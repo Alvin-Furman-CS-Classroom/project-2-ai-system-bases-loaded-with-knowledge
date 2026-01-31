@@ -1,0 +1,7 @@
+name,fielding_pct,errors,putouts,passed_balls,caught_stealing_pct,positions
+John Doe,0.950,5,150,,,"1B,LF"
+Jane Smith,0.980,2,200,3,0.350,C
+Bob Johnson,0.920,8,120,,,"2B,SS,3B"
+Alice Williams,0.965,4,180,,,"CF,RF"
+Charlie Brown,0.940,6,140,5,0.280,"C,1B"
+David Lee,0.910,10,100,,,"3B,LF"
