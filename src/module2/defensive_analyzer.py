@@ -30,10 +30,20 @@ def analyze_defensive_performance(input_file: str) -> Dict[str, Dict[str, float]
         >>> print(scores['John Doe']['C'])
         85.5
     """
-    # TODO: Implement the analysis pipeline:
     # 1. Parse input file
+    parser = DefensiveStatsParser()
+    players_data = parser.parse(input_file)
+    
     # 2. Initialize knowledge base and evaluators
+    kb = DefensiveKnowledgeBase()
+    position_evaluator = PositionEvaluator(kb)
+    score_calculator = ScoreCalculator(kb)
+    
     # 3. Evaluate all positions for all players
+    facts_dict = position_evaluator.evaluate_all_players(players_data)
+    
     # 4. Calculate scores
+    scores = score_calculator.calculate_all_scores(facts_dict)
+    
     # 5. Return results
-    pass
+    return scores
