@@ -4,6 +4,17 @@ Position Evaluator for Module 2: Defensive Performance Analysis
 Determines which positions to evaluate for each player.
 """
 
+# Changes made:
+# - Implemented storage of the provided `DefensiveKnowledgeBase` instance.
+# - Implemented `get_eligible_positions` to accept lists or strings and
+#   normalize/filter positions against `VALID_POSITIONS`.
+# - Implemented `evaluate_player_positions` to construct `DefensiveFact`
+#   objects (using `knowledge_base.add_fact` when available) for each
+#   eligible position.
+# - Implemented `evaluate_all_players` to produce a mapping of
+#   player names to their position facts.
+# These changes add core evaluation plumbing used by higher-level modules.
+
 from typing import Dict, List
 from .knowledge_base import DefensiveKnowledgeBase, DefensiveFact
 
@@ -21,8 +32,8 @@ class PositionEvaluator:
         Args:
             knowledge_base: Knowledge base containing evaluation rules
         """
-        # TODO: Store knowledge base reference
-        pass
+        # Store reference to the knowledge base for fact creation/evaluation
+        self.knowledge_base = knowledge_base
     
     def get_eligible_positions(self, player_data: Dict) -> List[str]:
         """
@@ -34,8 +45,23 @@ class PositionEvaluator:
         Returns:
             List of valid position strings
         """
-        # TODO: Implement position extraction and validation
-        pass
+        positions = player_data.get('positions')
+
+        if positions is None:
+            return []
+
+        # Normalize input: accept list or comma-separated string
+        if isinstance(positions, str):
+            # split on common delimiters
+            parts = [p.strip().upper() for p in positions.replace('/', ',').split(',') if p.strip()]
+        elif isinstance(positions, (list, tuple)):
+            parts = [str(p).strip().upper() for p in positions if str(p).strip()]
+        else:
+            return []
+
+        # Filter to valid defensive positions while preserving order
+        eligible = [p for p in parts if p in self.VALID_POSITIONS]
+        return eligible
     
     def evaluate_player_positions(self, player_data: Dict) -> Dict[str, DefensiveFact]:
         """
@@ -47,8 +73,33 @@ class PositionEvaluator:
         Returns:
             Dictionary mapping position to DefensiveFact
         """
-        # TODO: Implement position evaluation
-        pass
+        facts: Dict[str, DefensiveFact] = {}
+        positions = self.get_eligible_positions(player_data)
+
+        for pos in positions:
+            # Prefer using the knowledge base to build facts if available
+            fact = None
+            try:
+                fact = self.knowledge_base.add_fact(player_data, pos)
+            except Exception:
+                fact = None
+
+            # Fallback: construct DefensiveFact directly
+            if fact is None:
+                fact = DefensiveFact(
+                    player_name=player_data.get('player_name', 'Unknown'),
+                    position=pos,
+                    fielding_pct=float(player_data.get('fielding_pct', 0.0)),
+                    errors=int(player_data.get('errors', 0)),
+                    putouts=int(player_data.get('putouts', 0)),
+                    passed_balls=int(player_data.get('passed_balls', 0)),
+                    caught_stealing_pct=float(player_data.get('caught_stealing_pct', 0.0)),
+                    is_catcher=(pos == 'C')
+                )
+
+            facts[pos] = fact
+
+        return facts
     
     def evaluate_all_players(self, players_data: List[Dict]) -> Dict[str, Dict[str, DefensiveFact]]:
         """
@@ -61,5 +112,12 @@ class PositionEvaluator:
             Dictionary mapping player_name to position facts
             Format: {player_name: {position: DefensiveFact}}
         """
-        # TODO: Implement evaluation for all players
-        pass
+        results: Dict[str, Dict[str, DefensiveFact]] = {}
+
+        for pdata in players_data:
+            # Expect player name in data; fall back to a generated key if missing
+            player_name = pdata.get('player_name') or pdata.get('name') or str(pdata.get('id', 'unknown'))
+            position_facts = self.evaluate_player_positions(pdata)
+            results[player_name] = position_facts
+
+        return results
