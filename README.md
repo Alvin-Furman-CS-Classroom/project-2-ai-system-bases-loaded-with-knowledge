@@ -47,6 +47,11 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 
 **Dependencies:** None
 
+**Integration with Other Modules:**
+- Module 2 outputs defensive scores that will be combined with offensive scores (from Module 1) in Module 3 (CSP) to assign players to optimal defensive positions.
+- The `analyze_defensive_performance` function returns a dictionary `{player_name: {position: score}}` that can be directly used as input to Module 3's constraint satisfaction problem.
+- Example usage in Module 3: `defensive_scores = analyze_defensive_performance('defensive_stats.json')`
+
 **Tests:**
 - Unit tests for:
   - Knowledge base rule evaluation

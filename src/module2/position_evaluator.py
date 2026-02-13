@@ -1,19 +1,9 @@
 """
 Position Evaluator for Module 2: Defensive Performance Analysis
 
-Determines which positions to evaluate for each player.
+Determines which positions to evaluate for each player and constructs
+DefensiveFact objects for each player-position combination.
 """
-
-# Changes made:
-# - Implemented storage of the provided `DefensiveKnowledgeBase` instance.
-# - Implemented `get_eligible_positions` to accept lists or strings and
-#   normalize/filter positions against `VALID_POSITIONS`.
-# - Implemented `evaluate_player_positions` to construct `DefensiveFact`
-#   objects (using `knowledge_base.add_fact` when available) for each
-#   eligible position.
-# - Implemented `evaluate_all_players` to produce a mapping of
-#   player names to their position facts.
-# These changes add core evaluation plumbing used by higher-level modules.
 
 from typing import Dict, List
 from .knowledge_base import DefensiveKnowledgeBase, DefensiveFact

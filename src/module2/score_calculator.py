@@ -2,18 +2,9 @@
 Score Calculator for Module 2: Defensive Performance Analysis
 
 Calculates final defensive scores (0-100) for each player-position combination.
+Converts knowledge base evaluations (0-1 range) to final scores (0-100 range)
+for use by downstream modules.
 """
-
-# Changes made:
-# - Stored the provided `DefensiveKnowledgeBase` instance on init.
-# - Implemented `calculate_score` to prefer `knowledge_base.evaluate(fact)`;
-#   if the knowledge base does not return a value, a local heuristic is
-#   used as a fallback. The method normalizes/clamps intermediate values
-#   and returns a value in the 0-100 range.
-# - Implemented `calculate_all_scores` to process a nested facts mapping
-#   and return numeric scores for each player-position.
-# These changes enable conversion from `DefensiveFact` objects to final
-# numeric scores used by the public analysis API.
 
 from typing import Dict
 from .knowledge_base import DefensiveKnowledgeBase, DefensiveFact
@@ -52,34 +43,9 @@ class ScoreCalculator:
         except Exception:
             raw_score = None
 
-        # If KB didn't provide a score, compute using local heuristics
+        # If KB didn't provide a score, compute using fallback heuristics
         if raw_score is None:
-            # Ensure fielding_pct is in 0-1 range
-            fp = float(fact.fielding_pct) if fact.fielding_pct is not None else 0.0
-            fp = max(0.0, min(1.0, fp))
-
-            total_chances = max(0, fact.putouts + fact.errors)
-
-            if fact.is_catcher or fact.position == 'C':
-                # normalize passed balls by total chances (fallback)
-                normalized_passed_balls = (fact.passed_balls / total_chances) if total_chances > 0 else 0.0
-                cs_pct = float(fact.caught_stealing_pct) if fact.caught_stealing_pct is not None else 0.0
-                cs_pct = max(0.0, min(1.0, cs_pct))
-
-                raw_score = (
-                    (fp * 0.4) +
-                    ((1.0 - normalized_passed_balls) * 0.3) +
-                    (cs_pct * 0.3)
-                )
-            else:
-                normalized_errors = (fact.errors / total_chances) if total_chances > 0 else 0.0
-                normalized_putouts = (fact.putouts / total_chances) if total_chances > 0 else 0.0
-
-                raw_score = (
-                    (fp * 0.5) +
-                    ((1.0 - normalized_errors) * 0.3) +
-                    (normalized_putouts * 0.2)
-                )
+            raw_score = self._fallback_score(fact)
 
         # Clamp raw_score to 0-1 and convert to 0-100
         try:
@@ -89,6 +55,59 @@ class ScoreCalculator:
 
         raw = max(0.0, min(1.0, raw))
         return raw * 100.0
+    
+    def _normalize_percentage(self, value: float) -> float:
+        """
+        Normalize a percentage value to 0-1 range.
+        
+        Accepts values in either 0-1 or 0-100 format and normalizes to 0-1.
+        
+        Args:
+            value: Percentage value (may be 0-1 or 0-100)
+            
+        Returns:
+            Normalized percentage in 0-1 range
+        """
+        normalized = float(value) if value is not None else 0.0
+        if normalized > 1.0:
+            normalized = normalized / 100.0
+        return max(0.0, min(1.0, normalized))
+    
+    def _calculate_total_chances(self, putouts: int, errors: int) -> int:
+        """Calculate total defensive chances from putouts and errors."""
+        return max(0, putouts + errors)
+    
+    def _fallback_score(self, fact: DefensiveFact) -> float:
+        """
+        Calculate fallback score when knowledge base evaluation fails.
+        
+        Uses the same heuristics as the knowledge base rules as a safety net.
+        
+        Args:
+            fact: DefensiveFact to evaluate
+            
+        Returns:
+            Raw score (0-1 range)
+        """
+        fp = self._normalize_percentage(fact.fielding_pct)
+        total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
+
+        if fact.is_catcher or fact.position == 'C':
+            normalized_passed_balls = (fact.passed_balls / total_chances) if total_chances > 0 else 0.0
+            cs_pct = self._normalize_percentage(fact.caught_stealing_pct)
+            return (
+                (fp * 0.4) +
+                ((1.0 - normalized_passed_balls) * 0.3) +
+                (cs_pct * 0.3)
+            )
+        else:
+            normalized_errors = (fact.errors / total_chances) if total_chances > 0 else 0.0
+            normalized_putouts = (fact.putouts / total_chances) if total_chances > 0 else 0.0
+            return (
+                (fp * 0.5) +
+                ((1.0 - normalized_errors) * 0.3) +
+                (normalized_putouts * 0.2)
+            )
     
     def calculate_all_scores(self, facts_dict: Dict[str, Dict[str, DefensiveFact]]) -> Dict[str, Dict[str, float]]:
         """

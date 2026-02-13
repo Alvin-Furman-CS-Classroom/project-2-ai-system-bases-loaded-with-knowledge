@@ -1,13 +1,9 @@
 """
 Unit tests for position_evaluator.py
-"""
 
-# Changes made to tests:
-# - Added tests for parsing eligible positions from list and string inputs.
-# - Added filtering tests for invalid positions.
-# - Added tests verifying `evaluate_player_positions` builds `DefensiveFact`
-#   objects and that `evaluate_all_players` aggregates results for multiple
-#   players. Also added handling test for players with no positions.
+Tests cover position parsing from various formats, filtering invalid positions,
+fact construction for player-position combinations, and batch evaluation.
+"""
 
 import json
 import unittest

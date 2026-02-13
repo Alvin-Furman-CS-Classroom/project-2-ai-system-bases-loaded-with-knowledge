@@ -98,56 +98,71 @@ class DefensiveStatsParser:
         normalized = []
         
         for player in players:
-            # Normalize keys to lowercase
-            normalized_player = {k.lower().strip(): v for k, v in player.items()}
-            
-            # Validate required fields
-            for field in self.required_fields:
-                if field not in normalized_player:
-                    raise ValueError(f"Missing required field: {field} for player {normalized_player.get('name', 'unknown')}")
-            
-            # Handle position eligibility
-            if 'positions' not in normalized_player:
-                # Try alternative field names
-                for alt in ['position', 'eligible_positions', 'pos']:
-                    if alt in normalized_player:
-                        pos_value = normalized_player[alt]
-                        if isinstance(pos_value, str):
-                            normalized_player['positions'] = [p.strip() for p in pos_value.split(',')]
-                        elif isinstance(pos_value, list):
-                            normalized_player['positions'] = pos_value
-                        break
-                else:
-                    # Default to empty list if no positions specified
-                    normalized_player['positions'] = []
-            
-            # Ensure positions is a list
-            if isinstance(normalized_player['positions'], str):
-                normalized_player['positions'] = [p.strip() for p in normalized_player['positions'].split(',')]
-            
-            # Identify if player is a catcher
-            positions = [p.upper() for p in normalized_player['positions']]
-            is_catcher = 'C' in positions
-            
-            # Validate catcher-specific fields if player is a catcher
-            if is_catcher:
-                for field in self.catcher_fields:
-                    if field not in normalized_player:
-                        # Set default values if missing
-                        if field == 'passed_balls':
-                            normalized_player[field] = 0
-                        elif field == 'caught_stealing_pct':
-                            normalized_player[field] = 0.0
-            
-            # Convert numeric fields to appropriate types
-            normalized_player['fielding_pct'] = float(normalized_player['fielding_pct'])
-            normalized_player['errors'] = int(normalized_player['errors'])
-            normalized_player['putouts'] = int(normalized_player['putouts'])
-            
-            if is_catcher:
-                normalized_player['passed_balls'] = int(normalized_player.get('passed_balls', 0))
-                normalized_player['caught_stealing_pct'] = float(normalized_player.get('caught_stealing_pct', 0.0))
-            
+            normalized_player = self._normalize_keys(player)
+            self._validate_required_fields(normalized_player)
+            normalized_player = self._normalize_positions(normalized_player)
+            normalized_player = self._ensure_catcher_defaults(normalized_player)
+            normalized_player = self._convert_numeric_fields(normalized_player)
             normalized.append(normalized_player)
         
         return normalized
+    
+    def _normalize_keys(self, player: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize dictionary keys to lowercase."""
+        return {k.lower().strip(): v for k, v in player.items()}
+    
+    def _validate_required_fields(self, player: Dict[str, Any]) -> None:
+        """Validate that all required fields are present."""
+        for field in self.required_fields:
+            if field not in player:
+                raise ValueError(f"Missing required field: {field} for player {player.get('name', 'unknown')}")
+    
+    def _normalize_positions(self, player: Dict[str, Any]) -> Dict[str, Any]:
+        """Normalize position field to a list format."""
+        if 'positions' not in player:
+            # Try alternative field names
+            for alt in ['position', 'eligible_positions', 'pos']:
+                if alt in player:
+                    pos_value = player[alt]
+                    if isinstance(pos_value, str):
+                        player['positions'] = [p.strip() for p in pos_value.split(',')]
+                    elif isinstance(pos_value, list):
+                        player['positions'] = pos_value
+                    break
+            else:
+                # Default to empty list if no positions specified
+                player['positions'] = []
+        
+        # Ensure positions is a list
+        if isinstance(player['positions'], str):
+            player['positions'] = [p.strip() for p in player['positions'].split(',')]
+        
+        return player
+    
+    def _ensure_catcher_defaults(self, player: Dict[str, Any]) -> Dict[str, Any]:
+        """Set default values for catcher-specific fields if player is a catcher."""
+        positions = [p.upper() for p in player['positions']]
+        is_catcher = 'C' in positions
+        
+        if is_catcher:
+            for field in self.catcher_fields:
+                if field not in player:
+                    if field == 'passed_balls':
+                        player[field] = 0
+                    elif field == 'caught_stealing_pct':
+                        player[field] = 0.0
+        
+        return player
+    
+    def _convert_numeric_fields(self, player: Dict[str, Any]) -> Dict[str, Any]:
+        """Convert numeric fields to appropriate types."""
+        player['fielding_pct'] = float(player['fielding_pct'])
+        player['errors'] = int(player['errors'])
+        player['putouts'] = int(player['putouts'])
+        
+        positions = [p.upper() for p in player['positions']]
+        if 'C' in positions:
+            player['passed_balls'] = int(player.get('passed_balls', 0))
+            player['caught_stealing_pct'] = float(player.get('caught_stealing_pct', 0.0))
+        
+        return player

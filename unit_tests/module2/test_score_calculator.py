@@ -1,12 +1,10 @@
 """
 Unit tests for score_calculator.py
-"""
 
-# Changes made to tests:
-# - Added tests for `calculate_score` covering catcher and general
-#   position perfect scores, normalization and bounds, and batch scoring
-#   via `calculate_all_scores` for multiple players and positions.
-# - Tests also run against test_data/defensive_stats.json.
+Tests cover score calculation for catchers and general positions, normalization
+and bounds checking, batch scoring, and fallback behavior when knowledge base
+evaluation fails.
+"""
 
 import json
 import unittest

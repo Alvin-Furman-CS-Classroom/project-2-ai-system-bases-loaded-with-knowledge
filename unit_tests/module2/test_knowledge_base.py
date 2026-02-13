@@ -1,14 +1,9 @@
 """
 Unit tests for knowledge_base.py
-"""
 
-# Changes made to tests:
-# - Added comprehensive unit tests covering `add_fact`, `evaluate` for
-#   catchers and general positions, normalization/bounds, and
-#   `get_rule_description`.
-# - Tests include perfect/poor players and out-of-range inputs to ensure
-#   normalization and clamping behavior.
-# - Tests also run against test_data/defensive_stats.json.
+Tests cover fact creation, rule evaluation for catchers and general positions,
+normalization and bounds checking, and rule descriptions.
+"""
 
 import json
 import unittest

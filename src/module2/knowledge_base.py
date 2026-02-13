@@ -2,19 +2,9 @@
 Knowledge Base for Module 2: Defensive Performance Analysis
 
 Contains facts and rules for evaluating defensive performance.
+Uses propositional logic rules to evaluate defensive performance based on
+position-specific heuristics (catcher vs. general positions).
 """
-
-# Changes made:
-# - Added a `rules` mapping and implemented rule dispatch in `evaluate`.
-# - Implemented `add_fact` to safely create a `DefensiveFact` from
-#   incoming player dictionaries, with defensive defaults and normalization.
-# - Implemented `_catcher_rule` and `_general_position_rule` with
-#   normalization for fielding percentage, passed balls, errors, and
-#   caught-stealing percentage; rules return scores in the 0-1 range.
-# - Implemented `get_rule_description` to provide a human-readable
-#   explanation of the position-specific rule.
-# These changes provide the knowledge base logic used by the calculator
-# and evaluator components.
 
 from typing import Dict
 from dataclasses import dataclass
@@ -126,6 +116,27 @@ class DefensiveKnowledgeBase:
         s = max(0.0, min(1.0, s))
         return s
     
+    def _normalize_percentage(self, value: float) -> float:
+        """
+        Normalize a percentage value to 0-1 range.
+        
+        Accepts values in either 0-1 or 0-100 format and normalizes to 0-1.
+        
+        Args:
+            value: Percentage value (may be 0-1 or 0-100)
+            
+        Returns:
+            Normalized percentage in 0-1 range
+        """
+        normalized = float(value or 0.0)
+        if normalized > 1.0:
+            normalized = normalized / 100.0
+        return max(0.0, min(1.0, normalized))
+    
+    def _calculate_total_chances(self, putouts: int, errors: int) -> int:
+        """Calculate total defensive chances from putouts and errors."""
+        return max(0, putouts + errors)
+    
     def _catcher_rule(self, fact: DefensiveFact) -> float:
         """
         Rule for evaluating catcher defensive performance.
@@ -142,19 +153,10 @@ class DefensiveKnowledgeBase:
         Returns:
             Raw score (0-1 range)
         """
-        # Normalize fielding_pct (accept 0-1 or 0-100)
-        fp = float(fact.fielding_pct or 0.0)
-        if fp > 1.0:
-            fp = fp / 100.0
-        fp = max(0.0, min(1.0, fp))
-
-        total_chances = max(0, fact.putouts + fact.errors)
+        fp = self._normalize_percentage(fact.fielding_pct)
+        total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
         normalized_passed_balls = (fact.passed_balls / total_chances) if total_chances > 0 else 0.0
-
-        cs_pct = float(fact.caught_stealing_pct or 0.0)
-        if cs_pct > 1.0:
-            cs_pct = cs_pct / 100.0
-        cs_pct = max(0.0, min(1.0, cs_pct))
+        cs_pct = self._normalize_percentage(fact.caught_stealing_pct)
 
         score = (
             (fp * 0.4) +
@@ -180,12 +182,8 @@ class DefensiveKnowledgeBase:
         Returns:
             Raw score (0-1 range)
         """
-        fp = float(fact.fielding_pct or 0.0)
-        if fp > 1.0:
-            fp = fp / 100.0
-        fp = max(0.0, min(1.0, fp))
-
-        total_chances = max(0, fact.putouts + fact.errors)
+        fp = self._normalize_percentage(fact.fielding_pct)
+        total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
         normalized_errors = (fact.errors / total_chances) if total_chances > 0 else 0.0
         normalized_putouts = (fact.putouts / total_chances) if total_chances > 0 else 0.0
 
