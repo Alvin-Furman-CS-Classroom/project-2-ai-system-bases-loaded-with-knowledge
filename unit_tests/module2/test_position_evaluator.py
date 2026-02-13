@@ -9,6 +9,7 @@ Unit tests for position_evaluator.py
 #   objects and that `evaluate_all_players` aggregates results for multiple
 #   players. Also added handling test for players with no positions.
 
+import json
 import unittest
 import sys
 from pathlib import Path
@@ -18,6 +19,14 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 
 from module2.position_evaluator import PositionEvaluator
 from module2.knowledge_base import DefensiveKnowledgeBase, DefensiveFact
+
+_TEST_DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'test_data'
+_JSON_PATH = _TEST_DATA_DIR / 'defensive_stats.json'
+
+
+def _load_test_data_json():
+    with open(_JSON_PATH, 'r') as f:
+        return json.load(f)
 
 
 class TestPositionEvaluator(unittest.TestCase):
@@ -115,6 +124,33 @@ class TestPositionEvaluator(unittest.TestCase):
         all_facts = self.evaluator.evaluate_all_players(players)
         # fallback key should be present (uses 'unknown' when no name/id)
         self.assertIn('unknown', all_facts)
+
+    def test_get_eligible_positions_from_test_data(self):
+        """Eligible positions for a player from test_data JSON."""
+        players = _load_test_data_json()
+        matt = next(p for p in players if p.get('name') == 'Matt Olson')
+        positions = self.evaluator.get_eligible_positions(matt)
+        self.assertIn('1B', positions)
+        self.assertEqual(len(positions), 1)
+
+    def test_evaluate_player_positions_from_test_data(self):
+        """evaluate_player_positions for a player from test_data JSON."""
+        players = _load_test_data_json()
+        nick = next(p for p in players if p.get('name') == 'Nick Allen')
+        facts = self.evaluator.evaluate_player_positions(nick)
+        self.assertIn('SS', facts)
+        self.assertIn('2B', facts)
+        self.assertEqual(facts['SS'].player_name, 'Nick Allen')
+        self.assertEqual(facts['SS'].position, 'SS')
+
+    def test_evaluate_all_players_from_test_data(self):
+        """evaluate_all_players with test_data JSON returns expected players and positions."""
+        players = _load_test_data_json()
+        result = self.evaluator.evaluate_all_players(players)
+        self.assertIn('Matt Olson', result)
+        self.assertIn('Drake Baldwin', result)
+        self.assertIn('1B', result['Matt Olson'])
+        self.assertIn('C', result['Drake Baldwin'])
 
 
 if __name__ == '__main__':

@@ -6,7 +6,9 @@ Unit tests for score_calculator.py
 # - Added tests for `calculate_score` covering catcher and general
 #   position perfect scores, normalization and bounds, and batch scoring
 #   via `calculate_all_scores` for multiple players and positions.
+# - Tests also run against test_data/defensive_stats.json.
 
+import json
 import unittest
 import sys
 from pathlib import Path
@@ -16,6 +18,27 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 
 from module2.score_calculator import ScoreCalculator
 from module2.knowledge_base import DefensiveKnowledgeBase, DefensiveFact
+
+_TEST_DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'test_data'
+_JSON_PATH = _TEST_DATA_DIR / 'defensive_stats.json'
+
+
+def _load_test_data_json():
+    with open(_JSON_PATH, 'r') as f:
+        return json.load(f)
+
+
+def _build_facts_dict_from_test_data(kb):
+    """Build {player_name: {position: DefensiveFact}} from test_data JSON."""
+    players = _load_test_data_json()
+    result = {}
+    for p in players:
+        name = p.get('name') or p.get('player_name', '')
+        positions = p.get('positions', [])
+        result[name] = {}
+        for pos in positions:
+            result[name][pos] = kb.add_fact(p, pos)
+    return result
 
 
 class TestScoreCalculator(unittest.TestCase):
@@ -120,6 +143,36 @@ class TestScoreCalculator(unittest.TestCase):
         scores = self.calculator.calculate_all_scores(facts_dict)
         self.assertIn('Empty', scores)
         self.assertEqual(scores['Empty'], {})
+
+    def test_calculate_score_from_test_data_catcher(self):
+        """Score for a catcher from test_data JSON is in 0-100."""
+        players = _load_test_data_json()
+        drake = next(p for p in players if p.get('name') == 'Drake Baldwin')
+        fact = self.kb.add_fact(drake, 'C')
+        score = self.calculator.calculate_score(fact)
+        self.assertGreaterEqual(score, 0.0)
+        self.assertLessEqual(score, 100.0)
+
+    def test_calculate_score_from_test_data_general(self):
+        """Score for a general position from test_data JSON is in 0-100."""
+        players = _load_test_data_json()
+        matt = next(p for p in players if p.get('name') == 'Matt Olson')
+        fact = self.kb.add_fact(matt, '1B')
+        score = self.calculator.calculate_score(fact)
+        self.assertGreaterEqual(score, 0.0)
+        self.assertLessEqual(score, 100.0)
+
+    def test_calculate_all_scores_from_test_data(self):
+        """calculate_all_scores with test_data JSON returns expected structure and players."""
+        facts_dict = _build_facts_dict_from_test_data(self.kb)
+        scores = self.calculator.calculate_all_scores(facts_dict)
+        self.assertIn('Matt Olson', scores)
+        self.assertIn('Drake Baldwin', scores)
+        self.assertIn('Sean Murphy', scores)
+        for player_name, position_scores in scores.items():
+            for pos, score in position_scores.items():
+                self.assertGreaterEqual(score, 0.0)
+                self.assertLessEqual(score, 100.0)
 
 
 if __name__ == '__main__':

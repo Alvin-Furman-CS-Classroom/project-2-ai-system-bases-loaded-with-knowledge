@@ -15,6 +15,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 
 from module2.input_parser import DefensiveStatsParser
 
+# Path to test_data files
+_TEST_DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'test_data'
+_JSON_PATH = _TEST_DATA_DIR / 'defensive_stats.json'
+_CSV_PATH = _TEST_DATA_DIR / 'defensive_stats.csv'
+
 
 class TestDefensiveStatsParser(unittest.TestCase):
     """Test cases for DefensiveStatsParser."""
@@ -22,6 +27,31 @@ class TestDefensiveStatsParser(unittest.TestCase):
     def setUp(self):
         """Set up test fixtures."""
         self.parser = DefensiveStatsParser()
+
+    def test_parse_test_data_json(self):
+        """Parse test_data/defensive_stats.json returns list with expected players."""
+        result = self.parser.parse(str(_JSON_PATH))
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+        names = [p.get('name') or p.get('player_name') for p in result]
+        self.assertIn('Matt Olson', names)
+        self.assertIn('Drake Baldwin', names)
+        self.assertIn('Sean Murphy', names)
+        for record in result:
+            self.assertIn('fielding_pct', record)
+            self.assertIn('errors', record)
+            self.assertIn('putouts', record)
+            self.assertIn('positions', record)
+
+    def test_parse_test_data_csv(self):
+        """Parse test_data/defensive_stats.csv returns list with expected players."""
+        result = self.parser.parse(str(_CSV_PATH))
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+        names = [p.get('name') or p.get('player_name') for p in result]
+        self.assertIn('Matt Olson', names)
+        self.assertIn('Drake Baldwin', names)
+        self.assertIn('Sean Murphy', names)
     
     def test_parse_json_list_format(self):
         """Test parsing JSON file with list format."""

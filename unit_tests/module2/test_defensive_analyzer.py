@@ -16,9 +16,38 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent / 'src'))
 from module2.defensive_analyzer import analyze_defensive_performance
 from module2.knowledge_base import DefensiveFact
 
+# Path to test_data files (used for integration tests without mocks)
+_TEST_DATA_DIR = Path(__file__).resolve().parent.parent.parent / 'test_data'
+_JSON_PATH = _TEST_DATA_DIR / 'defensive_stats.json'
+_CSV_PATH = _TEST_DATA_DIR / 'defensive_stats.csv'
+
 
 class TestDefensiveAnalyzer(unittest.TestCase):
     """Test cases for the main defensive analyzer (integration tests)."""
+
+    def test_analyze_test_data_json(self):
+        """Full analysis on test_data/defensive_stats.json returns dict with expected players and scores in 0-100."""
+        result = analyze_defensive_performance(str(_JSON_PATH))
+        self.assertIsInstance(result, dict)
+        self.assertIn('Matt Olson', result)
+        self.assertIn('Drake Baldwin', result)
+        self.assertIn('Sean Murphy', result)
+        for player_name, position_scores in result.items():
+            self.assertIsInstance(position_scores, dict)
+            for pos, score in position_scores.items():
+                self.assertGreaterEqual(score, 0.0, f"{player_name} @ {pos}")
+                self.assertLessEqual(score, 100.0, f"{player_name} @ {pos}")
+
+    def test_analyze_test_data_csv(self):
+        """Full analysis on test_data/defensive_stats.csv returns dict with expected players and scores in 0-100."""
+        result = analyze_defensive_performance(str(_CSV_PATH))
+        self.assertIsInstance(result, dict)
+        self.assertIn('Matt Olson', result)
+        self.assertIn('Drake Baldwin', result)
+        for player_name, position_scores in result.items():
+            for pos, score in position_scores.items():
+                self.assertGreaterEqual(score, 0.0)
+                self.assertLessEqual(score, 100.0)
     
     def setUp(self):
         """Set up test fixtures."""
