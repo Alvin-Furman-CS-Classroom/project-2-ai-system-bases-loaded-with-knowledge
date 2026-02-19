@@ -1,0 +1,62 @@
+{
+  "batters": [
+    {
+      "name": "Mike Trout",
+      "ba": 0.306,
+      "k": 132,
+      "obp": 0.419,
+      "slg": 0.582,
+      "hr": 40,
+      "rbi": 80,
+      "handedness": "R"
+    },
+    {
+      "name": "Freddie Freeman",
+      "ba": 0.331,
+      "k": 121,
+      "obp": 0.410,
+      "slg": 0.567,
+      "hr": 29,
+      "rbi": 102,
+      "handedness": "L"
+    },
+    {
+      "name": "Mookie Betts",
+      "ba": 0.307,
+      "k": 131,
+      "obp": 0.408,
+      "slg": 0.579,
+      "hr": 39,
+      "rbi": 107,
+      "handedness": "R"
+    },
+    {
+      "name": "Juan Soto",
+      "ba": 0.275,
+      "k": 129,
+      "obp": 0.410,
+      "slg": 0.519,
+      "hr": 35,
+      "rbi": 109,
+      "handedness": "L"
+    },
+    {
+      "name": "Vladimir Guerrero Jr.",
+      "ba": 0.264,
+      "k": 110,
+      "obp": 0.345,
+      "slg": 0.444,
+      "hr": 26,
+      "rbi": 94,
+      "handedness": "R"
+    }
+  ],
+  "pitcher": {
+    "name": "Gerrit Cole",
+    "era": 2.63,
+    "whip": 0.98,
+    "k_rate": 0.33,
+    "handedness": "RHP",
+    "walk_rate": 0.06
+  }
+}

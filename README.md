@@ -29,6 +29,46 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 | 5 | Planning | Game state, bench players, performance scores, current lineup | Adaptive recommendations and multi-inning plan | Modules 1, 2, 3, 4 | Checkpoint 5 (April 16) |
 | 6 (optional) |  |  |  |  |  |
 
+## Module 1 Specification: Matchup Analysis
+
+**Topic:** First-Order Logic
+
+**Inputs:**
+- CSV or JSON file containing player statistics:
+  - **Batter statistics:** batting average (BA), strikeouts (K), on-base percentage (OBP), slugging percentage (SLG), home runs (HR), runs batted in (RBI), handedness (L/R)
+  - **Opponent pitcher statistics:** ERA, WHIP, strikeout rate (K rate), handedness (LHP/RHP), walk rate
+
+**Outputs:**
+- Performance scores (0-100) for each batter representing their expected effectiveness against the opponent pitcher
+- Output format: Dictionary/map or JSON structure mapping each batter name to their performance score
+- Scores derived through logical inference from first-order logic rules encoding matchup relationships using quantifiers (∀ for all, ∃ there exists)
+
+**Dependencies:** None
+
+**Integration with Other Modules:**
+- Module 1 outputs offensive performance scores that will be combined with defensive scores (from Module 2) in Module 3 (CSP) to assign players to optimal defensive positions.
+- Module 1 scores will also be used by Module 4 (Search Algorithms) to optimize the batting order.
+- The `analyze_matchup_performance` function returns a dictionary `{batter_name: score}` that can be directly used as input to subsequent modules.
+- Example usage in Module 3: `offensive_scores = analyze_matchup_performance('matchup_stats.json', pitcher_stats)`
+
+**First-Order Logic Rules:**
+The module uses quantified logical rules to evaluate matchups. Examples include:
+- Universal quantifier (∀): "For all batters, if batter OBP > 0.350 and pitcher walk rate > 0.10, then increase score"
+- Universal quantifier with conditions: "For all left-handed batters, if the pitcher is left-handed, then reduce performance score by 15%"
+- Existential quantifier (∃): "There exists a batter such that their slugging percentage > 0.500 and pitcher ERA > 4.00, then increase score"
+- Rules combine batter statistics with pitcher statistics to predict performance
+
+**Tests:**
+- Unit tests for:
+  - First-order logic rule evaluation (universal and existential quantifiers)
+  - Score calculation for various batter-pitcher combinations
+  - Handedness matchup rules (same-handed vs. opposite-handed)
+  - Statistical threshold rules (OBP, SLG, ERA, etc.)
+  - Edge cases (missing data, extreme values, boundary conditions)
+  - Input parsing (CSV and JSON formats)
+  - Output formatting
+  - Score normalization (ensuring scores are in 0-100 range)
+
 ## Module 2 Specification: Defensive Performance Analysis
 
 **Topic:** Knowledge Bases

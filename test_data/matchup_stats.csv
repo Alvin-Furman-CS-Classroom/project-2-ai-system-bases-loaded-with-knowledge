@@ -1,0 +1,7 @@
+type,name,ba,k,obp,slg,hr,rbi,handedness,era,whip,k_rate,walk_rate
+batter,Mike Trout,0.306,132,0.419,0.582,40,80,R,,,,
+batter,Freddie Freeman,0.331,121,0.410,0.567,29,102,L,,,,
+batter,Mookie Betts,0.307,131,0.408,0.579,39,107,R,,,,
+batter,Juan Soto,0.275,129,0.410,0.519,35,109,L,,,,
+batter,Vladimir Guerrero Jr.,0.264,110,0.345,0.444,26,94,R,,,,
+pitcher,Gerrit Cole,,,,,,,RHP,2.63,0.98,0.33,0.06
