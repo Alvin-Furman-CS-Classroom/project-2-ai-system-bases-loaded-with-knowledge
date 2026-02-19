@@ -3,10 +3,12 @@ Position Evaluator for Module 2: Defensive Performance Analysis
 
 Determines which positions to evaluate for each player and constructs
 DefensiveFact objects for each player-position combination.
+Supports cross-position prediction for unplayed positions.
 """
 
 from typing import Dict, List
 from .knowledge_base import DefensiveKnowledgeBase, DefensiveFact
+from .cross_position_predictor import CrossPositionPredictor
 
 
 class PositionEvaluator:
@@ -18,12 +20,12 @@ class PositionEvaluator:
     def __init__(self, knowledge_base: DefensiveKnowledgeBase):
         """
         Initialize position evaluator.
-        
+
         Args:
             knowledge_base: Knowledge base containing evaluation rules
         """
-        # Store reference to the knowledge base for fact creation/evaluation
         self.knowledge_base = knowledge_base
+        self.predictor = CrossPositionPredictor(knowledge_base)
     
     def get_eligible_positions(self, player_data: Dict) -> List[str]:
         """
@@ -91,13 +93,19 @@ class PositionEvaluator:
 
         return facts
     
-    def evaluate_all_players(self, players_data: List[Dict]) -> Dict[str, Dict[str, DefensiveFact]]:
+    def evaluate_all_players(
+        self,
+        players_data: List[Dict],
+        predict_all_positions: bool = False,
+    ) -> Dict[str, Dict[str, DefensiveFact]]:
         """
-        Evaluate all positions for all players.
-        
+        Evaluate positions for all players.
+
         Args:
             players_data: List of player data dictionaries
-            
+            predict_all_positions: If True, also predict scores for unplayed
+                positions using similar positions
+
         Returns:
             Dictionary mapping player_name to position facts
             Format: {player_name: {position: DefensiveFact}}
@@ -105,9 +113,20 @@ class PositionEvaluator:
         results: Dict[str, Dict[str, DefensiveFact]] = {}
 
         for pdata in players_data:
-            # Expect player name in data; fall back to a generated key if missing
-            player_name = pdata.get('player_name') or pdata.get('name') or str(pdata.get('id', 'unknown'))
+            player_name = (
+                pdata.get('player_name')
+                or pdata.get('name')
+                or str(pdata.get('id', 'unknown'))
+            )
             position_facts = self.evaluate_player_positions(pdata)
             results[player_name] = position_facts
+
+            if predict_all_positions and position_facts:
+                eligible = self.get_eligible_positions(pdata)
+                predicted = self.predictor.predict_player_positions(
+                    pdata, eligible, position_facts
+                )
+                for pos, fact in predicted.items():
+                    results[player_name][pos] = fact
 
         return results

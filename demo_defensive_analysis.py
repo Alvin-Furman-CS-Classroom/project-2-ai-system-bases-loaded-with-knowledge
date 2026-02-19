@@ -46,9 +46,11 @@ def main():
     position_evaluator = PositionEvaluator(kb)
     score_calculator = ScoreCalculator(kb)
 
-    # 3. Build facts (evaluate all positions for all players)
-    facts_dict = position_evaluator.evaluate_all_players(players_data)
-    print("[FACTS] Defensive facts per player/position:\n")
+    # 3. Build facts (evaluate + predict all positions for all players)
+    facts_dict = position_evaluator.evaluate_all_players(
+        players_data, predict_all_positions=True
+    )
+    print("[FACTS] Defensive facts per player/position (played + predicted):\n")
 
     for player_name in sorted(facts_dict.keys()):
         pos_facts = facts_dict[player_name]

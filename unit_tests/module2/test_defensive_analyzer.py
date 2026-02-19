@@ -48,7 +48,19 @@ class TestDefensiveAnalyzer(unittest.TestCase):
             for pos, score in position_scores.items():
                 self.assertGreaterEqual(score, 0.0)
                 self.assertLessEqual(score, 100.0)
-    
+
+    def test_predict_all_positions_returns_more_positions(self):
+        """With predict_all_positions=True, players have scores for unplayed positions."""
+        result_all = analyze_defensive_performance(str(_JSON_PATH), predict_all_positions=True)
+        result_played_only = analyze_defensive_performance(str(_JSON_PATH), predict_all_positions=False)
+        # Matt Olson only plays 1B; with prediction he should have more positions
+        matt_played = result_played_only.get('Matt Olson', {})
+        matt_all = result_all.get('Matt Olson', {})
+        self.assertIn('1B', matt_played)
+        self.assertIn('1B', matt_all)
+        self.assertGreaterEqual(len(matt_all), len(matt_played),
+                                "Predict all should return at least as many positions")
+
     def setUp(self):
         """Set up test fixtures."""
         # Create sample test data
@@ -156,8 +168,10 @@ class TestDefensiveAnalyzer(unittest.TestCase):
             mock_evaluator_class.assert_called_once_with(mock_kb)
             mock_calculator_class.assert_called_once_with(mock_kb)
             
-            # Verify evaluator was called with parsed data
-            mock_evaluator.evaluate_all_players.assert_called_once_with(self.sample_players_data)
+            # Verify evaluator was called with parsed data and predict_all_positions
+            mock_evaluator.evaluate_all_players.assert_called_once_with(
+                self.sample_players_data, predict_all_positions=True
+            )
             
             # Verify calculator was called with facts
             mock_calculator.calculate_all_scores.assert_called_once_with(self.sample_facts_dict)

@@ -81,33 +81,43 @@ class ScoreCalculator:
         """
         Calculate fallback score when knowledge base evaluation fails.
         
-        Uses the same heuristics as the knowledge base rules as a safety net.
+        Uses the same boolean logic rules as the knowledge base as a safety net.
         
         Args:
             fact: DefensiveFact to evaluate
             
         Returns:
-            Raw score (0-1 range)
+            Raw score (0-1 range) based on boolean rule evaluation
         """
         fp = self._normalize_percentage(fact.fielding_pct)
         total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
 
         if fact.is_catcher or fact.position == 'C':
+            # Catcher boolean rules
             normalized_passed_balls = (fact.passed_balls / total_chances) if total_chances > 0 else 0.0
             cs_pct = self._normalize_percentage(fact.caught_stealing_pct)
-            return (
-                (fp * 0.4) +
-                ((1.0 - normalized_passed_balls) * 0.3) +
-                (cs_pct * 0.3)
-            )
+            
+            true_count = sum([
+                fp >= 0.95,                          # R1: excellent fielding
+                normalized_passed_balls <= 0.01,     # R2: low passed balls
+                cs_pct >= 0.25,                      # R3: good caught stealing
+                fact.errors <= 5,                    # R4: few errors
+                fact.putouts >= 100                   # R5: adequate putouts
+            ])
+            return true_count / 5.0
         else:
+            # General position boolean rules
             normalized_errors = (fact.errors / total_chances) if total_chances > 0 else 0.0
             normalized_putouts = (fact.putouts / total_chances) if total_chances > 0 else 0.0
-            return (
-                (fp * 0.5) +
-                ((1.0 - normalized_errors) * 0.3) +
-                (normalized_putouts * 0.2)
-            )
+            
+            true_count = sum([
+                fp >= 0.95,                          # R1: excellent fielding
+                normalized_errors <= 0.05,            # R2: low error rate
+                normalized_putouts >= 0.80,          # R3: high putout rate
+                fact.errors <= 10,                    # R4: few errors
+                fact.putouts >= 50                    # R5: adequate putouts
+            ])
+            return true_count / 5.0
     
     def calculate_all_scores(self, facts_dict: Dict[str, Dict[str, DefensiveFact]]) -> Dict[str, Dict[str, float]]:
         """

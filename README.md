@@ -91,12 +91,19 @@ your-repo/
 ```python
 from src.module2.defensive_analyzer import analyze_defensive_performance
 
-# Analyze defensive statistics
+# Analyze defensive statistics (default: predicts all positions)
 scores = analyze_defensive_performance('test_data/defensive_stats.json')
 
 # scores is a dictionary: {player_name: {position: score}}
-# Example: {'John Doe': {'1B': 85.5, 'LF': 82.3}}
+# Example: {'John Doe': {'1B': 85.5, 'LF': 82.3, 'RF': 78.2, ...}}
+# By default, scores include predicted performance at unplayed positions.
+
+# Only evaluate played positions (no predictions):
+scores = analyze_defensive_performance('defensive_stats.json', predict_all_positions=False)
 ```
+
+**Cross-Position Prediction:**
+By default, the module predicts each player's performance at positions they have not played, using position similarity rules (e.g., LF↔RF, SS↔2B) and stat transfer heuristics. Set `predict_all_positions=False` to only return scores for positions each player has actually played.
 
 **Input File Format:**
 

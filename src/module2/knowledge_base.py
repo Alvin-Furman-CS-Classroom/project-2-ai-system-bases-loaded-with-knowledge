@@ -2,8 +2,9 @@
 Knowledge Base for Module 2: Defensive Performance Analysis
 
 Contains facts and rules for evaluating defensive performance.
-Uses propositional logic rules to evaluate defensive performance based on
-position-specific heuristics (catcher vs. general positions).
+Uses boolean propositional logic rules (True/False conditions) to evaluate
+defensive performance based on position-specific heuristics (catcher vs. general positions).
+Each rule evaluates to True or False, and the final score is the proportion of True rules.
 """
 
 from typing import Dict
@@ -139,79 +140,125 @@ class DefensiveKnowledgeBase:
     
     def _catcher_rule(self, fact: DefensiveFact) -> float:
         """
-        Rule for evaluating catcher defensive performance.
+        Rule for evaluating catcher defensive performance using boolean logic.
         
-        Knowledge Base Rule:
+        Knowledge Base Rules (all must be evaluated as True/False):
         IF position == "C" THEN
-            score = (fielding_pct * 0.4) + 
-                    ((1 - normalized_passed_balls) * 0.3) + 
-                    (caught_stealing_pct * 0.3)
+            R1: fielding_pct >= 0.95
+            R2: normalized_passed_balls <= 0.01
+            R3: caught_stealing_pct >= 0.25
+            R4: errors <= 5
+            R5: putouts >= 100
+        
+        Score = (number of True rules) / (total rules)
         
         Args:
             fact: DefensiveFact for a catcher
             
         Returns:
-            Raw score (0-1 range)
+            Raw score (0-1 range) based on boolean rule evaluation
         """
         fp = self._normalize_percentage(fact.fielding_pct)
         total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
         normalized_passed_balls = (fact.passed_balls / total_chances) if total_chances > 0 else 0.0
         cs_pct = self._normalize_percentage(fact.caught_stealing_pct)
 
-        score = (
-            (fp * 0.4) +
-            ((1.0 - normalized_passed_balls) * 0.3) +
-            (cs_pct * 0.3)
-        )
+        # Boolean rules - each evaluates to True or False
+        r1_excellent_fielding = fp >= 0.95
+        r2_low_passed_balls = normalized_passed_balls <= 0.01
+        r3_good_caught_stealing = cs_pct >= 0.25
+        r4_few_errors = fact.errors <= 5
+        r5_adequate_putouts = fact.putouts >= 100
+
+        # Count how many rules are True
+        true_count = sum([
+            r1_excellent_fielding,
+            r2_low_passed_balls,
+            r3_good_caught_stealing,
+            r4_few_errors,
+            r5_adequate_putouts
+        ])
+
+        # Score = proportion of rules that are True
+        total_rules = 5
+        score = true_count / total_rules
 
         return max(0.0, min(1.0, score))
     
     def _general_position_rule(self, fact: DefensiveFact) -> float:
         """
-        Rule for evaluating general position defensive performance.
+        Rule for evaluating general position defensive performance using boolean logic.
         
-        Knowledge Base Rule:
+        Knowledge Base Rules (all must be evaluated as True/False):
         IF position != "C" THEN
-            score = (fielding_pct * 0.5) + 
-                    ((1 - normalized_errors) * 0.3) + 
-                    (normalized_putouts * 0.2)
+            R1: fielding_pct >= 0.95
+            R2: normalized_errors <= 0.05
+            R3: normalized_putouts >= 0.80
+            R4: errors <= 10
+            R5: putouts >= 50
+        
+        Score = (number of True rules) / (total rules)
         
         Args:
             fact: DefensiveFact for a non-catcher position
             
         Returns:
-            Raw score (0-1 range)
+            Raw score (0-1 range) based on boolean rule evaluation
         """
         fp = self._normalize_percentage(fact.fielding_pct)
         total_chances = self._calculate_total_chances(fact.putouts, fact.errors)
         normalized_errors = (fact.errors / total_chances) if total_chances > 0 else 0.0
         normalized_putouts = (fact.putouts / total_chances) if total_chances > 0 else 0.0
 
-        score = (
-            (fp * 0.5) +
-            ((1.0 - normalized_errors) * 0.3) +
-            (normalized_putouts * 0.2)
-        )
+        # Boolean rules - each evaluates to True or False
+        r1_excellent_fielding = fp >= 0.95
+        r2_low_error_rate = normalized_errors <= 0.05
+        r3_high_putout_rate = normalized_putouts >= 0.80
+        r4_few_errors = fact.errors <= 10
+        r5_adequate_putouts = fact.putouts >= 50
+
+        # Count how many rules are True
+        true_count = sum([
+            r1_excellent_fielding,
+            r2_low_error_rate,
+            r3_high_putout_rate,
+            r4_few_errors,
+            r5_adequate_putouts
+        ])
+
+        # Score = proportion of rules that are True
+        total_rules = 5
+        score = true_count / total_rules
 
         return max(0.0, min(1.0, score))
     
     def get_rule_description(self, position: str) -> str:
         """
-        Get a human-readable description of the rule for a position.
+        Get a human-readable description of the boolean rules for a position.
         
         Args:
             position: Position to get rule description for
             
         Returns:
-            String description of the rule
+            String description of the boolean rules
         """
         if position == 'C':
             return (
-                'Catcher rule: 0.4*fielding_pct + 0.3*(1-normalized_passed_balls) '
-                '+ 0.3*caught_stealing_pct'
+                'Catcher boolean rules: '
+                'R1: fielding_pct >= 0.95 AND '
+                'R2: normalized_passed_balls <= 0.01 AND '
+                'R3: caught_stealing_pct >= 0.25 AND '
+                'R4: errors <= 5 AND '
+                'R5: putouts >= 100. '
+                'Score = (True rules) / 5'
             )
 
         return (
-            'General rule: 0.5*fielding_pct + 0.3*(1-normalized_errors) '
-            '+ 0.2*normalized_putouts'
+            'General position boolean rules: '
+            'R1: fielding_pct >= 0.95 AND '
+            'R2: normalized_errors <= 0.05 AND '
+            'R3: normalized_putouts >= 0.80 AND '
+            'R4: errors <= 10 AND '
+            'R5: putouts >= 50. '
+            'Score = (True rules) / 5'
         )
