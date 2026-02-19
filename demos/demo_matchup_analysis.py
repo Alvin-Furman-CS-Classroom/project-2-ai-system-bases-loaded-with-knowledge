@@ -20,7 +20,7 @@ def main():
     print("-" * 60)
     
     try:
-        scores = analyze_matchup_performance('test_data/matchup_stats.json')
+        scores = analyze_matchup_performance('../test_data/matchup_stats.json')
         
         print(f"\nFound {len(scores)} batters:")
         print()
@@ -38,7 +38,7 @@ def main():
         print(f"Worst matchup: {sorted_scores[-1][0]} ({sorted_scores[-1][1]:.2f})")
         
     except FileNotFoundError:
-        print("Error: test_data/matchup_stats.json not found")
+        print("Error: ../test_data/matchup_stats.json not found")
         print("Please ensure the test data file exists.")
     except Exception as e:
         print(f"Error: {e}")

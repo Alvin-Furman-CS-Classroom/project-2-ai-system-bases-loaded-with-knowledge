@@ -68,7 +68,7 @@ def main():
     
     try:
         scores_from_file = analyze_batter_vs_pitchers_from_file(
-            'test_data/batter_vs_pitchers.json'
+            '../test_data/batter_vs_pitchers.json'
         )
         
         print(f"\nFound {len(scores_from_file)} pitcher matchups:")
@@ -82,7 +82,7 @@ def main():
             print(f"{pitcher_name:<30} {score:>10.2f}")
         
     except FileNotFoundError:
-        print("Error: test_data/batter_vs_pitchers.json not found")
+        print("Error: ../test_data/batter_vs_pitchers.json not found")
     except Exception as e:
         print(f"Error: {e}")
     

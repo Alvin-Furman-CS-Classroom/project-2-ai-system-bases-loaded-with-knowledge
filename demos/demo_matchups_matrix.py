@@ -72,7 +72,7 @@ def main():
     
     try:
         scores_from_file = analyze_matchups_matrix_from_file(
-            'test_data/matchups_matrix.json'
+            '../test_data/matchups_matrix.json'
         )
         
         print(f"\nFound {len(scores_from_file)} batters against {len(list(scores_from_file.values())[0])} pitchers:")
@@ -102,7 +102,7 @@ def main():
         print(f"  scores['{first_batter}']['{first_pitcher}'] = {scores_from_file[first_batter][first_pitcher]:.2f}")
         
     except FileNotFoundError:
-        print("Error: test_data/matchups_matrix.json not found")
+        print("Error: ../test_data/matchups_matrix.json not found")
     except Exception as e:
         print(f"Error: {e}")
     
