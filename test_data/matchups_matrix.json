@@ -1,0 +1,60 @@
+{
+  "batters": [
+    {
+      "name": "Mike Trout",
+      "ba": 0.306,
+      "k": 132,
+      "obp": 0.419,
+      "slg": 0.582,
+      "hr": 40,
+      "rbi": 80,
+      "handedness": "R"
+    },
+    {
+      "name": "Freddie Freeman",
+      "ba": 0.331,
+      "k": 121,
+      "obp": 0.410,
+      "slg": 0.567,
+      "hr": 29,
+      "rbi": 102,
+      "handedness": "L"
+    },
+    {
+      "name": "Mookie Betts",
+      "ba": 0.307,
+      "k": 131,
+      "obp": 0.408,
+      "slg": 0.579,
+      "hr": 39,
+      "rbi": 107,
+      "handedness": "R"
+    }
+  ],
+  "pitchers": [
+    {
+      "name": "Gerrit Cole",
+      "era": 2.63,
+      "whip": 0.98,
+      "k_rate": 0.33,
+      "handedness": "RHP",
+      "walk_rate": 0.06
+    },
+    {
+      "name": "Justin Verlander",
+      "era": 3.22,
+      "whip": 1.05,
+      "k_rate": 0.28,
+      "handedness": "RHP",
+      "walk_rate": 0.07
+    },
+    {
+      "name": "Jacob deGrom",
+      "era": 2.67,
+      "whip": 0.95,
+      "k_rate": 0.35,
+      "handedness": "RHP",
+      "walk_rate": 0.05
+    }
+  ]
+}
