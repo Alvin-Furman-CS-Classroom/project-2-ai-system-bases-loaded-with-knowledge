@@ -1,46 +1,46 @@
 {
   "batters": [
     {
-      "name": "Mike Trout",
-      "ba": 0.306,
-      "k": 132,
-      "obp": 0.419,
-      "slg": 0.582,
-      "hr": 40,
-      "rbi": 80,
+      "name": "Ronald Acu\u00f1a Jr.",
+      "ba": 0.337,
+      "k": 84,
+      "obp": 0.416,
+      "slg": 0.596,
+      "hr": 41,
+      "rbi": 106,
       "handedness": "R"
     }
   ],
   "pitchers": [
     {
-      "name": "Gerrit Cole",
-      "era": 2.63,
-      "whip": 0.98,
-      "k_rate": 0.33,
-      "handedness": "RHP",
-      "walk_rate": 0.06
-    },
-    {
-      "name": "Justin Verlander",
-      "era": 3.22,
-      "whip": 1.05,
-      "k_rate": 0.28,
+      "name": "Spencer Strider",
+      "era": 3.86,
+      "whip": 1.09,
+      "k_rate": 0.37,
       "handedness": "RHP",
       "walk_rate": 0.07
     },
     {
-      "name": "Jacob deGrom",
-      "era": 2.67,
-      "whip": 0.95,
-      "k_rate": 0.35,
-      "handedness": "RHP",
-      "walk_rate": 0.05
+      "name": "Max Fried",
+      "era": 3.2,
+      "whip": 1.13,
+      "k_rate": 0.24,
+      "handedness": "LHP",
+      "walk_rate": 0.06
     },
     {
-      "name": "Shane Bieber",
-      "era": 3.80,
-      "whip": 1.12,
+      "name": "Charlie Morton",
+      "era": 3.64,
+      "whip": 1.27,
       "k_rate": 0.25,
+      "handedness": "RHP",
+      "walk_rate": 0.09
+    },
+    {
+      "name": "Bryce Elder",
+      "era": 3.81,
+      "whip": 1.28,
+      "k_rate": 0.2,
       "handedness": "RHP",
       "walk_rate": 0.08
     }

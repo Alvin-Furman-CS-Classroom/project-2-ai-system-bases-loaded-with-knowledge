@@ -1,62 +1,62 @@
 {
   "batters": [
     {
-      "name": "Mike Trout",
-      "ba": 0.306,
-      "k": 132,
-      "obp": 0.419,
-      "slg": 0.582,
-      "hr": 40,
-      "rbi": 80,
+      "name": "Ronald Acu\u00f1a Jr.",
+      "ba": 0.337,
+      "k": 84,
+      "obp": 0.416,
+      "slg": 0.596,
+      "hr": 41,
+      "rbi": 106,
       "handedness": "R"
     },
     {
-      "name": "Freddie Freeman",
-      "ba": 0.331,
-      "k": 121,
-      "obp": 0.410,
-      "slg": 0.567,
-      "hr": 29,
-      "rbi": 102,
-      "handedness": "L"
-    },
-    {
-      "name": "Mookie Betts",
-      "ba": 0.307,
-      "k": 131,
-      "obp": 0.408,
-      "slg": 0.579,
-      "hr": 39,
-      "rbi": 107,
-      "handedness": "R"
-    },
-    {
-      "name": "Juan Soto",
-      "ba": 0.275,
-      "k": 129,
-      "obp": 0.410,
-      "slg": 0.519,
-      "hr": 35,
+      "name": "Ozzie Albies",
+      "ba": 0.274,
+      "k": 98,
+      "obp": 0.336,
+      "slg": 0.513,
+      "hr": 33,
       "rbi": 109,
+      "handedness": "S"
+    },
+    {
+      "name": "Austin Riley",
+      "ba": 0.282,
+      "k": 142,
+      "obp": 0.345,
+      "slg": 0.516,
+      "hr": 37,
+      "rbi": 97,
+      "handedness": "R"
+    },
+    {
+      "name": "Matt Olson",
+      "ba": 0.283,
+      "k": 167,
+      "obp": 0.389,
+      "slg": 0.604,
+      "hr": 54,
+      "rbi": 139,
       "handedness": "L"
     },
     {
-      "name": "Vladimir Guerrero Jr.",
-      "ba": 0.264,
-      "k": 110,
-      "obp": 0.345,
-      "slg": 0.444,
-      "hr": 26,
-      "rbi": 94,
+      "name": "Marcell Ozuna",
+      "ba": 0.274,
+      "k": 144,
+      "obp": 0.346,
+      "slg": 0.558,
+      "hr": 40,
+      "rbi": 100,
       "handedness": "R"
     }
   ],
   "pitcher": {
-    "name": "Gerrit Cole",
-    "era": 2.63,
-    "whip": 0.98,
-    "k_rate": 0.33,
+    "name": "Spencer Strider",
+    "era": 3.86,
+    "whip": 1.09,
+    "k_rate": 0.37,
     "handedness": "RHP",
-    "walk_rate": 0.06
+    "walk_rate": 0.07
   }
 }

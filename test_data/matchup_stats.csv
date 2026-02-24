@@ -1,7 +1,7 @@
 type,name,ba,k,obp,slg,hr,rbi,handedness,era,whip,k_rate,walk_rate
-batter,Mike Trout,0.306,132,0.419,0.582,40,80,R,,,,
-batter,Freddie Freeman,0.331,121,0.410,0.567,29,102,L,,,,
-batter,Mookie Betts,0.307,131,0.408,0.579,39,107,R,,,,
-batter,Juan Soto,0.275,129,0.410,0.519,35,109,L,,,,
-batter,Vladimir Guerrero Jr.,0.264,110,0.345,0.444,26,94,R,,,,
-pitcher,Gerrit Cole,,,,,,,RHP,2.63,0.98,0.33,0.06
+batter,Ronald Acuña Jr.,0.337,84,0.416,0.596,41,106,R,,,,
+batter,Ozzie Albies,0.274,98,0.336,0.513,33,109,S,,,,
+batter,Austin Riley,0.282,142,0.345,0.516,37,97,R,,,,
+batter,Matt Olson,0.283,167,0.389,0.604,54,139,L,,,,
+batter,Marcell Ozuna,0.274,144,0.346,0.558,40,100,R,,,,
+pitcher,Spencer Strider,,,,,,,RHP,3.86,1.09,0.37,0.07
