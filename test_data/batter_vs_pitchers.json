@@ -1,48 +1,1272 @@
 {
   "batters": [
     {
-      "name": "Ronald Acu\u00f1a Jr.",
-      "ba": 0.337,
-      "k": 84,
-      "obp": 0.416,
-      "slg": 0.596,
-      "hr": 41,
-      "rbi": 106,
+      "name": "Jonathan Ornelas",
+      "ba": 0.5,
+      "k": 0,
+      "obp": 0.5,
+      "slg": 0.5,
+      "hr": 0,
+      "rbi": 0,
       "handedness": "R"
     }
   ],
   "pitchers": [
     {
-      "name": "Spencer Strider",
-      "era": 3.86,
-      "whip": 1.09,
-      "k_rate": 0.37,
-      "handedness": "RHP",
-      "walk_rate": 0.07
+      "name": "Logan Webb",
+      "era": 3.22,
+      "whip": 1.237,
+      "k_rate": 0.262,
+      "walk_rate": 0.054,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Garrett Crochet",
+      "era": 2.59,
+      "whip": 1.028,
+      "k_rate": 0.313,
+      "walk_rate": 0.057,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Cristopher S\u00e1nchez",
+      "era": 2.5,
+      "whip": 2.55,
+      "k_rate": 0.263,
+      "walk_rate": 0.055,
+      "handedness": "LHP"
     },
     {
       "name": "Max Fried",
-      "era": 3.2,
-      "whip": 1.13,
-      "k_rate": 0.24,
-      "handedness": "LHP",
-      "walk_rate": 0.06
+      "era": 2.86,
+      "whip": 1.101,
+      "k_rate": 0.236,
+      "walk_rate": 0.064,
+      "handedness": "LHP"
     },
     {
-      "name": "Charlie Morton",
-      "era": 3.64,
+      "name": "Carlos Rod\u00f3n",
+      "era": 3.09,
+      "whip": 1.049,
+      "k_rate": 0.257,
+      "walk_rate": 0.093,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Tarik Skubal",
+      "era": 2.21,
+      "whip": 0.891,
+      "k_rate": 0.322,
+      "walk_rate": 0.044,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Kevin Gausman",
+      "era": 3.59,
+      "whip": 1.062,
+      "k_rate": 0.244,
+      "walk_rate": 0.065,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Zac Gallen",
+      "era": 4.83,
+      "whip": 1.26,
+      "k_rate": 0.215,
+      "walk_rate": 0.081,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Framber Valdez",
+      "era": 3.66,
+      "whip": 1.245,
+      "k_rate": 0.233,
+      "walk_rate": 0.085,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Paul Skenes",
+      "era": 1.97,
+      "whip": 0.948,
+      "k_rate": 0.295,
+      "walk_rate": 0.057,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Bryan Woo",
+      "era": 2.94,
+      "whip": 0.927,
+      "k_rate": 0.271,
+      "walk_rate": 0.049,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Zack Littell",
+      "era": 4.39,
+      "whip": 1.069,
+      "k_rate": 0.185,
+      "walk_rate": 0.05,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Hunter Brown",
+      "era": 2.43,
+      "whip": 1.025,
+      "k_rate": 0.283,
+      "walk_rate": 0.078,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Merrill Kelly",
+      "era": 4.23,
+      "whip": 1.247,
+      "k_rate": 0.197,
+      "walk_rate": 0.043,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jes\u00fas Luzardo",
+      "era": 3.92,
+      "whip": 1.22,
+      "k_rate": 0.285,
+      "walk_rate": 0.075,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Tanner Bibee",
+      "era": 4.24,
+      "whip": 1.229,
+      "k_rate": 0.213,
+      "walk_rate": 0.071,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Robbie Ray",
+      "era": 3.65,
+      "whip": 1.212,
+      "k_rate": 0.246,
+      "walk_rate": 0.097,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Nick Pivetta",
+      "era": 2.87,
+      "whip": 0.985,
+      "k_rate": 0.264,
+      "walk_rate": 0.069,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Luis Castillo",
+      "era": 3.54,
+      "whip": 1.185,
+      "k_rate": 0.217,
+      "walk_rate": 0.062,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Sonny Gray",
+      "era": 4.28,
+      "whip": 1.234,
+      "k_rate": 0.267,
+      "walk_rate": 0.05,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jake Irvin",
+      "era": 5.7,
+      "whip": 1.428,
+      "k_rate": 0.158,
+      "walk_rate": 0.079,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Matthew Boyd",
+      "era": 3.21,
+      "whip": 1.091,
+      "k_rate": 0.214,
+      "walk_rate": 0.058,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Yusei Kikuchi",
+      "era": 3.99,
+      "whip": 1.424,
+      "k_rate": 0.225,
+      "walk_rate": 0.096,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Freddy Peralta",
+      "era": 2.7,
+      "whip": 1.075,
+      "k_rate": 0.282,
+      "walk_rate": 0.091,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Brandon Pfaadt",
+      "era": 5.25,
+      "whip": 1.33,
+      "k_rate": 0.192,
+      "walk_rate": 0.048,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Mitch Keller",
+      "era": 4.19,
+      "whip": 1.259,
+      "k_rate": 0.2,
+      "walk_rate": 0.068,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Sandy Alcantara",
+      "era": 5.36,
+      "whip": 1.271,
+      "k_rate": 0.191,
+      "walk_rate": 0.077,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Yoshinobu Yamamoto",
+      "era": 2.49,
+      "whip": 0.99,
+      "k_rate": 0.294,
+      "walk_rate": 0.086,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jacob deGrom",
+      "era": 2.97,
+      "whip": 0.921,
+      "k_rate": 0.277,
+      "walk_rate": 0.055,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Michael Wacha",
+      "era": 3.86,
+      "whip": 1.222,
+      "k_rate": 0.176,
+      "walk_rate": 0.063,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Dean Kremer",
+      "era": 4.19,
+      "whip": 1.212,
+      "k_rate": 0.201,
+      "walk_rate": 0.064,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Joe Ryan",
+      "era": 3.42,
+      "whip": 1.035,
+      "k_rate": 0.282,
+      "walk_rate": 0.057,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jeffrey Springs",
+      "era": 4.11,
+      "whip": 1.211,
+      "k_rate": 0.194,
+      "walk_rate": 0.076,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Chris Bassitt",
+      "era": 3.96,
+      "whip": 1.327,
+      "k_rate": 0.226,
+      "walk_rate": 0.071,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Brady Singer",
+      "era": 4.03,
+      "whip": 1.238,
+      "k_rate": 0.228,
+      "walk_rate": 0.084,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jos\u00e9 Soriano",
+      "era": 4.26,
+      "whip": 1.396,
+      "k_rate": 0.21,
+      "walk_rate": 0.108,
+      "handedness": "RHP"
+    },
+    {
+      "name": "David Peterson",
+      "era": 4.22,
+      "whip": 1.37,
+      "k_rate": 0.207,
+      "walk_rate": 0.09,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Dylan Cease",
+      "era": 4.55,
+      "whip": 1.327,
+      "k_rate": 0.298,
+      "walk_rate": 0.098,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Ryan Pepiot",
+      "era": 3.86,
+      "whip": 1.163,
+      "k_rate": 0.246,
+      "walk_rate": 0.09,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Gavin Williams",
+      "era": 3.06,
       "whip": 1.27,
-      "k_rate": 0.25,
-      "handedness": "RHP",
-      "walk_rate": 0.09
+      "k_rate": 0.246,
+      "walk_rate": 0.118,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Brayan Bello",
+      "era": 3.35,
+      "whip": 1.236,
+      "k_rate": 0.177,
+      "walk_rate": 0.084,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Andrew Abbott",
+      "era": 2.87,
+      "whip": 1.148,
+      "k_rate": 0.218,
+      "walk_rate": 0.063,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Shane Baz",
+      "era": 4.87,
+      "whip": 1.335,
+      "k_rate": 0.248,
+      "walk_rate": 0.09,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jos\u00e9 Berr\u00edos",
+      "era": 4.17,
+      "whip": 1.301,
+      "k_rate": 0.198,
+      "walk_rate": 0.08,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Clay Holmes",
+      "era": 3.53,
+      "whip": 1.304,
+      "k_rate": 0.182,
+      "walk_rate": 0.093,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Nick Martinez",
+      "era": 4.45,
+      "whip": 1.207,
+      "k_rate": 0.17,
+      "walk_rate": 0.061,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Kyle Hendricks",
+      "era": 4.76,
+      "whip": 1.275,
+      "k_rate": 0.164,
+      "walk_rate": 0.062,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Mitchell Parker",
+      "era": 5.68,
+      "whip": 1.433,
+      "k_rate": 0.142,
+      "walk_rate": 0.08,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Kyle Freeland",
+      "era": 4.98,
+      "whip": 1.42,
+      "k_rate": 0.175,
+      "walk_rate": 0.054,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Andre Pallante",
+      "era": 5.31,
+      "whip": 1.445,
+      "k_rate": 0.155,
+      "walk_rate": 0.087,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Luis Severino",
+      "era": 4.54,
+      "whip": 1.303,
+      "k_rate": 0.176,
+      "walk_rate": 0.071,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Will Warren",
+      "era": 4.44,
+      "whip": 1.374,
+      "k_rate": 0.241,
+      "walk_rate": 0.091,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jack Flaherty",
+      "era": 4.64,
+      "whip": 1.28,
+      "k_rate": 0.276,
+      "walk_rate": 0.087,
+      "handedness": "RHP"
+    },
+    {
+      "name": "MacKenzie Gore",
+      "era": 4.17,
+      "whip": 1.353,
+      "k_rate": 0.272,
+      "walk_rate": 0.094,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Colin Rea",
+      "era": 3.95,
+      "whip": 1.249,
+      "k_rate": 0.192,
+      "walk_rate": 0.066,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Chris Paddack",
+      "era": 6.32,
+      "whip": 1.298,
+      "k_rate": 0.146,
+      "walk_rate": 0.051,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Quinn Priester",
+      "era": 3.32,
+      "whip": 1.239,
+      "k_rate": 0.202,
+      "walk_rate": 0.077,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Ranger Su\u00e1rez",
+      "era": 3.2,
+      "whip": 1.22,
+      "k_rate": 0.232,
+      "walk_rate": 0.058,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Tomoyuki Sugano",
+      "era": 4.64,
+      "whip": 1.331,
+      "k_rate": 0.157,
+      "walk_rate": 0.053,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Logan Allen",
+      "era": 4.25,
+      "whip": 1.398,
+      "k_rate": 0.18,
+      "walk_rate": 0.092,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Nick Lodolo",
+      "era": 3.33,
+      "whip": 1.079,
+      "k_rate": 0.243,
+      "walk_rate": 0.048,
+      "handedness": "LHP"
     },
     {
       "name": "Bryce Elder",
+      "era": 5.3,
+      "whip": 1.394,
+      "k_rate": 0.193,
+      "walk_rate": 0.075,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Miles Mikolas",
+      "era": 4.84,
+      "whip": 1.318,
+      "k_rate": 0.149,
+      "walk_rate": 0.055,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Patrick Corbin",
+      "era": 4.4,
+      "whip": 1.365,
+      "k_rate": 0.198,
+      "walk_rate": 0.077,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Eduardo Rodr\u00edguez",
+      "era": 5.02,
+      "whip": 1.542,
+      "k_rate": 0.206,
+      "walk_rate": 0.086,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Ryne Nelson",
+      "era": 3.39,
+      "whip": 1.071,
+      "k_rate": 0.213,
+      "walk_rate": 0.066,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Justin Verlander",
+      "era": 3.85,
+      "whip": 1.362,
+      "k_rate": 0.207,
+      "walk_rate": 0.079,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jack Leiter",
+      "era": 3.86,
+      "whip": 1.279,
+      "k_rate": 0.229,
+      "walk_rate": 0.104,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Matthew Liberatore",
+      "era": 4.21,
+      "whip": 1.305,
+      "k_rate": 0.188,
+      "walk_rate": 0.062,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Drew Rasmussen",
+      "era": 2.76,
+      "whip": 1.02,
+      "k_rate": 0.217,
+      "walk_rate": 0.063,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Zack Wheeler",
+      "era": 2.71,
+      "whip": 0.935,
+      "k_rate": 0.333,
+      "walk_rate": 0.056,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Casey Mize",
+      "era": 3.87,
+      "whip": 1.268,
+      "k_rate": 0.222,
+      "walk_rate": 0.057,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Bailey Ober",
+      "era": 5.1,
+      "whip": 1.298,
+      "k_rate": 0.192,
+      "walk_rate": 0.05,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Shane Smith",
       "era": 3.81,
-      "whip": 1.28,
+      "whip": 1.196,
+      "k_rate": 0.235,
+      "walk_rate": 0.094,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Seth Lugo",
+      "era": 4.15,
+      "whip": 1.294,
+      "k_rate": 0.205,
+      "walk_rate": 0.09,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Lucas Giolito",
+      "era": 3.41,
+      "whip": 1.29,
+      "k_rate": 0.197,
+      "walk_rate": 0.091,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Shota Imanaga",
+      "era": 3.73,
+      "whip": 0.988,
+      "k_rate": 0.206,
+      "walk_rate": 0.046,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Davis Martin",
+      "era": 4.1,
+      "whip": 1.29,
+      "k_rate": 0.173,
+      "walk_rate": 0.08,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Taj Bradley",
+      "era": 6.61,
+      "whip": 1.404,
+      "k_rate": 0.239,
+      "walk_rate": 0.09,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Charlie Morton",
+      "era": 0.0,
+      "whip": 2.25,
+      "k_rate": 0.167,
+      "walk_rate": 0.167,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Michael Lorenzen",
+      "era": 4.64,
+      "whip": 1.327,
+      "k_rate": 0.21,
+      "walk_rate": 0.064,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Erick Fedde",
+      "era": 3.38,
+      "whip": 1.125,
+      "k_rate": 0.106,
+      "walk_rate": 0.106,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Noah Cameron",
+      "era": 2.99,
+      "whip": 1.099,
+      "k_rate": 0.205,
+      "walk_rate": 0.077,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Edward Cabrera",
+      "era": 3.53,
+      "whip": 1.228,
+      "k_rate": 0.258,
+      "walk_rate": 0.083,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Tyler Anderson",
+      "era": 4.56,
+      "whip": 1.408,
+      "k_rate": 0.174,
+      "walk_rate": 0.095,
+      "handedness": "LHP"
+    },
+    {
+      "name": "JP Sears",
+      "era": 5.47,
+      "whip": 1.541,
+      "k_rate": 0.18,
+      "walk_rate": 0.063,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Sean Burke",
+      "era": 4.22,
+      "whip": 1.444,
+      "k_rate": 0.223,
+      "walk_rate": 0.106,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Randy V\u00e1squez",
+      "era": 3.84,
+      "whip": 1.324,
+      "k_rate": 0.137,
+      "walk_rate": 0.091,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Dustin May",
+      "era": 5.4,
+      "whip": 1.694,
+      "k_rate": 0.195,
+      "walk_rate": 0.098,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Slade Cecconi",
+      "era": 4.3,
+      "whip": 1.189,
       "k_rate": 0.2,
-      "handedness": "RHP",
-      "walk_rate": 0.08
+      "walk_rate": 0.059,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jose Quintana",
+      "era": 3.96,
+      "whip": 1.291,
+      "k_rate": 0.16,
+      "walk_rate": 0.09,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Logan Gilbert",
+      "era": 3.44,
+      "whip": 1.031,
+      "k_rate": 0.323,
+      "walk_rate": 0.058,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Brad Lord",
+      "era": 4.34,
+      "whip": 1.293,
+      "k_rate": 0.198,
+      "walk_rate": 0.079,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Nathan Eovaldi",
+      "era": 1.73,
+      "whip": 0.854,
+      "k_rate": 0.26,
+      "walk_rate": 0.042,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Antonio Senzatela",
+      "era": 6.65,
+      "whip": 1.838,
+      "k_rate": 0.118,
+      "walk_rate": 0.076,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jameson Taillon",
+      "era": 3.68,
+      "whip": 1.057,
+      "k_rate": 0.189,
+      "walk_rate": 0.052,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Germ\u00e1n M\u00e1rquez",
+      "era": 6.7,
+      "whip": 1.71,
+      "k_rate": 0.14,
+      "walk_rate": 0.081,
+      "handedness": "RHP"
+    },
+    {
+      "name": "George Kirby",
+      "era": 4.21,
+      "whip": 1.19,
+      "k_rate": 0.261,
+      "walk_rate": 0.055,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Walker Buehler",
+      "era": 0.66,
+      "whip": 1.171,
+      "k_rate": 0.14,
+      "walk_rate": 0.105,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Chris Sale",
+      "era": 2.58,
+      "whip": 1.066,
+      "k_rate": 0.324,
+      "walk_rate": 0.063,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Spencer Strider",
+      "era": 4.45,
+      "whip": 1.396,
+      "k_rate": 0.243,
+      "walk_rate": 0.095,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Bailey Falter",
+      "era": 11.25,
+      "whip": 2.25,
+      "k_rate": 0.18,
+      "walk_rate": 0.115,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Adrian Houser",
+      "era": 4.79,
+      "whip": 1.349,
+      "k_rate": 0.185,
+      "walk_rate": 0.066,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Taijuan Walker",
+      "era": 4.08,
+      "whip": 1.407,
+      "k_rate": 0.16,
+      "walk_rate": 0.078,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Andrew Heaney",
+      "era": 13.5,
+      "whip": 2.5,
+      "k_rate": 0.182,
+      "walk_rate": 0.091,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Chad Patrick",
+      "era": 3.53,
+      "whip": 1.279,
+      "k_rate": 0.252,
+      "walk_rate": 0.08,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Cade Horton",
+      "era": 2.67,
+      "whip": 1.085,
+      "k_rate": 0.204,
+      "walk_rate": 0.069,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Cal Quantrill",
+      "era": 13.5,
+      "whip": 2.375,
+      "k_rate": 0.07,
+      "walk_rate": 0.116,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Kris Bubic",
+      "era": 2.55,
+      "whip": 1.178,
+      "k_rate": 0.244,
+      "walk_rate": 0.082,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Grant Holmes",
+      "era": 3.99,
+      "whip": 1.339,
+      "k_rate": 0.25,
+      "walk_rate": 0.11,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Kodai Senga",
+      "era": 3.02,
+      "whip": 1.315,
+      "k_rate": 0.226,
+      "walk_rate": 0.114,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Clayton Kershaw",
+      "era": 3.36,
+      "whip": 1.216,
+      "k_rate": 0.181,
+      "walk_rate": 0.076,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Stephen Kolek",
+      "era": 1.91,
+      "whip": 0.758,
+      "k_rate": 0.168,
+      "walk_rate": 0.04,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Cade Povich",
+      "era": 5.21,
+      "whip": 1.496,
+      "k_rate": 0.242,
+      "walk_rate": 0.088,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Simeon Woods Richardson",
+      "era": 4.04,
+      "whip": 1.275,
+      "k_rate": 0.227,
+      "walk_rate": 0.098,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jack Kochanowicz",
+      "era": 6.81,
+      "whip": 1.748,
+      "k_rate": 0.141,
+      "walk_rate": 0.113,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Spencer Schwellenbach",
+      "era": 3.09,
+      "whip": 0.967,
+      "k_rate": 0.249,
+      "walk_rate": 0.041,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Janson Junk",
+      "era": 4.17,
+      "whip": 1.136,
+      "k_rate": 0.172,
+      "walk_rate": 0.029,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Trevor Rogers",
+      "era": 1.81,
+      "whip": 0.903,
+      "k_rate": 0.243,
+      "walk_rate": 0.069,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Hunter Greene",
+      "era": 2.76,
+      "whip": 0.938,
+      "k_rate": 0.314,
+      "walk_rate": 0.062,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Landen Roupp",
+      "era": 3.8,
+      "whip": 1.481,
+      "k_rate": 0.214,
+      "walk_rate": 0.095,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Ben Brown",
+      "era": 5.92,
+      "whip": 1.439,
+      "k_rate": 0.256,
+      "walk_rate": 0.068,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Eric Lauer",
+      "era": 3.18,
+      "whip": 1.108,
+      "k_rate": 0.239,
+      "walk_rate": 0.061,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Jonathan Cannon",
+      "era": 5.82,
+      "whip": 1.486,
+      "k_rate": 0.185,
+      "walk_rate": 0.082,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Aaron Civale",
+      "era": 2.08,
+      "whip": 0.538,
+      "k_rate": 0.28,
+      "walk_rate": 0.0,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Ryan Gusto",
+      "era": 9.77,
+      "whip": 1.723,
+      "k_rate": 0.135,
+      "walk_rate": 0.108,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Mike Vasil",
+      "era": 2.5,
+      "whip": 1.248,
+      "k_rate": 0.194,
+      "walk_rate": 0.123,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Carmen Mlodzinski",
+      "era": 3.55,
+      "whip": 1.303,
+      "k_rate": 0.212,
+      "walk_rate": 0.064,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Chase Dollander",
+      "era": 6.52,
+      "whip": 1.551,
+      "k_rate": 0.186,
+      "walk_rate": 0.111,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Joey Wentz",
+      "era": 4.92,
+      "whip": 1.422,
+      "k_rate": 0.23,
+      "walk_rate": 0.083,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Tyler Alexander",
+      "era": 4.26,
+      "whip": 1.353,
+      "k_rate": 0.201,
+      "walk_rate": 0.069,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Mike Burrows",
+      "era": 3.94,
+      "whip": 1.24,
+      "k_rate": 0.241,
+      "walk_rate": 0.077,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Michael McGreevy",
+      "era": 4.42,
+      "whip": 1.254,
+      "k_rate": 0.145,
+      "walk_rate": 0.05,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Joey Cantillo",
+      "era": 3.21,
+      "whip": 1.259,
+      "k_rate": 0.269,
+      "walk_rate": 0.105,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Eury P\u00e9rez",
+      "era": 4.25,
+      "whip": 1.049,
+      "k_rate": 0.273,
+      "walk_rate": 0.083,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Aaron Nola",
+      "era": 6.01,
+      "whip": 1.346,
+      "k_rate": 0.24,
+      "walk_rate": 0.069,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jacob Lopez",
+      "era": 4.08,
+      "whip": 1.273,
+      "k_rate": 0.283,
+      "walk_rate": 0.093,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Sean Newcomb",
+      "era": 1.75,
+      "whip": 1.032,
+      "k_rate": 0.249,
+      "walk_rate": 0.07,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Keider Montero",
+      "era": 4.37,
+      "whip": 1.39,
+      "k_rate": 0.185,
+      "walk_rate": 0.08,
+      "handedness": "RHP"
+    },
+    {
+      "name": "J.T. Ginn",
+      "era": 5.08,
+      "whip": 1.362,
+      "k_rate": 0.253,
+      "walk_rate": 0.079,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Tyler Glasnow",
+      "era": 3.19,
+      "whip": 1.096,
+      "k_rate": 0.29,
+      "walk_rate": 0.117,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Bryce Miller",
+      "era": 5.68,
+      "whip": 1.406,
+      "k_rate": 0.189,
+      "walk_rate": 0.087,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Emerson Hancock",
+      "era": 4.9,
+      "whip": 1.378,
+      "k_rate": 0.166,
+      "walk_rate": 0.081,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Michael Soroka",
+      "era": 1.08,
+      "whip": 1.08,
+      "k_rate": 0.222,
+      "walk_rate": 0.139,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Luis Ortiz",
+      "era": 4.36,
+      "whip": 1.376,
+      "k_rate": 0.251,
+      "walk_rate": 0.11,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Kyle Leahy",
+      "era": 3.07,
+      "whip": 1.227,
+      "k_rate": 0.22,
+      "walk_rate": 0.077,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Tyler Mahle",
+      "era": 2.18,
+      "whip": 1.131,
+      "k_rate": 0.191,
+      "walk_rate": 0.084,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Colton Gordon",
+      "era": 5.34,
+      "whip": 1.419,
+      "k_rate": 0.19,
+      "walk_rate": 0.05,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Jacob Latz",
+      "era": 2.84,
+      "whip": 1.237,
+      "k_rate": 0.218,
+      "walk_rate": 0.106,
+      "handedness": "LHP"
+    },
+    {
+      "name": "Max Scherzer",
+      "era": 5.19,
+      "whip": 1.294,
+      "k_rate": 0.229,
+      "walk_rate": 0.064,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Mitch Spence",
+      "era": 5.1,
+      "whip": 1.441,
+      "k_rate": 0.176,
+      "walk_rate": 0.069,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Jimmy Herget",
+      "era": 2.48,
+      "whip": 1.176,
+      "k_rate": 0.233,
+      "walk_rate": 0.075,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Trevor Williams",
+      "era": 6.21,
+      "whip": 1.536,
+      "k_rate": 0.174,
+      "walk_rate": 0.056,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Valente Bellozo",
+      "era": 4.65,
+      "whip": 1.328,
+      "k_rate": 0.155,
+      "walk_rate": 0.066,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Logan Evans",
+      "era": 4.32,
+      "whip": 1.389,
+      "k_rate": 0.169,
+      "walk_rate": 0.089,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Spencer Bivens",
+      "era": 4.0,
+      "whip": 1.333,
+      "k_rate": 0.178,
+      "walk_rate": 0.073,
+      "handedness": "RHP"
+    },
+    {
+      "name": "Osvaldo Bido",
+      "era": 5.87,
+      "whip": 0.0,
+      "k_rate": 0.0,
+      "walk_rate": 0.0,
+      "handedness": "RHP"
     }
   ]
 }

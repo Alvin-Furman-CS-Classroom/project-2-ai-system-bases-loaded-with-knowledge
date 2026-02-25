@@ -1,62 +1,262 @@
 {
   "batters": [
     {
-      "name": "Ronald Acu\u00f1a Jr.",
-      "ba": 0.337,
-      "k": 84,
-      "obp": 0.416,
-      "slg": 0.596,
-      "hr": 41,
-      "rbi": 106,
-      "handedness": "R"
-    },
-    {
-      "name": "Ozzie Albies",
-      "ba": 0.274,
-      "k": 98,
-      "obp": 0.336,
-      "slg": 0.513,
-      "hr": 33,
-      "rbi": 109,
-      "handedness": "S"
-    },
-    {
-      "name": "Austin Riley",
-      "ba": 0.282,
-      "k": 142,
-      "obp": 0.345,
-      "slg": 0.516,
-      "hr": 37,
-      "rbi": 97,
-      "handedness": "R"
-    },
-    {
       "name": "Matt Olson",
-      "ba": 0.283,
-      "k": 167,
-      "obp": 0.389,
-      "slg": 0.604,
-      "hr": 54,
-      "rbi": 139,
+      "ba": 0.272,
+      "k": 176,
+      "obp": 0.366,
+      "slg": 0.484,
+      "hr": 29,
+      "rbi": 95,
       "handedness": "L"
     },
     {
-      "name": "Marcell Ozuna",
-      "ba": 0.274,
-      "k": 144,
-      "obp": 0.346,
-      "slg": 0.558,
-      "hr": 40,
-      "rbi": 100,
+      "name": "Michael Harris II",
+      "ba": 0.249,
+      "k": 128,
+      "obp": 0.268,
+      "slg": 0.409,
+      "hr": 20,
+      "rbi": 86,
+      "handedness": "L"
+    },
+    {
+      "name": "Ozzie Albies",
+      "ba": 0.24,
+      "k": 94,
+      "obp": 0.306,
+      "slg": 0.365,
+      "hr": 16,
+      "rbi": 74,
+      "handedness": "S"
+    },
+    {
+      "name": "Nick Allen",
+      "ba": 0.221,
+      "k": 99,
+      "obp": 0.284,
+      "slg": 0.251,
+      "hr": 0,
+      "rbi": 22,
       "handedness": "R"
+    },
+    {
+      "name": "Austin Riley",
+      "ba": 0.26,
+      "k": 128,
+      "obp": 0.309,
+      "slg": 0.428,
+      "hr": 16,
+      "rbi": 54,
+      "handedness": "R"
+    },
+    {
+      "name": "Ronald Acu\u00f1a Jr.",
+      "ba": 0.29,
+      "k": 102,
+      "obp": 0.417,
+      "slg": 0.518,
+      "hr": 21,
+      "rbi": 42,
+      "handedness": "R"
+    },
+    {
+      "name": "Drake Baldwin",
+      "ba": 0.274,
+      "k": 68,
+      "obp": 0.341,
+      "slg": 0.469,
+      "hr": 19,
+      "rbi": 80,
+      "handedness": "L"
+    },
+    {
+      "name": "Jurickson Profar",
+      "ba": 0.245,
+      "k": 59,
+      "obp": 0.353,
+      "slg": 0.434,
+      "hr": 14,
+      "rbi": 43,
+      "handedness": "S"
+    },
+    {
+      "name": "Sean Murphy",
+      "ba": 0.199,
+      "k": 105,
+      "obp": 0.3,
+      "slg": 0.409,
+      "hr": 16,
+      "rbi": 45,
+      "handedness": "R"
+    },
+    {
+      "name": "Eli White",
+      "ba": 0.234,
+      "k": 70,
+      "obp": 0.27,
+      "slg": 0.406,
+      "hr": 10,
+      "rbi": 35,
+      "handedness": "R"
+    },
+    {
+      "name": "Nacho Alvarez Jr.",
+      "ba": 0.234,
+      "k": 49,
+      "obp": 0.296,
+      "slg": 0.33,
+      "hr": 2,
+      "rbi": 15,
+      "handedness": "R"
+    },
+    {
+      "name": "Alex Verdugo",
+      "ba": 0.239,
+      "k": 31,
+      "obp": 0.296,
+      "slg": 0.289,
+      "hr": 0,
+      "rbi": 12,
+      "handedness": "L"
+    },
+    {
+      "name": "Ha-Seong Kim",
+      "ba": 0.253,
+      "k": 16,
+      "obp": 0.316,
+      "slg": 0.368,
+      "hr": 3,
+      "rbi": 12,
+      "handedness": "R"
+    },
+    {
+      "name": "Jarred Kelenic",
+      "ba": 0.167,
+      "k": 23,
+      "obp": 0.231,
+      "slg": 0.3,
+      "hr": 2,
+      "rbi": 2,
+      "handedness": "L"
+    },
+    {
+      "name": "Stuart Fairchild",
+      "ba": 0.216,
+      "k": 15,
+      "obp": 0.273,
+      "slg": 0.333,
+      "hr": 0,
+      "rbi": 2,
+      "handedness": "R"
+    },
+    {
+      "name": "Luke Williams",
+      "ba": 0.129,
+      "k": 9,
+      "obp": 0.176,
+      "slg": 0.194,
+      "hr": 0,
+      "rbi": 5,
+      "handedness": "R"
+    },
+    {
+      "name": "Bryan De La Cruz",
+      "ba": 0.191,
+      "k": 18,
+      "obp": 0.24,
+      "slg": 0.213,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "R"
+    },
+    {
+      "name": "Vidal Bruj\u00e1n",
+      "ba": 0.268,
+      "k": 9,
+      "obp": 0.362,
+      "slg": 0.317,
+      "hr": 0,
+      "rbi": 5,
+      "handedness": "S"
+    },
+    {
+      "name": "Orlando Arcia",
+      "ba": 0.194,
+      "k": 8,
+      "obp": 0.219,
+      "slg": 0.226,
+      "hr": 0,
+      "rbi": 1,
+      "handedness": "R"
+    },
+    {
+      "name": "Jake Fraley",
+      "ba": 0.304,
+      "k": 8,
+      "obp": 0.333,
+      "slg": 0.348,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "L"
+    },
+    {
+      "name": "Sandy Le\u00f3n",
+      "ba": 0.083,
+      "k": 4,
+      "obp": 0.083,
+      "slg": 0.333,
+      "hr": 1,
+      "rbi": 3,
+      "handedness": "S"
+    },
+    {
+      "name": "Brett Wisely",
+      "ba": 0.0,
+      "k": 4,
+      "obp": 0.333,
+      "slg": 0.0,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "L"
+    },
+    {
+      "name": "Chadwick Tromp",
+      "ba": 0.0,
+      "k": 2,
+      "obp": 0.167,
+      "slg": 0.0,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "R"
+    },
+    {
+      "name": "Jonathan Ornelas",
+      "ba": 0.5,
+      "k": 0,
+      "obp": 0.5,
+      "slg": 0.5,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "R"
+    },
+    {
+      "name": "Eddie Rosario",
+      "ba": 0.0,
+      "k": 2,
+      "obp": 0.0,
+      "slg": 0.0,
+      "hr": 0,
+      "rbi": 0,
+      "handedness": "L"
     }
   ],
   "pitcher": {
-    "name": "Spencer Strider",
-    "era": 3.86,
-    "whip": 1.09,
-    "k_rate": 0.37,
-    "handedness": "RHP",
-    "walk_rate": 0.07
+    "name": "Logan Webb",
+    "era": 3.22,
+    "whip": 1.237,
+    "k_rate": 0.262,
+    "walk_rate": 0.054,
+    "handedness": "RHP"
   }
 }

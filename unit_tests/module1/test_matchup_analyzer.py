@@ -55,8 +55,8 @@ class TestMatchupAnalyzer(unittest.TestCase):
                 self.assertLessEqual(score, 100.0)
             
             # Check that expected batters are present
-            self.assertIn("Mike Trout", scores)
-            self.assertIn("Freddie Freeman", scores)
+            self.assertIn("Matt Olson", scores)
+            self.assertIn("Ronald Acuña Jr.", scores)
     
     def test_analyze_matchup_performance_csv(self):
         """Test analyzing matchup performance from CSV file."""

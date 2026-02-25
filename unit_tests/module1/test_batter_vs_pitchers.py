@@ -119,7 +119,7 @@ class TestBatterVsPitchers(unittest.TestCase):
         if json_file.exists():
             scores = analyze_batter_vs_pitchers_from_file(
                 str(json_file),
-                batter_name="Mike Trout"
+                batter_name="Jonathan Ornelas"
             )
             
             self.assertIsInstance(scores, dict)

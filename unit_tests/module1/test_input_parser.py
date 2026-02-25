@@ -35,12 +35,12 @@ class TestInputParser(unittest.TestCase):
             self.assertIsInstance(pitcher, Pitcher)
             
             # Check first batter
-            self.assertEqual(batters[0].name, "Mike Trout")
-            self.assertEqual(batters[0].ba, 0.306)
+            self.assertEqual(batters[0].name, "Matt Olson")
+            self.assertEqual(batters[0].ba, 0.272)
             
             # Check pitcher
-            self.assertEqual(pitcher.name, "Gerrit Cole")
-            self.assertEqual(pitcher.era, 2.63)
+            self.assertEqual(pitcher.name, "Logan Webb")
+            self.assertEqual(pitcher.era, 3.22)
     
     def test_parse_csv(self):
         """Test parsing CSV file."""
