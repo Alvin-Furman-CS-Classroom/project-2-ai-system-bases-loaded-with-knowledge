@@ -197,6 +197,9 @@ POSITION_SIMILARITY: Dict[Tuple[str, str], float] = {
     ('C', '3B'): 0.37,
 }
 
+# Minimum similarity score to use a source position for prediction (used by tests / API)
+MIN_SIMILARITY = 0.35
+
 # Position difficulty ranking (for stat transfer rules)
 # Based on test data averages: 1B (0.994), C (0.998), CF (0.997), RF (0.990),
 # LF (0.987), SS (0.993), 2B (0.994), 3B (0.981)

@@ -10,6 +10,41 @@ from typing import Tuple
 from .models import Batter, Pitcher
 
 
+def _is_unknown_pitcher(pitcher: Pitcher) -> bool:
+    """
+    Detect pitchers whose stats look like \"no games played\" or placeholder data.
+
+    Heuristics (must be conservative so we don't mislabel real pitchers):
+    - All of ERA, WHIP, K_rate, walk_rate are 0.0, OR
+    - At least 3 of those 4 are 0.0, OR
+    - ERA is exactly 0.0 (likely no innings or a tiny sample).
+
+    This logic mirrors the standalone data-check script used in tests.
+    """
+    if pitcher is None:
+        return False
+
+    try:
+        era = float(pitcher.era)
+        whip = float(pitcher.whip)
+        k_rate = float(pitcher.k_rate)
+        walk_rate = float(pitcher.walk_rate)
+    except (TypeError, ValueError):
+        # If stats cannot be parsed, treat as unknown/placeholder.
+        return True
+
+    zeros = sum(1 for v in (era, whip, k_rate, walk_rate) if v == 0.0)
+
+    if zeros == 4:
+        return True
+    if zeros >= 3:
+        return True
+    if era == 0.0:
+        return True
+
+    return False
+
+
 def handedness_penalty(batter: Batter, pitcher: Pitcher) -> float:
     """
     Apply penalty for same-handed matchups.
@@ -254,6 +289,45 @@ def contact_hitter_advantage(batter: Batter, pitcher: Pitcher) -> float:
     return 0.0
 
 
+def unknown_pitcher_rule(batter: Batter, pitcher: Pitcher) -> float:
+    """
+    Apply a neutralizing adjustment for pitchers with unknown/placeholder stats.
+
+    When a pitcher looks \"unknown\" (e.g., mostly zero stats or ERA = 0.0),
+    we do not want to treat them as clearly weak or strong based on unreliable
+    data. This rule:
+
+    - Detects unknown pitchers using _is_unknown_pitcher.
+    - Cancels out bonuses that assume we know the pitcher is weak based on ERA:
+        - power_vs_era_advantage
+        - power_hitter_bonus
+
+    Batter-only rules (e.g., elite_batter_bonus) and platoon effects
+    (handedness_penalty) are left untouched.
+    """
+    if batter is None or pitcher is None:
+        return 0.0
+
+    if not _is_unknown_pitcher(pitcher):
+        return 0.0
+
+    cancel_adjustment = 0.0
+
+    # Cancel ERA-based weak-pitcher bonuses that rely on possibly bogus stats.
+    try:
+        cancel_adjustment += power_vs_era_advantage(batter, pitcher)
+    except Exception:
+        pass
+
+    try:
+        cancel_adjustment += power_hitter_bonus(batter, pitcher)
+    except Exception:
+        pass
+
+    # Return the negative of those bonuses to neutralize them.
+    return -cancel_adjustment
+
+
 def get_all_rules() -> list:
     """
     Get a list of all matchup rule functions.
@@ -270,7 +344,8 @@ def get_all_rules() -> list:
         elite_batter_bonus,
         elite_pitcher_penalty,
         power_hitter_bonus,
-        contact_hitter_advantage
+        contact_hitter_advantage,
+        unknown_pitcher_rule,
     ]
 
 

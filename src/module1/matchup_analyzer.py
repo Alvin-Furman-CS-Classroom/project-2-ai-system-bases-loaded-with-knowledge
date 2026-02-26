@@ -3,6 +3,13 @@ Main analyzer for Module 1: Matchup Analysis
 
 Orchestrates the matchup analysis pipeline using first-order logic rules
 to calculate performance scores for each batter against an opponent pitcher.
+
+Prediction without head-to-head data:
+  Scores are predicted from batter and pitcher profiles only. No historical
+  batter-vs-pitcher (BvP) data is required, so the module can predict
+  performance for any batter against any pitcher, including pairs who have
+  never faced each other. Base score comes from the batter's overall stats;
+  adjustments come from first-order logic rules (handedness, walk rate, etc.).
 """
 
 from typing import Dict, List, Optional

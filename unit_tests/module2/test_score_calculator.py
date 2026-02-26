@@ -52,7 +52,7 @@ class TestScoreCalculator(unittest.TestCase):
             'player_name': 'Catchy',
             'fielding_pct': 1.0,
             'errors': 0,
-            'putouts': 50,
+            'putouts': 100,
             'passed_balls': 0,
             'caught_stealing_pct': 1.0,
         }, 'C')

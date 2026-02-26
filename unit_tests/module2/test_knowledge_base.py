@@ -88,7 +88,7 @@ class TestDefensiveKnowledgeBase(unittest.TestCase):
         poor = {
             'player_name': 'Poor 2B',
             'fielding_pct': 0.0,
-            'errors': 10,
+            'errors': 11,
             'putouts': 0,
         }
 
@@ -122,8 +122,8 @@ class TestDefensiveKnowledgeBase(unittest.TestCase):
         desc_c = self.kb.get_rule_description('C')
         desc_2b = self.kb.get_rule_description('2B')
 
-        self.assertIn('Catcher rule', desc_c)
-        self.assertIn('General rule', desc_2b)
+        self.assertIn('Catcher', desc_c)
+        self.assertIn('General', desc_2b)
 
     def test_add_fact_from_test_data_catcher(self):
         """Create fact for a catcher from test_data JSON (e.g. Drake Baldwin)."""

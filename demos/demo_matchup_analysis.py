@@ -5,7 +5,16 @@ Demonstrates how to use the matchup analysis module to calculate
 performance scores for batters against an opponent pitcher.
 """
 
-from src.module1.matchup_analyzer import analyze_matchup_performance
+import sys
+from pathlib import Path
+
+# Resolve test_data path relative to repo root (works when run from repo root or demos/)
+REPO_ROOT = Path(__file__).resolve().parent.parent
+TEST_DATA = REPO_ROOT / 'test_data'
+sys.path.insert(0, str(REPO_ROOT / 'src'))
+
+from module1.matchup_analyzer import analyze_matchup_performance
+from module1.rule_evaluator import RuleEvaluator
 
 
 def main():
@@ -15,12 +24,15 @@ def main():
     print("=" * 60)
     print()
     
-    # Analyze matchup performance from JSON file
+    json_path = TEST_DATA / 'matchup_stats.json'
+    
+    # Analyze matchup performance from JSON file (with first-order logic rules)
     print("Analyzing matchup performance from JSON file...")
     print("-" * 60)
     
     try:
-        scores = analyze_matchup_performance('../test_data/matchup_stats.json')
+        evaluator = RuleEvaluator()
+        scores = analyze_matchup_performance(str(json_path), rule_evaluator=evaluator)
         
         print(f"\nFound {len(scores)} batters:")
         print()
@@ -38,16 +50,14 @@ def main():
         print(f"Worst matchup: {sorted_scores[-1][0]} ({sorted_scores[-1][1]:.2f})")
         
     except FileNotFoundError:
-        print("Error: ../test_data/matchup_stats.json not found")
-        print("Please ensure the test data file exists.")
+        print(f"Error: {json_path} not found")
+        print("Run from repo root: python3 demos/demo_matchup_analysis.py")
     except Exception as e:
         print(f"Error: {e}")
     
     print()
     print("=" * 60)
-    print("Note: These scores are base scores calculated from batter statistics.")
-    print("Rule-based adjustments will be applied when Partner B's components")
-    print("(logic_engine.py, matchup_rules.py, rule_evaluator.py) are implemented.")
+    print("Scores use first-order logic rules (handedness, OBP/walk rate, etc.).")
     print("=" * 60)
 
 

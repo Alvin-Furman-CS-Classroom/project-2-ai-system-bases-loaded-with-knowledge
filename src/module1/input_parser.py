@@ -2,6 +2,11 @@
 Input parser for Module 1: Matchup Analysis
 
 Parses CSV and JSON files containing batter and pitcher statistics.
+
+Pitcher stats: The module does not look up or generate stats from games. Every
+pitcher's ERA, WHIP, k_rate, walk_rate, and handedness must come from the
+input file. If a pitcher has no games yet, the data source should supply
+placeholder values (e.g. league average) or omit them (defaults to 0.0).
 """
 
 import json
@@ -130,7 +135,14 @@ class MatchupDataParser:
         )
     
     def _create_pitcher(self, data: Dict[str, Any]) -> Pitcher:
-        """Create a Pitcher object from dictionary data."""
+        """Create a Pitcher object from dictionary data.
+
+        All pitcher stats (ERA, WHIP, k_rate, walk_rate) come only from the
+        input data—the module does not fetch or generate stats from games.
+        Missing or empty numeric fields default to 0.0; handedness defaults to 'RHP'.
+        For a pitcher with no games yet, supply league-average or placeholder
+        values in the input, or accept 0s (rules will treat them as neutral/weak).
+        """
         # Handle missing or empty values
         name = data.get('name')
         if name:

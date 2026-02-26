@@ -1,15 +1,23 @@
 """
 Demo script for analyzing one batter against multiple pitchers.
 
-Demonstrates the new functionality to evaluate how a single batter
-performs against different opponent pitchers.
+Demonstrates how to use the matchup analysis module to evaluate how
+a single batter performs against different opponent pitchers.
 """
 
-from src.module1.matchup_analyzer import (
+import sys
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+TEST_DATA = REPO_ROOT / 'test_data'
+sys.path.insert(0, str(REPO_ROOT / 'src'))
+
+from module1.matchup_analyzer import (
     analyze_batter_vs_pitchers,
     analyze_batter_vs_pitchers_from_file
 )
-from src.module1.models import Batter, Pitcher
+from module1.models import Batter, Pitcher
+from module1.rule_evaluator import RuleEvaluator
 
 
 def main():
@@ -19,38 +27,37 @@ def main():
     print("=" * 60)
     print()
     
-    # Method 1: Using objects directly
+    # Method 1: Using objects (matches test_data/batter_vs_pitchers.json first batter)
     print("Method 1: Analyzing batter against multiple pitchers (using objects)")
     print("-" * 60)
     
     batter = Batter(
-        name="Mike Trout",
-        ba=0.306,
-        k=132,
-        obp=0.419,
-        slg=0.582,
-        hr=40,
-        rbi=80,
+        name="Jonathan Ornelas",
+        ba=0.5,
+        k=0,
+        obp=0.5,
+        slg=0.5,
+        hr=0,
+        rbi=0,
         handedness="R"
     )
     
     pitchers = [
-        Pitcher(name="Gerrit Cole", era=2.63, whip=0.98, k_rate=0.33,
-                handedness="RHP", walk_rate=0.06),
-        Pitcher(name="Justin Verlander", era=3.22, whip=1.05, k_rate=0.28,
-                handedness="RHP", walk_rate=0.07),
-        Pitcher(name="Jacob deGrom", era=2.67, whip=0.95, k_rate=0.35,
-                handedness="RHP", walk_rate=0.05),
+        Pitcher(name="Logan Webb", era=3.22, whip=1.237, k_rate=0.262,
+                handedness="RHP", walk_rate=0.054),
+        Pitcher(name="Garrett Crochet", era=2.59, whip=1.028, k_rate=0.313,
+                handedness="LHP", walk_rate=0.057),
+        Pitcher(name="Max Fried", era=2.86, whip=1.101, k_rate=0.236,
+                handedness="LHP", walk_rate=0.064),
     ]
     
-    scores = analyze_batter_vs_pitchers(batter, pitchers)
+    scores = analyze_batter_vs_pitchers(batter, pitchers, RuleEvaluator())
     
     print(f"\nAnalyzing {batter.name} against {len(pitchers)} pitchers:")
     print()
     print(f"{'Pitcher Name':<30} {'Score':>10}")
     print("-" * 42)
     
-    # Sort by score (descending) for better display
     sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
     for pitcher_name, score in sorted_scores:
         print(f"{pitcher_name:<30} {score:>10.2f}")
@@ -62,13 +69,14 @@ def main():
     print()
     print("=" * 60)
     
-    # Method 2: Using file input
+    # Method 2: Using file input (test_data/batter_vs_pitchers.json)
     print("\nMethod 2: Analyzing from file (JSON)")
     print("-" * 60)
     
+    json_path = TEST_DATA / 'batter_vs_pitchers.json'
     try:
         scores_from_file = analyze_batter_vs_pitchers_from_file(
-            '../test_data/batter_vs_pitchers.json'
+            str(json_path), rule_evaluator=RuleEvaluator()
         )
         
         print(f"\nFound {len(scores_from_file)} pitcher matchups:")
@@ -76,21 +84,21 @@ def main():
         print(f"{'Pitcher Name':<30} {'Score':>10}")
         print("-" * 42)
         
-        sorted_file_scores = sorted(scores_from_file.items(), 
-                                   key=lambda x: x[1], reverse=True)
-        for pitcher_name, score in sorted_file_scores:
+        sorted_file_scores = sorted(scores_from_file.items(), key=lambda x: x[1], reverse=True)
+        for pitcher_name, score in sorted_file_scores[:15]:  # Show top 15
             print(f"{pitcher_name:<30} {score:>10.2f}")
+        if len(sorted_file_scores) > 15:
+            print(f"  ... and {len(sorted_file_scores) - 15} more")
         
     except FileNotFoundError:
-        print("Error: ../test_data/batter_vs_pitchers.json not found")
+        print(f"Error: {json_path} not found")
+        print("Run from repo root: python3 demos/demo_batter_vs_pitchers.py")
     except Exception as e:
         print(f"Error: {e}")
     
     print()
     print("=" * 60)
-    print("Note: These scores are base scores calculated from batter statistics.")
-    print("Rule-based adjustments will be applied when Partner B's components")
-    print("(logic_engine.py, matchup_rules.py, rule_evaluator.py) are implemented.")
+    print("Scores use first-order logic rules (handedness, OBP/walk rate, etc.).")
     print("=" * 60)
 
 

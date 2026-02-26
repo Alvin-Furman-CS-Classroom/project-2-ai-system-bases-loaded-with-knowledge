@@ -42,6 +42,7 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 - Performance scores (0-100) for each batter representing their expected effectiveness against the opponent pitcher
 - Output format: Dictionary/map or JSON structure mapping each batter name to their performance score
 - Scores derived through logical inference from first-order logic rules encoding matchup relationships using quantifiers (∀ for all, ∃ there exists)
+- **No head-to-head data required:** the module predicts performance for every batter against every pitcher using only batter and pitcher profiles (e.g. season stats, handedness), so it works for pairs who have never faced each other
 
 **Dependencies:** None
 
@@ -49,7 +50,7 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 - Module 1 outputs offensive performance scores that will be combined with defensive scores (from Module 2) in Module 3 (CSP) to assign players to optimal defensive positions.
 - Module 1 scores will also be used by Module 4 (Search Algorithms) to optimize the batting order.
 - The `analyze_matchup_performance` function returns a dictionary `{batter_name: score}` that can be directly used as input to subsequent modules.
-- Example usage in Module 3: `offensive_scores = analyze_matchup_performance('matchup_stats.json', pitcher_stats)`
+- Example usage in Module 3: `offensive_scores = analyze_matchup_performance('matchup_stats.json')` (pitcher stats are in the file; optionally pass `rule_evaluator=RuleEvaluator()` for first-order logic adjustments)
 
 **First-Order Logic Rules:**
 The module uses quantified logical rules to evaluate matchups. Examples include:

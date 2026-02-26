@@ -76,11 +76,11 @@ class TestMatchupAnalyzer(unittest.TestCase):
         """Test analyzing with a rule evaluator."""
         json_file = self.test_data_dir / 'matchup_stats.json'
         if json_file.exists():
-            # Create mock rule evaluator with adjustments
+            # Create mock rule evaluator with adjustments (use batters from test data)
             adjustments = {
-                "Mike Trout": 10.0,
-                "Freddie Freeman": -5.0,
-                "Mookie Betts": 8.0
+                "Matt Olson": 10.0,
+                "Michael Harris II": -5.0,
+                "Ozzie Albies": 8.0
             }
             evaluator = MockRuleEvaluator(adjustments)
             
@@ -122,7 +122,7 @@ class TestMatchupAnalyzer(unittest.TestCase):
         if json_file.exists():
             # Create a callable function as evaluator
             def evaluator_func(batters, pitcher):
-                return {"Mike Trout": 5.0}
+                return {"Matt Olson": 5.0}
             
             scores = analyze_matchup_performance(str(json_file), rule_evaluator=evaluator_func)
             
