@@ -1,0 +1,246 @@
+[
+  {
+    "name": "Matt Olson",
+    "fielding_pct": 0.996,
+    "errors": 5,
+    "putouts": 1147,
+    "positions": [
+      "1B"
+    ]
+  },
+  {
+    "name": "Michael Harris II",
+    "fielding_pct": 0.998,
+    "errors": 1,
+    "putouts": 402,
+    "positions": [
+      "CF"
+    ]
+  },
+  {
+    "name": "Ozzie Albies",
+    "fielding_pct": 0.997,
+    "errors": 2,
+    "putouts": 205,
+    "positions": [
+      "2B"
+    ]
+  },
+  {
+    "name": "Nick Allen",
+    "fielding_pct": 0.986,
+    "errors": 6,
+    "putouts": 158,
+    "positions": [
+      "SS",
+      "2B"
+    ]
+  },
+  {
+    "name": "Austin Riley",
+    "fielding_pct": 0.953,
+    "errors": 11,
+    "putouts": 55,
+    "positions": [
+      "3B"
+    ]
+  },
+  {
+    "name": "Ronald Acu\u00f1a Jr.",
+    "fielding_pct": 0.988,
+    "errors": 2,
+    "putouts": 164,
+    "positions": [
+      "RF"
+    ]
+  },
+  {
+    "name": "Drake Baldwin",
+    "fielding_pct": 0.995,
+    "errors": 4,
+    "putouts": 745,
+    "positions": [
+      "C"
+    ],
+    "passed_balls": 3,
+    "caught_stealing_pct": 0.137
+  },
+  {
+    "name": "Jurickson Profar",
+    "fielding_pct": 0.994,
+    "errors": 1,
+    "putouts": 164,
+    "positions": [
+      "LF"
+    ]
+  },
+  {
+    "name": "Sean Murphy",
+    "fielding_pct": 0.997,
+    "errors": 2,
+    "putouts": 644,
+    "positions": [
+      "C"
+    ],
+    "passed_balls": 2,
+    "caught_stealing_pct": 0.296
+  },
+  {
+    "name": "Eli White",
+    "fielding_pct": 0.993,
+    "errors": 1,
+    "putouts": 134,
+    "positions": [
+      "RF",
+      "LF",
+      "CF",
+      "1B"
+    ]
+  },
+  {
+    "name": "Nacho Alvarez Jr.",
+    "fielding_pct": 0.978,
+    "errors": 3,
+    "putouts": 36,
+    "positions": [
+      "3B"
+    ]
+  },
+  {
+    "name": "Alex Verdugo",
+    "fielding_pct": 0.978,
+    "errors": 2,
+    "putouts": 88,
+    "positions": [
+      "LF"
+    ]
+  },
+  {
+    "name": "Ha-Seong Kim",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 31,
+    "positions": [
+      "SS"
+    ]
+  },
+  {
+    "name": "Jarred Kelenic",
+    "fielding_pct": 0.941,
+    "errors": 2,
+    "putouts": 32,
+    "positions": [
+      "RF",
+      "LF"
+    ]
+  },
+  {
+    "name": "Stuart Fairchild",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 33,
+    "positions": [
+      "RF",
+      "LF",
+      "CF"
+    ]
+  },
+  {
+    "name": "Luke Williams",
+    "fielding_pct": 0.974,
+    "errors": 1,
+    "putouts": 18,
+    "positions": [
+      "SS",
+      "3B"
+    ]
+  },
+  {
+    "name": "Bryan De La Cruz",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 21,
+    "positions": [
+      "LF",
+      "RF"
+    ]
+  },
+  {
+    "name": "Vidal Bruj\u00e1n",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 16,
+    "positions": [
+      "SS",
+      "3B",
+      "RF"
+    ]
+  },
+  {
+    "name": "Orlando Arcia",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 7,
+    "positions": [
+      "SS"
+    ]
+  },
+  {
+    "name": "Jake Fraley",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 14,
+    "positions": [
+      "RF",
+      "LF"
+    ]
+  },
+  {
+    "name": "Sandy Le\u00f3n",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 34,
+    "positions": [
+      "C"
+    ],
+    "passed_balls": 0
+  },
+  {
+    "name": "Brett Wisely",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 6,
+    "positions": [
+      "2B"
+    ]
+  },
+  {
+    "name": "Chadwick Tromp",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 17,
+    "positions": [
+      "C"
+    ],
+    "passed_balls": 0
+  },
+  {
+    "name": "Jonathan Ornelas",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 1,
+    "positions": [
+      "SS",
+      "3B"
+    ]
+  },
+  {
+    "name": "Eddie Rosario",
+    "fielding_pct": 1.0,
+    "errors": 0,
+    "putouts": 3,
+    "positions": [
+      "RF"
+    ]
+  }
+]
