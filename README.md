@@ -102,6 +102,50 @@ The module uses quantified logical rules to evaluate matchups. Examples include:
   - Input parsing (CSV and JSON formats)
   - Output formatting
 
+## Module 3 Specification: Defensive Position Assignment (CSP)
+
+**Topic:** Constraint Satisfaction Problems (CSP)
+
+**Inputs:**
+- **`offensive_scores`:** `{player_name: float}` — typically from Module 1, `analyze_matchup_performance(...)`.
+- **`defensive_scores`:** `{player_name: {position: float}}` — from Module 2, `analyze_defensive_performance(...)`.
+- **`position_eligibility`:** `{player_name: [position_codes...]}` — who may play which of `P`, `C`, `1B`, `2B`, `3B`, `SS`, `LF`, `CF`, `RF`.
+- **Optional:** `weights` (`None`, `(w_def, w_off)`, or `{"w_def":..., "w_off":...}`; defaults **0.65 / 0.35**), `lock_positions`, `positions` (override default nine positions), `defensive_stress_profile` (`None`, `"flat"`, or `"up_the_middle"`).
+
+**Outputs:**
+- **`{position: player_name}`** — one unique player per position solved for; maximizes  
+  `sum (w_def * defense * leverage_mult + w_off * offense)` per assignment.  
+  For `P`, Module 2 does not supply a defensive grade; defense term is **0** and leverage multiplier is neutral unless you change pitcher handling.
+
+**Dependencies:** Modules 1 & 2 (dict inputs). Internal CSP engine: `src/module3/csp_solver.py` (`solve_max_csp`). Optional leverage multipliers follow **FanGraphs positional adjustment** runs — see `docs/MODULE3_DEFENSIVE_LEVERAGE_SOURCES.md`.
+
+**Integration with Other Modules:**
+- Module 4 should consume the nine assigned players plus batter stats for batting order.
+- Example:
+
+```python
+from src.module1.matchup_analyzer import analyze_matchup_performance
+from src.module1.rule_evaluator import RuleEvaluator
+from src.module2.defensive_analyzer import analyze_defensive_performance
+from src.module3.position_assignment import assign_defensive_positions
+
+offensive = analyze_matchup_performance(
+    "test_data/matchup_stats.json",
+    rule_evaluator=RuleEvaluator(),  # recommended for full Module 1 behavior
+)
+defensive = analyze_defensive_performance("test_data/defensive_stats.json")
+eligibility = {"Player A": ["1B", "LF"], ...}  # nine players covering all positions
+assignment = assign_defensive_positions(offensive, defensive, eligibility)
+# Optional: defensive_stress_profile="up_the_middle"
+```
+
+**Tests:**
+- CSP solver: `unit_tests/module3/test_csp_solver.py`
+- Assignment + stress profile: `unit_tests/module3/test_position_assignment.py`
+- End-to-end: `integration_tests/module3/test_module1_2_3_integration.py`
+
+**Work split reference:** `MODULE3_WORK_SPLIT.md` (if present in repo).
+
 ## Repository Layout
 
 ```
@@ -125,6 +169,27 @@ your-repo/
 2. No additional package installation required (uses only standard library)
 
 ## Running
+
+### Module 3: Defensive position assignment (CSP)
+
+**Environment:** Add `src` to `PYTHONPATH` so `module1` / `module2` / `module3` resolve (matches unit/integration tests).
+
+```python
+from src.module3.position_assignment import (
+    assign_defensive_positions,
+    DEFAULT_POSITIONS,
+    DEFENSIVE_LEVERAGE_UP_THE_MIDDLE,
+)
+
+assignment = assign_defensive_positions(offensive_scores, defensive_scores, position_eligibility)
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
+```
 
 ### Module 2: Defensive Performance Analysis
 
@@ -199,6 +264,13 @@ python3 -m unittest discover -s unit_tests/module2 -p "test_*.py" -v
 python3 -m unittest unit_tests.module2.test_defensive_analyzer -v
 ```
 
+**Running Module 3 tests:**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
+```
+
 **Test Coverage:**
 - Input parser (CSV and JSON formats)
 - Knowledge base rules (catcher and general positions)
@@ -219,7 +291,7 @@ Sample test data files are available in `test_data/`:
 | ---------- | ---- | ---------------- | ------ | -------- |
 | 1 |  |  |  |  |
 | 2 |  |  |  |  |
-| 3 |  |  |  |  |
+| 3 | March 19 | Module 3 (CSP) | Complete | README Module 3 spec; `checkpoints/checkpoint_3_module_report.md`; `checkpoints/checkpoint_3_elegance_report.md`; **Running Module 3** / **Running Module 3 tests** (`PYTHONPATH=src`) |
 | 4 |  |  |  |  |
 
 ## Required Workflow (Agent-Guided)
