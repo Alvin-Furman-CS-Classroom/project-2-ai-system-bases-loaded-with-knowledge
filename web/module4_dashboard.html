@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Module 4 Lineup Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: #0b1020;
+      color: #e8ecf3;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+    }
+    .card {
+      background: #141a2f;
+      border: 1px solid #243050;
+      border-radius: 12px;
+      padding: 16px;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.02em;
+    }
+    ol {
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    li {
+      background: #1a2340;
+      border: 1px solid #2a3760;
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .slot {
+      display: inline-block;
+      width: 2ch;
+      color: #7ec8ff;
+      font-weight: 600;
+    }
+    .field {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 72%, #2e6a3f 0%, #225233 45%, #1a3f27 100%);
+    }
+    .diamond {
+      position: absolute;
+      left: 50%;
+      top: 58%;
+      width: 240px;
+      height: 240px;
+      border: 3px solid #d8c39a;
+      transform: translate(-50%, -50%) rotate(45deg);
+      box-sizing: border-box;
+    }
+    .pos {
+      position: absolute;
+      background: rgba(11,16,32,0.85);
+      border: 1px solid #4b5f97;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      white-space: nowrap;
+      transform: translate(-50%, -50%);
+    }
+    .label {
+      display: inline-block;
+      color: #9ed2ff;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .lf { left: 18%; top: 24%; }
+    .cf { left: 50%; top: 16%; }
+    .rf { left: 82%; top: 24%; }
+    .ss { left: 39%; top: 40%; }
+    .b2 { left: 61%; top: 40%; }
+    .b3 { left: 30%; top: 52%; }
+    .b1 { left: 70%; top: 52%; }
+    .p  { left: 50%; top: 55%; }
+    .c  { left: 50%; top: 76%; }
+    @media (max-width: 860px) {
+      .wrap { grid-template-columns: 1fr; }
+      .field { min-height: 440px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h2>Batting Order (Module 4)</h2>
+      <ol>
+        <li><span class='slot'>1.</span> Ronald Acuña Jr.</li>
+<li><span class='slot'>2.</span> Jonathan Ornelas</li>
+<li><span class='slot'>3.</span> Matt Olson</li>
+<li><span class='slot'>4.</span> Drake Baldwin</li>
+<li><span class='slot'>5.</span> Michael Harris II</li>
+<li><span class='slot'>6.</span> Sean Murphy</li>
+<li><span class='slot'>7.</span> Nick Allen</li>
+<li><span class='slot'>8.</span> Ozzie Albies</li>
+<li><span class='slot'>9.</span> Jurickson Profar</li>
+      </ol>
+    </section>
+    <section class="card field">
+      <h2>Defensive Diamond</h2>
+      <div class="diamond"></div>
+      <div class="pos lf"><span class="label">LF</span>Jurickson Profar</div>
+      <div class="pos cf"><span class="label">CF</span>Michael Harris II</div>
+      <div class="pos rf"><span class="label">RF</span>Ronald Acuña Jr.</div>
+      <div class="pos ss"><span class="label">SS</span>Nick Allen</div>
+      <div class="pos b2"><span class="label">2B</span>Ozzie Albies</div>
+      <div class="pos b3"><span class="label">3B</span>Jonathan Ornelas</div>
+      <div class="pos b1"><span class="label">1B</span>Matt Olson</div>
+      <div class="pos p"><span class="label">P</span>Drake Baldwin</div>
+      <div class="pos c"><span class="label">C</span>Sean Murphy</div>
+    </section>
+  </div>
+</body>
+</html>
