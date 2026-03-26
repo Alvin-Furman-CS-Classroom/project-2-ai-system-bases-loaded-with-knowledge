@@ -4,7 +4,7 @@
 
 This system uses AI-driven optimization to support lineup construction and strategic decision-making in baseball/softball by selecting, ordering, and dynamically adjusting players to maximize performance under changing game conditions. The system assists coaches by analyzing player statistics, opponent characteristics, and game context to recommend pre-game lineups and make adaptive in-game adjustments.
 
-The workflow begins with first-order logic-based matchup analysis using quantified rules to predict how each batter performs against the opponent pitcher, complemented by defensive performance evaluation using knowledge-based rules. These analyses feed into a constraint satisfaction problem assigning players to optimal defensive positions while balancing offensive and defensive capabilities. A search-based algorithm optimizes the batting order, strategically placing high on-base percentage players early, power hitters in the middle, and lower-performing players at the end. Finally, a planning module monitors game state and creates adaptive strategies, recommending substitutions, lineup modifications, and tactical shifts across multiple innings.
+The workflow begins with first-order logic-based matchup analysis using quantified rules to predict how each batter performs against the opponent pitcher, complemented by defensive performance evaluation using knowledge-based rules. These analyses feed into a constraint satisfaction problem assigning players to optimal defensive positions while balancing offensive and defensive capabilities. A genetic algorithm then optimizes the batting order by iteratively evolving lineup candidates to place high on-base percentage players early, power hitters in the middle, and lower-performing players near the end. Finally, a planning module monitors game state and creates adaptive strategies, recommending substitutions, lineup modifications, and tactical shifts across multiple innings.
 
 ## Team
 
@@ -25,7 +25,7 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 | 1 | First-Order Logic | CSV/JSON with batter stats (BA, K, OBP, SLG, HR, RBI) and pitcher stats (ERA, WHIP, K rate, handedness, walk rate) | Performance scores (0-100) for each batter | None | Checkpoint 2 (Feb 26) |
 | 2 | Knowledge Bases | CSV/JSON with defensive stats (fielding %, errors, putouts; catcher-specific stats) | Position-specific defensive scores (0-100) | None | Checkpoint 1 (Feb 11) |
 | 3 | CSP | Offensive scores (Module 1), defensive scores (Module 2), position eligibility | Assignment of 9 players to positions | Modules 1, 2 | Checkpoint 3 (March 19) |
-| 4 | Search Algorithms | 9 selected players from Module 3, detailed batter stats | Optimal batting order (1-9) | Modules 1, 2, 3 | Checkpoint 4 (April 2) |
+| 4 | Genetic Algorithms | 9 selected players from Module 3, detailed batter stats | Optimal batting order (1-9) | Modules 1, 2, 3 | Checkpoint 4 (April 2) |
 | 5 | Planning | Game state, bench players, performance scores, current lineup | Adaptive recommendations and multi-inning plan | Modules 1, 2, 3, 4 | Checkpoint 5 (April 16) |
 | 6 (optional) |  |  |  |  |  |
 

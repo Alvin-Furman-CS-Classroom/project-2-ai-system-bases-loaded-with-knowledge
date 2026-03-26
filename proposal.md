@@ -4,7 +4,7 @@
 
 This system uses AI-driven optimization to support lineup construction and strategic decision-making in baseball/softball by selecting, ordering, and dynamically adjusting players to maximize performance under changing game conditions. Baseball and softball are well-suited for AI because they generate extensive historical data, involve multiple interconnected decision points, and require strategic planning that balances competing objectives.
 
-The system assists coaches by analyzing player statistics, opponent characteristics, and game context to recommend pre-game lineups and make adaptive in-game adjustments. The workflow begins with first-order logic-based matchup analysis using quantified rules to predict how each batter performs against the opponent pitcher, complemented by defensive performance evaluation using knowledge-based rules that weight defensive metrics more heavily for critical positions (catcher, shortstop, third base). These analyses feed into a constraint satisfaction problem assigning players to optimal defensive positions while balancing offensive and defensive capabilities. A search-based algorithm optimizes the batting order, strategically placing high on-base percentage players early, power hitters in the middle, and lower-performing players at the end. Finally, a planning module monitors game state and creates adaptive strategies, recommending substitutions, lineup modifications, and tactical shifts across multiple innings. Together, these modules demonstrate how various AI techniques work synergistically to solve complex optimization problems where logical inference, constraint satisfaction, search-based ordering, and multi-step planning all play essential roles.
+The system assists coaches by analyzing player statistics, opponent characteristics, and game context to recommend pre-game lineups and make adaptive in-game adjustments. The workflow begins with first-order logic-based matchup analysis using quantified rules to predict how each batter performs against the opponent pitcher, complemented by defensive performance evaluation using knowledge-based rules that weight defensive metrics more heavily for critical positions (catcher, shortstop, third base). These analyses feed into a constraint satisfaction problem assigning players to optimal defensive positions while balancing offensive and defensive capabilities. A genetic algorithm optimizes the batting order by evolving lineup permutations over multiple generations, strategically placing high on-base percentage players early, power hitters in the middle, and lower-performing players at the end. Finally, a planning module monitors game state and creates adaptive strategies, recommending substitutions, lineup modifications, and tactical shifts across multiple innings. Together, these modules demonstrate how various AI techniques work synergistically to solve complex optimization problems where logical inference, constraint satisfaction, evolutionary optimization, and multi-step planning all play essential roles.
 
 ## Modules
 
@@ -59,7 +59,7 @@ The system assists coaches by analyzing player statistics, opponent characterist
 
 ### Module 4: Batting Order Optimization
 
-**Topics:** Search Algorithms (A*, Beam Search)
+**Topics:** Genetic Algorithms
 
 **Input:** 
 - The 9 selected players assigned to positions from Module 3
@@ -69,7 +69,7 @@ The system assists coaches by analyzing player statistics, opponent characterist
 
 **Integration:** This module takes the optimal 9 players from Module 3 and arranges them in an optimal batting order based on their statistical profiles. The complete lineup (defensive positions and batting order) is the final output of the system.
 
-**Prerequisites:** Modules 1, 2, and 3 must be completed first. Course content on Search Algorithms (A*, Beam Search) required.
+**Prerequisites:** Modules 1, 2, and 3 must be completed first. Course content on genetic/evolutionary optimization required.
 
 ---
 
@@ -102,7 +102,7 @@ The system assists coaches by analyzing player statistics, opponent characterist
 | 2      | Knowledge Bases    | Topic 1: First 1.5 weeks (Propositional Logic) | Checkpoint 1 (Feb 11) |
 | 1      | First-Order Logic   | Topic 3: Weeks 3-4.5 (First-Order Logic) | Checkpoint 2 (Feb 26) |
 | 3      | Constraint Satisfaction Problems (CSP) | Topic 4: Weeks 4.5-5.5 (Advanced Search - CSP covered here) | Checkpoint 3 (March 19) - Note: Requires completion of Modules 1 and 2 |
-| 4      | Search Algorithms (A*, Beam Search) | Topic 2: Weeks 1.5-3 (Informed Search) | Checkpoint 4 (April 2) - Note: Requires completion of Modules 1, 2, and 3 |
+| 4      | Genetic Algorithms | Topic 4-5: Advanced Search / Optimization (confirm exact lecture alignment) | Checkpoint 4 (April 2) - Note: Requires completion of Modules 1, 2, and 3 |
 | 5      | Planning           | Not explicitly listed - may be covered with Search/Advanced Search or separately; verify with instructor | Checkpoint 5 (April 16) |
 
 ## Coverage Rationale
@@ -115,8 +115,8 @@ This system leverages five AI topics, each selected for their natural fit with d
 
 **Constraint Satisfaction Problems (CSP)** map naturally to position assignment because it involves satisfying multiple constraints simultaneously. When writing a lineup, a player can only occupy exactly one position, physical and skill requirements must be met, and team rules or preferences must be respected. CSPs ensure valid lineups while preventing illegal or impractical assignments, reflecting the real constraints coaches face when setting a defensive lineup.
 
-**Search Algorithms** work well for batting order optimization because creating an optimal batting order involves choosing the best sequence of hitters from many possible options. Search methods can compare different lineup orders and identify ones that are likely to produce more runs. This approach goes beyond traditional lineup rules by testing multiple possibilities and selecting an order that best fits the team's strengths.
+**Genetic Algorithms** work well for batting order optimization because creating an optimal batting order involves searching a large permutation space of hitter sequences. A genetic algorithm can efficiently explore this space by evolving candidate lineups with selection, crossover, and mutation while preserving baseball-specific lineup heuristics in the fitness function.
 
 **Planning** enables adaptive lineup adjustments because baseball and softball are dynamic sports where decisions change based on game context. Planning allows the system to model sequences of decisions over time, supporting adjustments like pinch hitting, defensive shifts, or lineup changes, capturing the strategic, forward-looking nature of game management.
 
-**Trade-offs considered:** Alternative approaches were evaluated for each module. For matchup analysis, machine learning could have been used to learn patterns from historical data, but first-order logic was chosen for its interpretability and ability to encode explicit domain knowledge about baseball matchups. Knowledge bases were also considered but first-order logic's quantifiers provide more expressive power for modeling relationships between all batters and the pitcher. For position assignment, pure optimization algorithms could work, but CSP was selected for its explicit constraint modeling and interpretability. Game theory was considered for strategic interactions but planning was preferred for its ability to sequence multiple decisions across innings.
+**Trade-offs considered:** Alternative approaches were evaluated for each module. For matchup analysis, machine learning could have been used to learn patterns from historical data, but first-order logic was chosen for its interpretability and ability to encode explicit domain knowledge about baseball matchups. Knowledge bases were also considered but first-order logic's quantifiers provide more expressive power for modeling relationships between all batters and the pitcher. For position assignment, pure optimization algorithms could work, but CSP was selected for its explicit constraint modeling and interpretability. For batting order optimization, A* and beam search were considered, but genetic algorithms were chosen for stronger scalability over lineup permutations and flexible fitness shaping. Game theory was considered for strategic interactions but planning was preferred for its ability to sequence multiple decisions across innings.
