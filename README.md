@@ -146,6 +146,31 @@ assignment = assign_defensive_positions(offensive, defensive, eligibility)
 
 **Work split reference:** `MODULE3_WORK_SPLIT.md` (if present in repo).
 
+## Module 4 Specification: Batting Order (Genetic Algorithms)
+
+**Topic:** Genetic Algorithms
+
+**Inputs:**
+- **`selected_players`:** sequence of **9 unique** player names (typically the values from Module 3’s `{position: player}` assignment).
+- **`batter_stats`:** `{player_name: {obp, slg, hr, rbi}}` — required keys per selected player.
+- **Optional:** `offensive_scores` (`{player_name: float}`) from Module 1 for fitness blending; `fitness_weights` (`LineupFitnessWeights`); `seed` for reproducibility; GA hyperparameters: `population_size` (default **120**), `generations` (default **250**), `mutation_rate` (default **0.08**), `elite_count` (default **6**). The GA engine also uses **`stagnation_limit`** (default **60**) to stop early when fitness plateaus.
+
+**Outputs:**
+- **`optimize_batting_order(...)`** returns a dict:
+  - `optimized_order`: list of 9 unique names (batting slots 1–9)
+  - `best_fitness`, `generations_run`, `seed`
+
+**Dependencies:** Modules 1, 2, 3 for typical pipeline (data only into wrapper). Core code: `src/module4/genetic_optimizer.py`, `src/module4/lineup_fitness.py`, `src/module4/batting_order.py`.
+
+**Integration with Other Modules:**
+- Module 5 can consume `optimized_order` plus game state. Optional UI: `web/module4_dashboard.html` (generate via `PYTHONPATH=src python3 demos/demo_module4_web_ui.py`); see `web/README.md`.
+
+**Tests:**
+- GA + fitness + field UI helpers: `unit_tests/module4/`
+- End-to-end: `integration_tests/module4/test_module3_4_integration.py`
+
+**Work split reference:** `MODULE4_WORK_SPLIT.md`.
+
 ## Repository Layout
 
 ```
@@ -189,6 +214,24 @@ assignment = assign_defensive_positions(offensive_scores, defensive_scores, posi
 ```bash
 PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py" -v
 PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
+```
+
+### Module 4: Batting order (genetic algorithm)
+
+**Environment:** Same as Module 3 — `PYTHONPATH=src`.
+
+```python
+from module4.batting_order import optimize_batting_order
+
+result = optimize_batting_order(selected_players, batter_stats, seed=42)
+# result["optimized_order"] -> batting order 1–9
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module4 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module4.test_module3_4_integration -v
 ```
 
 ### Module 2: Defensive Performance Analysis
@@ -271,6 +314,13 @@ PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py"
 PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
 ```
 
+**Running Module 4 tests:**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module4 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module4.test_module3_4_integration -v
+```
+
 **Test Coverage:**
 - Input parser (CSV and JSON formats)
 - Knowledge base rules (catcher and general positions)
@@ -292,7 +342,7 @@ Sample test data files are available in `test_data/`:
 | 1 |  |  |  |  |
 | 2 |  |  |  |  |
 | 3 | March 19 | Module 3 (CSP) | Complete | README Module 3 spec; `checkpoints/checkpoint_3_module_report.md`; `checkpoints/checkpoint_3_elegance_report.md`; **Running Module 3** / **Running Module 3 tests** (`PYTHONPATH=src`) |
-| 4 |  |  |  |  |
+| 4 | April 2 | Module 4 (Genetic Algorithms) | Complete | README **Module 4 Specification**; `checkpoints/checkpoint_4_module_report.md`; `checkpoints/checkpoint_4_elegance_report.md`; **Running Module 4** / **Running Module 4 tests** (`PYTHONPATH=src`); `MODULE4_WORK_SPLIT.md` |
 
 ## Required Workflow (Agent-Guided)
 
