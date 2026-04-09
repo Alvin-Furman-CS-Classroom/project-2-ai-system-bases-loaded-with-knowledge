@@ -14,17 +14,27 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from demos.module4_pipeline_data import compute_module4_ui_inputs
+from demos.module4_pipeline_data import (
+    compute_ui_bundle,
+)
 from module4.web_ui import write_lineup_dashboard_html
 
 
 def main() -> None:
-    batting_order, assignment = compute_module4_ui_inputs(seed=42)
+    bundle = compute_ui_bundle(seed=42)
 
     out = write_lineup_dashboard_html(
-        batting_order,
-        assignment,
+        bundle["batting_order"],
+        bundle["assignment"],
         output_path=str(Path("web") / "module4_dashboard.html"),
+        title="Module 4 + Module 5 Dashboard",
+        module5_plan=bundle["module5_plan"],
+        outfield_profiles=bundle["outfield_profiles"],
+        outfield_profiles_predicted=bundle["outfield_profiles_predicted"],
+        defensive_profiles=bundle["defensive_profiles"],
+        offensive_profiles=bundle["offensive_profiles"],
+        eligibility_profiles=bundle["eligibility_profiles"],
+        pipeline_context=bundle["pipeline_context"],
     )
     print(f"Wrote dashboard: {out.resolve()}")
 

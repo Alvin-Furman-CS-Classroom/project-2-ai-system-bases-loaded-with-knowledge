@@ -171,6 +171,57 @@ assignment = assign_defensive_positions(offensive, defensive, eligibility)
 
 **Work split reference:** `MODULE4_WORK_SPLIT.md`.
 
+## Module 5 Specification: Adaptive Planning
+
+**Topic:** Planning
+
+**Inputs:**
+- **`game_state`:** mapping with inning context and constraints:
+  - required keys: `inning`, `half`, `outs`, `score_for`, `score_against`, `bases`, `substitutions_used`, `substitutions_limit`
+  - optional key: `pitcher_fatigue`
+- **`current_lineup`:**
+  - `batting_order`: list of 9 unique players
+  - `field_positions`: `{position: player}`
+- **`bench_players`:** list of bench player objects with:
+  - required: `name`, `roles`
+  - optional: `speed`, `offense_score`, `defense_score` (used by specific rules)
+- **`offensive_scores`:** `{player: float}` (must include active lineup players; bench entries optional but recommended)
+- **`defensive_scores`:** `{player: float}` flat defensive mapping for currently fielded players (plus optional bench defenders)
+- **Optional:** `innings_ahead` (default **3**)
+
+**Outputs:**
+- **`generate_adaptive_plan(...)`** returns:
+  - `recommendations`: prioritized, explainable action objects (`action_type`, `priority`, `confidence`, `reason`, `inning_window`, etc.)
+  - `multi_inning_plan`: inning-by-inning outlook with objective and recommended actions
+  - `summary`: plan metadata (`start_inning`, `horizon_innings`, `score_diff`, `substitutions_remaining`, `lineup_snapshot`)
+
+**Dependencies:** Uses outputs from Modules 1-4 in normal pipeline usage. Core code:
+- `src/module5/game_state.py` (validation/normalization)
+- `src/module5/strategy_rules.py` (scored tactical recommendations + conflict resolution)
+- `src/module5/planner.py` (public API orchestration + fallback recommendations)
+
+**Integration with Other Modules:**
+- Typical flow:
+  1. Module 1 offensive scores
+  2. Module 2 defensive scores
+  3. Module 3 assignment
+  4. Module 4 batting order
+  5. Module 5 adaptive plan
+- End-to-end integration test:
+  - `integration_tests/module5/test_module1_2_3_4_5_integration.py`
+- Demo dashboard integration:
+  - `demos/demo_module4_web_ui.py` now renders Module 4 + Module 5 in `web/module4_dashboard.html`
+
+**Tests:**
+- Unit:
+  - `unit_tests/module5/test_game_state.py`
+  - `unit_tests/module5/test_strategy_rules.py`
+  - `unit_tests/module5/test_planner.py`
+- Integration:
+  - `integration_tests/module5/test_module1_2_3_4_5_integration.py`
+
+**Work split reference:** `MODULE5_WORK_SPLIT.md`.
+
 ## Repository Layout
 
 ```
@@ -232,6 +283,30 @@ result = optimize_batting_order(selected_players, batter_stats, seed=42)
 ```bash
 PYTHONPATH=src python3 -m unittest discover -s unit_tests/module4 -p "test_*.py" -v
 PYTHONPATH=src python3 -m unittest integration_tests.module4.test_module3_4_integration -v
+```
+
+### Module 5: Adaptive planning
+
+**Environment:** Same as Modules 3 and 4 — `PYTHONPATH=src`.
+
+```python
+from module5.planner import generate_adaptive_plan
+
+plan = generate_adaptive_plan(
+    game_state,
+    current_lineup,
+    bench_players,
+    offensive_scores,
+    defensive_scores,
+    innings_ahead=3,
+)
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module5 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module5.test_module1_2_3_4_5_integration -v
 ```
 
 ### Module 2: Defensive Performance Analysis
@@ -343,6 +418,7 @@ Sample test data files are available in `test_data/`:
 | 2 |  |  |  |  |
 | 3 | March 19 | Module 3 (CSP) | Complete | README Module 3 spec; `checkpoints/checkpoint_3_module_report.md`; `checkpoints/checkpoint_3_elegance_report.md`; **Running Module 3** / **Running Module 3 tests** (`PYTHONPATH=src`) |
 | 4 | April 2 | Module 4 (Genetic Algorithms) | Complete | README **Module 4 Specification**; `checkpoints/checkpoint_4_module_report.md`; `checkpoints/checkpoint_4_elegance_report.md`; **Running Module 4** / **Running Module 4 tests** (`PYTHONPATH=src`); `MODULE4_WORK_SPLIT.md` |
+| 5 | April 16 | Module 5 (Planning) | In progress | README **Module 5 Specification**; unit tests in `unit_tests/module5/`; integration test `integration_tests/module5/test_module1_2_3_4_5_integration.py`; interactive planning surfaced in `web/module4_dashboard.html` |
 
 ## Required Workflow (Agent-Guided)
 
