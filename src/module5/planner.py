@@ -13,6 +13,7 @@ from module5.game_state import (
     validate_bench_players,
     validate_current_lineup,
 )
+from module5.strategy_rules import StrategyRuleError, evaluate_strategy_recommendations
 
 
 class PlanningInputError(ValueError):
@@ -153,12 +154,35 @@ def generate_adaptive_plan(
     if not normalized_defense:
         raise PlanningInputError("defensive_scores must not be empty")
 
-    recommendations = _make_default_recommendations(
-        normalized_state,
-        normalized_offense,
-        normalized_defense,
-        bench_players,
-    )
+    state_payload = {
+        "inning": normalized_state.inning,
+        "half": normalized_state.half,
+        "outs": normalized_state.outs,
+        "score_for": normalized_state.score_for,
+        "score_against": normalized_state.score_against,
+        "bases": list(normalized_state.bases),
+        "substitutions_used": normalized_state.substitutions_used,
+        "substitutions_limit": normalized_state.substitutions_limit,
+        "pitcher_fatigue": normalized_state.pitcher_fatigue,
+    }
+    try:
+        recommendations = evaluate_strategy_recommendations(
+            state=state_payload,
+            current_lineup=current_lineup,
+            bench_players=bench_players,
+            offensive_scores=normalized_offense,
+            defensive_scores=normalized_defense,
+            innings_ahead=innings_ahead,
+        )
+    except StrategyRuleError as exc:
+        raise PlanningInputError(str(exc)) from exc
+    if not recommendations:
+        recommendations = _make_default_recommendations(
+            normalized_state,
+            normalized_offense,
+            normalized_defense,
+            bench_players,
+        )
     recommendations = sorted(
         recommendations,
         key=lambda r: (int(r["priority"]), -float(r["confidence"]), r["action_type"]),
