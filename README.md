@@ -8,9 +8,8 @@ The workflow begins with first-order logic-based matchup analysis using quantifi
 
 ## Team
 
-- Member 1
-- Member 2
-- Member 3 (if applicable)
+- Kali Javetski
+- Sylvia Burroughs
 
 ## Proposal
 
@@ -178,7 +177,7 @@ assignment = assign_defensive_positions(offensive, defensive, eligibility)
 **Inputs:**
 - **`game_state`:** mapping with inning context and constraints:
   - required keys: `inning`, `half`, `outs`, `score_for`, `score_against`, `bases`, `substitutions_used`, `substitutions_limit`
-  - optional key: `pitcher_fatigue`
+  - optional key: `pitcher_fatigue` (accepted for compatibility; **not** used for recommendations—there is no pitching module, so the planner does not suggest bullpen or pitching changes)
 - **`current_lineup`:**
   - `batting_order`: list of 9 unique players
   - `field_positions`: `{position: player}`
@@ -414,11 +413,11 @@ Sample test data files are available in `test_data/`:
 
 | Checkpoint | Date | Modules Included | Status | Evidence |
 | ---------- | ---- | ---------------- | ------ | -------- |
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
+| 1 | Feb 11 | Module 2 (Knowledge Bases) | Complete | README **Module 2 Specification**; `checkpoints/checkpoint_1_elegance_report.md`; **Running Module 2** / unit tests (`PYTHONPATH=src`) |
+| 2 | Feb 26 | Module 1 (First-Order Logic) | Complete | README **Module 1 Specification**; `checkpoints/checkpoint_2_module_report.md`; `checkpoints/checkpoint_2_elegance_report.md`; **Running Module 1** / unit tests (`PYTHONPATH=src`) |
 | 3 | March 19 | Module 3 (CSP) | Complete | README Module 3 spec; `checkpoints/checkpoint_3_module_report.md`; `checkpoints/checkpoint_3_elegance_report.md`; **Running Module 3** / **Running Module 3 tests** (`PYTHONPATH=src`) |
 | 4 | April 2 | Module 4 (Genetic Algorithms) | Complete | README **Module 4 Specification**; `checkpoints/checkpoint_4_module_report.md`; `checkpoints/checkpoint_4_elegance_report.md`; **Running Module 4** / **Running Module 4 tests** (`PYTHONPATH=src`); `MODULE4_WORK_SPLIT.md` |
-| 5 | April 16 | Module 5 (Planning) | In progress | README **Module 5 Specification**; unit tests in `unit_tests/module5/`; integration test `integration_tests/module5/test_module1_2_3_4_5_integration.py`; interactive planning surfaced in `web/module4_dashboard.html` |
+| 5 | April 16 | Module 5 (Planning) | Complete | README **Module 5 Specification**; `checkpoints/checkpoint_5_module_report.md`; `checkpoints/checkpoint_5_elegance_report.md`; `checkpoints/project_module_rubric_report.md`; `checkpoints/project_elegance_report.md`; **Running Module 5** tests (`PYTHONPATH=src`); `web/module4_dashboard.html`; `demos/dashboard_plan_server.py` |
 
 ## Required Workflow (Agent-Guided)
 

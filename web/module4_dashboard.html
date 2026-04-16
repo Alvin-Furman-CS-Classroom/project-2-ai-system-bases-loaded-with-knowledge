@@ -53,6 +53,21 @@
     .batter-name {
       font-weight: 500;
     }
+    .lineup-row {
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .lineup-row:hover {
+      border-color: #4b6cb0;
+    }
+    .lineup-row.highlighted {
+      border-color: #74b8ff;
+      box-shadow: 0 0 0 2px rgba(116, 184, 255, 0.35);
+    }
+    .lineup-row:focus {
+      outline: 2px solid #74b8ff;
+      outline-offset: 2px;
+    }
     .role-badge {
       display: inline-block;
       margin-left: 8px;
@@ -119,6 +134,15 @@
       user-select: none;
       padding-right: 34px;
     }
+    .defensive-slot .player {
+      cursor: pointer;
+      text-decoration: underline dotted rgba(142, 209, 255, 0.45);
+      text-underline-offset: 2px;
+    }
+    .defensive-slot.highlighted {
+      border-color: #74b8ff !important;
+      box-shadow: 0 0 0 2px rgba(116, 184, 255, 0.35);
+    }
     .defensive-slot.dragging {
       opacity: 0.72;
       border-color: #8cc6ff;
@@ -156,9 +180,11 @@
     .b1 { left: 70%; top: 52%; }
     .c  { left: 50%; top: 76%; }
     .dh { left: 79%; top: 76%; }
+    /* Full-width rows below the top row; use auto rows so multiple .module5 blocks stack
+       (Adaptive Planning + Pipeline Connections) instead of sharing grid-row: 2 and overlapping. */
     .module5 {
       grid-column: 1 / -1;
-      grid-row: 2;
+      grid-row: auto;
     }
     .field-footer {
       background: rgba(11,16,32,0.9);
@@ -275,6 +301,33 @@
       padding: 6px 8px;
       line-height: 1.25;
     }
+    .player-inspector {
+      margin-top: 12px;
+      border: 1px solid #30416e;
+      border-radius: 10px;
+      background: rgba(9, 14, 30, 0.92);
+      padding: 10px 12px;
+    }
+    .player-inspector h4 {
+      margin: 0 0 8px;
+      font-size: 0.86rem;
+      color: #9ed2ff;
+    }
+    .player-inspector .inspector-name {
+      font-weight: 700;
+      color: #eaf2ff;
+      margin-bottom: 6px;
+    }
+    .player-inspector .inspector-grid {
+      display: grid;
+      gap: 4px;
+      font-size: 0.78rem;
+      color: #b8c8e8;
+    }
+    .player-inspector .inspector-pos {
+      color: #8fd1ff;
+      font-weight: 600;
+    }
     .why-score {
       color: #8fd1ff;
       font-weight: 700;
@@ -292,6 +345,114 @@
       border-radius: 8px;
       padding: 10px;
       line-height: 1.35;
+    }
+    .rec-item {
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .rec-item:hover {
+      border-color: #4b6cb0;
+    }
+    .rec-item.active {
+      border-color: #61d095;
+      box-shadow: 0 0 0 2px rgba(97, 208, 149, 0.28);
+    }
+    .rec-item:focus {
+      outline: 2px solid #61d095;
+      outline-offset: 2px;
+    }
+    tbody tr.inning-row {
+      cursor: pointer;
+      transition: background 0.12s ease;
+    }
+    tbody tr.inning-row:hover {
+      background: #1e2a4d;
+    }
+    tbody tr.inning-row:focus {
+      outline: 2px solid #74b8ff;
+      outline-offset: -2px;
+    }
+    .gs-form {
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #2a3760;
+    }
+    .gs-form h3 {
+      margin-top: 0;
+      font-size: 0.95rem;
+      color: #bcd3ff;
+    }
+    .gs-hint code {
+      font-size: 0.72rem;
+      color: #9ed2ff;
+    }
+    .gs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px 14px;
+      align-items: end;
+      margin-top: 10px;
+    }
+    .gs-grid label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.78rem;
+      color: #b8c8e8;
+    }
+    .gs-grid input[type="number"],
+    .gs-grid select {
+      padding: 6px 8px;
+      border-radius: 8px;
+      border: 1px solid #3a4f82;
+      background: #121a32;
+      color: #e8ecf3;
+      font-size: 0.85rem;
+    }
+    .gs-bases {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px 12px;
+      font-size: 0.78rem;
+      color: #b8c8e8;
+    }
+    .gs-bases-label {
+      font-weight: 600;
+      color: #9ed2ff;
+      margin-right: 4px;
+    }
+    .gs-actions {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 16px;
+    }
+    .gs-btn {
+      border: 1px solid #5f93d8;
+      background: #24406f;
+      color: #eaf2ff;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .gs-btn:hover {
+      background: #2d4f85;
+    }
+    .gs-auto {
+      font-size: 0.78rem;
+      color: #c7d5f1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+    #m5-replan-status {
+      margin-top: 8px;
+      margin-bottom: 0;
     }
     .recommendations span {
       color: #c9d4ee;
@@ -330,19 +491,21 @@
   </style>
 </head>
 <body>
+  <script type="application/json" id="replan-context">{"game_state": {"inning": 7, "half": "bottom", "outs": 1, "score_for": 4, "score_against": 3, "bases": [true, false, true], "substitutions_used": 2, "substitutions_limit": 5, "pitcher_fatigue": 0.0}, "bench_players": [{"name": "Bench Speed", "roles": ["PR", "CF", "LF"]}, {"name": "Bench Power", "roles": ["PH", "1B", "RF"]}], "offensive_scores": {"Matt Olson": 37.32, "Ozzie Albies": 30.39, "Michael Harris II": 30.459999999999997, "Sean Murphy": 30.240000000000002, "Jonathan Ornelas": 50.0, "Nick Allen": 25.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 40.92, "Drake Baldwin": 35.93, "Bench Speed": 58.0, "Bench Power": 58.0}, "defensive_scores": {"Matt Olson": 100.0, "Ozzie Albies": 100.0, "Michael Harris II": 100.0, "Sean Murphy": 100.0, "Jonathan Ornelas": 80.0, "Nick Allen": 100.0, "Jurickson Profar": 100.0, "Ronald Acuña Jr.": 100.0, "Drake Baldwin": 0.0, "Bench Speed": 50.0, "Bench Power": 50.0}, "innings_ahead": 3}</script>
+
   <div class="wrap">
     <section class="card lineup-card">
       <h2>Batting Order (Module 4)</h2>
       <ol>
-        <li data-player='Ronald Acuña Jr.'><span class='slot'>1.</span> <span class='batter-name'>Ronald Acuña Jr.</span></li>
-<li data-player='Jonathan Ornelas'><span class='slot'>2.</span> <span class='batter-name'>Jonathan Ornelas</span></li>
-<li data-player='Matt Olson'><span class='slot'>3.</span> <span class='batter-name'>Matt Olson</span></li>
-<li data-player='Drake Baldwin'><span class='slot'>4.</span> <span class='batter-name'>Drake Baldwin</span> <span class='role-badge'>DH</span></li>
-<li data-player='Michael Harris II'><span class='slot'>5.</span> <span class='batter-name'>Michael Harris II</span></li>
-<li data-player='Sean Murphy'><span class='slot'>6.</span> <span class='batter-name'>Sean Murphy</span></li>
-<li data-player='Nick Allen'><span class='slot'>7.</span> <span class='batter-name'>Nick Allen</span></li>
-<li data-player='Ozzie Albies'><span class='slot'>8.</span> <span class='batter-name'>Ozzie Albies</span></li>
-<li data-player='Jurickson Profar'><span class='slot'>9.</span> <span class='batter-name'>Jurickson Profar</span></li>
+        <li class="lineup-row" data-player="Ronald Acuña Jr." tabindex="0" role="button"><span class='slot'>1.</span> <span class='batter-name'>Ronald Acuña Jr.</span></li>
+<li class="lineup-row" data-player="Jonathan Ornelas" tabindex="0" role="button"><span class='slot'>2.</span> <span class='batter-name'>Jonathan Ornelas</span></li>
+<li class="lineup-row" data-player="Matt Olson" tabindex="0" role="button"><span class='slot'>3.</span> <span class='batter-name'>Matt Olson</span></li>
+<li class="lineup-row" data-player="Drake Baldwin" tabindex="0" role="button"><span class='slot'>4.</span> <span class='batter-name'>Drake Baldwin</span> <span class='role-badge'>DH</span></li>
+<li class="lineup-row" data-player="Michael Harris II" tabindex="0" role="button"><span class='slot'>5.</span> <span class='batter-name'>Michael Harris II</span></li>
+<li class="lineup-row" data-player="Sean Murphy" tabindex="0" role="button"><span class='slot'>6.</span> <span class='batter-name'>Sean Murphy</span></li>
+<li class="lineup-row" data-player="Nick Allen" tabindex="0" role="button"><span class='slot'>7.</span> <span class='batter-name'>Nick Allen</span></li>
+<li class="lineup-row" data-player="Ozzie Albies" tabindex="0" role="button"><span class='slot'>8.</span> <span class='batter-name'>Ozzie Albies</span></li>
+<li class="lineup-row" data-player="Jurickson Profar" tabindex="0" role="button"><span class='slot'>9.</span> <span class='batter-name'>Jurickson Profar</span></li>
       </ol>
     </section>
     <section class="card field">
@@ -377,24 +540,72 @@
           <h4>Why This Move</h4>
           <ul id="why-move-list" class="why-list"></ul>
         </div>
+        <div id="player-inspector" class="player-inspector">
+          <h4>Player focus</h4>
+          <p class="hint inspector-body">
+            Click a batter in the lineup, a player name on the diamond, or a Module 5 recommendation to cross-highlight and see scores.
+          </p>
+        </div>
       </div>
     </section>
 
-    <section class="card module5">
+    <section class="card module5" id="module5-root">
       <h2>Adaptive Planning (Module 5)</h2>
-      <ul class="recommendations">
-        <li><strong>defensive_replacement</strong> (priority 1, confidence 0.64)<br/><span>Protecting a lead: improve DH defense by replacing Drake Baldwin with Bench Speed.</span></li>
-<li><strong>lineup_matchup_adjustment</strong> (priority 2, confidence 0.60)<br/><span>Center next high-leverage plate appearance around Jonathan Ornelas based on projected matchup edge.</span></li>
+      
+      <div class="gs-form">
+        <h3>Game state (editable)</h3>
+        <p class="hint gs-hint">
+          Adjust the situation and click <strong>Refresh plan</strong> to rerun Module 5 with the Python planner.
+          Serve this page with
+          <code>PYTHONPATH=src python3 demos/dashboard_plan_server.py</code>
+          (then open the URL it prints).
+        </p>
+        <div class="gs-grid">
+          <label>Inning <input id="gs-inning" type="number" min="1" max="18" value="7" /></label>
+          <label>Half
+            <select id="gs-half">
+              <option value="top">Top</option>
+              <option value="bottom" selected>Bottom</option>
+            </select>
+          </label>
+          <label>Outs
+            <select id="gs-outs">
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+            </select>
+          </label>
+          <label>Runs (us) <input id="gs-score-for" type="number" min="0" max="99" value="4" /></label>
+          <label>Runs (them) <input id="gs-score-against" type="number" min="0" max="99" value="3" /></label>
+          <div class="gs-bases">
+            <span class="gs-bases-label">Bases</span>
+            <label><input id="gs-base-1" type="checkbox" checked /> 1st</label>
+            <label><input id="gs-base-2" type="checkbox" /> 2nd</label>
+            <label><input id="gs-base-3" type="checkbox" checked /> 3rd</label>
+          </div>
+          <label>Subs used <input id="gs-subs-used" type="number" min="0" max="25" value="2" /></label>
+          <label>Subs limit <input id="gs-subs-limit" type="number" min="0" max="25" value="5" /></label>
+        </div>
+        <div class="gs-actions">
+          <button type="button" id="m5-refresh-plan" class="gs-btn">Refresh plan</button>
+          <label class="gs-auto"><input id="gs-auto-refresh" type="checkbox" /> Auto-refresh on change</label>
+        </div>
+        <p id="m5-replan-status" class="hint"></p>
+      </div>
+    
+      <ul id="m5-recommendations" class="recommendations">
+        <li class="rec-item" tabindex="0" role="button" data-bench-player="Bench Speed" data-target-player="Jonathan Ornelas" data-position="3B"><strong>defensive_replacement</strong> (priority 1, confidence 0.64)<br/><span>Protecting a lead: strengthen 3B by bringing in Bench Speed for Jonathan Ornelas.</span></li>
+<li class="rec-item" tabindex="0" role="button" data-bench-player="" data-target-player="Jonathan Ornelas" data-position=""><strong>lineup_matchup_adjustment</strong> (priority 2, confidence 0.60)<br/><span>Center next high-leverage plate appearance around Jonathan Ornelas based on projected matchup edge.</span></li>
       </ul>
       <h3>Multi-Inning Outlook</h3>
       <table>
         <thead>
           <tr><th>Inning</th><th>Half</th><th>Objective</th><th>Actions</th></tr>
         </thead>
-        <tbody>
-          <tr><td>7</td><td>bottom</td><td>protect_lead</td><td>2</td></tr>
-<tr><td>8</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
-<tr><td>9</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
+        <tbody id="m5-inning-body">
+          <tr class="inning-row" tabindex="0" role="row"><td>7</td><td>bottom</td><td>protect_lead</td><td>2</td></tr>
+<tr class="inning-row" tabindex="0" role="row"><td>8</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
+<tr class="inning-row" tabindex="0" role="row"><td>9</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
         </tbody>
       </table>
     </section>
@@ -412,8 +623,8 @@
       <h3>Data Sources</h3>
       <table>
         <tbody>
-          <tr><td>Matchup stats (M1/M4)</td><td>/Users/kalijavetski/Documents/csc343/project-2-ai-system-bases-loaded-with-knowledge/test_data/matchup_stats.json</td></tr>
-          <tr><td>Defensive stats (M2/M3)</td><td>/Users/kalijavetski/Documents/csc343/project-2-ai-system-bases-loaded-with-knowledge/test_data/defensive_stats.json</td></tr>
+          <tr><td>Matchup stats (M1/M4)</td><td>/Users/sylviaburroughs/Documents/CSC 343/project-2-ai-system-bases-loaded-with-knowledge/test_data/matchup_stats.json</td></tr>
+          <tr><td>Defensive stats (M2/M3)</td><td>/Users/sylviaburroughs/Documents/CSC 343/project-2-ai-system-bases-loaded-with-knowledge/test_data/defensive_stats.json</td></tr>
           <tr><td>Pipeline seed</td><td>42</td></tr>
         </tbody>
       </table>
@@ -422,11 +633,11 @@
   </div>
   <script>
     (function () {
-      const outfieldProfiles = {"Michael Harris II": {"LF": 0.0, "CF": 100.0, "RF": 0.0}, "Drake Baldwin": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ronald Acuña Jr.": {"LF": 0.0, "CF": 0.0, "RF": 100.0}, "Ozzie Albies": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jurickson Profar": {"LF": 100.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Nick Allen": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"LF": 0.0, "CF": 0.0, "RF": 0.0}};
-      const outfieldPredictedProfiles = {"Michael Harris II": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Drake Baldwin": {"LF": 80.0, "CF": 100.0, "RF": 80.0}, "Matt Olson": {"LF": 80.0, "CF": 100.0, "RF": 80.0}, "Ronald Acuña Jr.": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ozzie Albies": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Jurickson Profar": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Sean Murphy": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Nick Allen": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Jonathan Ornelas": {"LF": 80.0, "CF": 80.0, "RF": 80.0}};
-      const defensiveProfiles = {"Michael Harris II": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 100.0, "RF": 0.0}, "Drake Baldwin": {"C": 80.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"C": 0.0, "1B": 100.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ronald Acuña Jr.": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 100.0}, "Ozzie Albies": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jurickson Profar": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"C": 100.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Nick Allen": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 100.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}};
-      const offensiveProfiles = {"Michael Harris II": 30.459999999999997, "Drake Baldwin": 35.93, "Matt Olson": 37.32, "Ronald Acuña Jr.": 40.92, "Ozzie Albies": 30.39, "Jurickson Profar": 34.489999999999995, "Sean Murphy": 30.240000000000002, "Nick Allen": 25.52, "Jonathan Ornelas": 50.0};
-      const eligibilityProfiles = {"Michael Harris II": ["CF", "DH", "LF", "RF"], "Drake Baldwin": ["C", "DH"], "Matt Olson": ["1B", "DH"], "Ronald Acuña Jr.": ["CF", "DH", "LF", "RF"], "Ozzie Albies": ["2B", "DH"], "Jurickson Profar": ["CF", "DH", "LF", "RF"], "Sean Murphy": ["C", "DH"], "Nick Allen": ["2B", "DH", "SS"], "Jonathan Ornelas": ["3B", "DH", "SS"]};
+      const outfieldProfiles = {"Ronald Acuña Jr.": {"LF": 0.0, "CF": 0.0, "RF": 100.0}, "Jurickson Profar": {"LF": 100.0, "CF": 0.0, "RF": 0.0}, "Michael Harris II": {"LF": 0.0, "CF": 100.0, "RF": 0.0}, "Drake Baldwin": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ozzie Albies": {"LF": 0.0, "CF": 0.0, "RF": 0.0}, "Nick Allen": {"LF": 0.0, "CF": 0.0, "RF": 0.0}};
+      const outfieldPredictedProfiles = {"Ronald Acuña Jr.": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Jurickson Profar": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Michael Harris II": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Drake Baldwin": {"LF": 80.0, "CF": 100.0, "RF": 80.0}, "Matt Olson": {"LF": 80.0, "CF": 100.0, "RF": 80.0}, "Jonathan Ornelas": {"LF": 80.0, "CF": 80.0, "RF": 80.0}, "Sean Murphy": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ozzie Albies": {"LF": 100.0, "CF": 100.0, "RF": 100.0}, "Nick Allen": {"LF": 100.0, "CF": 100.0, "RF": 100.0}};
+      const defensiveProfiles = {"Ronald Acuña Jr.": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 100.0}, "Jurickson Profar": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Michael Harris II": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 100.0, "RF": 0.0}, "Drake Baldwin": {"C": 80.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"C": 0.0, "1B": 100.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"C": 100.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ozzie Albies": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Nick Allen": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 100.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}};
+      const offensiveProfiles = {"Ronald Acuña Jr.": 40.92, "Jurickson Profar": 34.489999999999995, "Michael Harris II": 30.459999999999997, "Drake Baldwin": 35.93, "Matt Olson": 37.32, "Jonathan Ornelas": 50.0, "Sean Murphy": 30.240000000000002, "Ozzie Albies": 30.39, "Nick Allen": 25.52};
+      const eligibilityProfiles = {"Ronald Acuña Jr.": ["CF", "DH", "LF", "RF"], "Jurickson Profar": ["CF", "DH", "LF", "RF"], "Michael Harris II": ["CF", "DH", "LF", "RF"], "Drake Baldwin": ["C", "DH"], "Matt Olson": ["1B", "DH"], "Jonathan Ornelas": ["3B", "DH", "SS"], "Sean Murphy": ["C", "DH"], "Ozzie Albies": ["2B", "DH"], "Nick Allen": ["2B", "DH", "SS"]};
       const allPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
       const slots = Array.from(document.querySelectorAll(".defensive-slot"));
       const valueEl = document.getElementById("outfield-confidence");
@@ -438,9 +649,349 @@
       const freeBtn = document.getElementById("mode-free");
       const predictiveConfidenceEl = document.getElementById("predictive-confidence");
       const lockButtons = Array.from(document.querySelectorAll(".lock-btn"));
+      const inspectorEl = document.getElementById("player-inspector");
+      const lineupRows = Array.from(document.querySelectorAll(".lineup-card ol li[data-player]"));
+      const module5Root = document.getElementById("module5-root");
+      const replanContextEl = document.getElementById("replan-context");
+      let replanContext = {};
+      if (replanContextEl && replanContextEl.textContent) {
+        try {
+          replanContext = JSON.parse(replanContextEl.textContent);
+        } catch (err) {
+          replanContext = {};
+        }
+      }
       let dragSourcePos = null;
       let strictMode = false;
       const lockedPositions = new Set();
+      let lastFocusedPlayer = null;
+
+      function clearSelectionHighlights() {
+        for (const li of lineupRows) {
+          li.classList.remove("highlighted");
+        }
+        for (const slot of slots) {
+          slot.classList.remove("highlighted");
+        }
+        document.querySelectorAll("#m5-recommendations .rec-item").forEach((el) => {
+          el.classList.remove("active");
+        });
+      }
+
+      function highlightPlayerEverywhere(player) {
+        if (!player) return;
+        for (const li of lineupRows) {
+          if ((li.dataset.player || "") === player) {
+            li.classList.add("highlighted");
+          }
+        }
+        for (const pos of allPositions) {
+          if (getPlayerAt(pos) === player) {
+            const slot = getSlotByPos(pos);
+            if (slot) slot.classList.add("highlighted");
+          }
+        }
+      }
+
+      function positionsForPlayer(player) {
+        const out = [];
+        for (const pos of allPositions) {
+          if (getPlayerAt(pos) === player) {
+            out.push(pos);
+          }
+        }
+        return out;
+      }
+
+      function renderInspectorPrimary(player) {
+        if (!inspectorEl) return;
+        if (!player) {
+          inspectorEl.innerHTML =
+            "<h4>Player focus</h4>" +
+            "<p class=\\\"hint inspector-body\\\">" +
+            "Click a batter in the lineup, a player name on the diamond, or a Module 5 recommendation.</p>";
+          return;
+        }
+        const off = offensiveScore(player);
+        const posList = positionsForPlayer(player);
+        const offLabel = Object.prototype.hasOwnProperty.call(offensiveProfiles, player)
+          ? off.toFixed(1)
+          : "—";
+        const defMap = defensiveProfiles[player] || {};
+        const defLines = Object.keys(defMap)
+          .sort()
+          .map(
+            (pos) =>
+              "<div><span class=\\\"inspector-pos\\\">" +
+              pos +
+              "</span>: " +
+              Number(defMap[pos]).toFixed(1) +
+              "</div>",
+          )
+          .join("");
+        const posSummary =
+          posList.length > 0 ? posList.join(", ") : "(not on diamond in current assignment)";
+        inspectorEl.innerHTML =
+          "<h4>Player focus</h4>" +
+          "<div class=\\\"inspector-name\\\">" +
+          player +
+          "</div>" +
+          "<div class=\\\"inspector-grid\\\">" +
+          "<div><span class=\\\"inspector-pos\\\">Module 1 offense</span>: " +
+          offLabel +
+          "</div>" +
+          "<div><span class=\\\"inspector-pos\\\">Current positions</span>: " +
+          posSummary +
+          "</div>" +
+          (defLines
+            ? "<div style=\\\"margin-top:6px\\\"><span class=\\\"inspector-pos\\\">Module 2 defense by position</span></div>" +
+              defLines
+            : "<div><span class=\\\"inspector-pos\\\">Module 2 defense</span>: —</div>") +
+          "</div>";
+      }
+
+      function renderInspectorRecommendation(bench, target, position) {
+        if (!inspectorEl) return;
+        const parts = [];
+        parts.push("<h4>Recommendation focus</h4>");
+        parts.push("<div class=\\\"inspector-grid\\\">");
+        if (bench) {
+          parts.push(
+            "<div><span class=\\\"inspector-pos\\\">Bench / sub</span>: " + bench + "</div>",
+          );
+        }
+        if (target) {
+          parts.push(
+            "<div><span class=\\\"inspector-pos\\\">On-field target</span>: " + target + "</div>",
+          );
+        }
+        if (position) {
+          parts.push(
+            "<div><span class=\\\"inspector-pos\\\">Position</span>: " + position + "</div>",
+          );
+        }
+        parts.push(
+          "<div class=\\\"hint\\\" style=\\\"margin-top:8px\\\">Highlighted players match this action where they appear in the lineup or on the diamond.</div>",
+        );
+        parts.push("</div>");
+        inspectorEl.innerHTML = parts.join("");
+      }
+
+      function renderInspectorInningSummary(cells) {
+        if (!inspectorEl || !cells || cells.length < 4) return;
+        const inn = cells[0].textContent.trim();
+        const half = cells[1].textContent.trim();
+        const objective = cells[2].textContent.trim();
+        const actions = cells[3].textContent.trim();
+        inspectorEl.innerHTML =
+          "<h4>Inning window</h4>" +
+          "<div class=\\\"inspector-grid\\\">" +
+          "<div><span class=\\\"inspector-pos\\\">Inning</span>: " +
+          inn +
+          " (" +
+          half +
+          ")</div>" +
+          "<div><span class=\\\"inspector-pos\\\">Objective</span>: " +
+          objective +
+          "</div>" +
+          "<div><span class=\\\"inspector-pos\\\">Planned actions</span>: " +
+          actions +
+          "</div>" +
+          "</div>" +
+          "<p class=\\\"hint\\\" style=\\\"margin-top:8px\\\">Use the Adaptive Planning list above for full rationale.</p>";
+      }
+
+      function activateLineupPlayer(player) {
+        lastFocusedPlayer = player || null;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(player);
+        renderInspectorPrimary(player);
+      }
+
+      function activateFieldPlayer(player) {
+        lastFocusedPlayer = player || null;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(player);
+        renderInspectorPrimary(player);
+      }
+
+      function refreshFocusAfterAssignment() {
+        if (!lastFocusedPlayer) return;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(lastFocusedPlayer);
+        renderInspectorPrimary(lastFocusedPlayer);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function readGameStateForm() {
+        const inning = parseInt(document.getElementById("gs-inning")?.value || "1", 10);
+        const halfEl = document.getElementById("gs-half");
+        const half = halfEl ? halfEl.value : "bottom";
+        const outs = parseInt(document.getElementById("gs-outs")?.value || "0", 10);
+        const scoreFor = parseInt(document.getElementById("gs-score-for")?.value || "0", 10);
+        const scoreAgainst = parseInt(
+          document.getElementById("gs-score-against")?.value || "0",
+          10,
+        );
+        const b1 = document.getElementById("gs-base-1")?.checked || false;
+        const b2 = document.getElementById("gs-base-2")?.checked || false;
+        const b3 = document.getElementById("gs-base-3")?.checked || false;
+        const subsUsed = parseInt(document.getElementById("gs-subs-used")?.value || "0", 10);
+        const subsLimit = parseInt(document.getElementById("gs-subs-limit")?.value || "5", 10);
+        return {
+          inning: Math.max(1, inning),
+          half: half,
+          outs: Math.max(0, Math.min(2, outs)),
+          score_for: Math.max(0, scoreFor),
+          score_against: Math.max(0, scoreAgainst),
+          bases: [b1, b2, b3],
+          substitutions_used: Math.max(0, subsUsed),
+          substitutions_limit: Math.max(0, subsLimit),
+          pitcher_fatigue: 0.0,
+        };
+      }
+
+      function battingOrderFromDom() {
+        return lineupRows.map((li) => li.dataset.player || "").filter(Boolean);
+      }
+
+      function buildPlanningDefensiveScores() {
+        const base = Object.assign({}, replanContext.defensive_scores || {});
+        for (const pos of allPositions) {
+          const player = getPlayerAt(pos);
+          if (!player) continue;
+          const byPos = defensiveProfiles[player];
+          if (byPos && Object.prototype.hasOwnProperty.call(byPos, pos)) {
+            base[player] = Number(byPos[pos]);
+          } else if (!Object.prototype.hasOwnProperty.call(base, player)) {
+            base[player] = 0.0;
+          }
+        }
+        return base;
+      }
+
+      function renderModule5FromPlan(plan) {
+        const list = document.getElementById("m5-recommendations");
+        const tbody = document.getElementById("m5-inning-body");
+        if (!list || !tbody || !plan) return;
+        const recs = plan.recommendations || [];
+        if (recs.length === 0) {
+          list.innerHTML =
+            "<li><strong>No immediate recommendations.</strong> " +
+            "<span>Module 5 did not flag a high-priority action for this state.</span></li>";
+        } else {
+          list.innerHTML = recs
+            .map((rec) => {
+              const at = escapeHtml(rec.action_type || "action");
+              const pr = escapeHtml(String(rec.priority != null ? rec.priority : "?"));
+              const conf = Number(rec.confidence != null ? rec.confidence : 0).toFixed(2);
+              const reason = escapeHtml(rec.reason || "No rationale provided.");
+              const bp = escapeHtml(rec.bench_player || "");
+              const tp = escapeHtml(rec.target_player || "");
+              const ps = escapeHtml(rec.position || "");
+              return (
+                '<li class="rec-item" tabindex="0" role="button" ' +
+                'data-bench-player="' +
+                bp +
+                '" data-target-player="' +
+                tp +
+                '" data-position="' +
+                ps +
+                '"><strong>' +
+                at +
+                "</strong> (priority " +
+                pr +
+                ", confidence " +
+                conf +
+                ")<br/><span>" +
+                reason +
+                "</span></li>"
+              );
+            })
+            .join("");
+        }
+        const rows = plan.multi_inning_plan || [];
+        if (rows.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='4'>No inning plan generated.</td></tr>";
+        } else {
+          tbody.innerHTML = rows
+            .map((row) => {
+              const inn = escapeHtml(String(row.inning != null ? row.inning : "?"));
+              const hf = escapeHtml(String(row.half || "tbd"));
+              const obj = escapeHtml(String(row.objective || "n/a"));
+              const cnt = Array.isArray(row.recommended_actions)
+                ? row.recommended_actions.length
+                : 0;
+              return (
+                '<tr class="inning-row" tabindex="0" role="row">' +
+                "<td>" +
+                inn +
+                "</td><td>" +
+                hf +
+                "</td><td>" +
+                obj +
+                "</td><td>" +
+                cnt +
+                "</td></tr>"
+              );
+            })
+            .join("");
+        }
+      }
+
+      async function runModule5Replan() {
+        const status = document.getElementById("m5-replan-status");
+        if (!replanContext || !replanContext.bench_players) {
+          if (status) status.textContent = "";
+          return;
+        }
+        if (status) status.textContent = "Contacting planner…";
+        const payload = {
+          game_state: readGameStateForm(),
+          current_lineup: {
+            batting_order: battingOrderFromDom(),
+            field_positions: currentAssignment(),
+          },
+          bench_players: replanContext.bench_players,
+          offensive_scores: replanContext.offensive_scores,
+          defensive_scores: buildPlanningDefensiveScores(),
+          innings_ahead: replanContext.innings_ahead || 3,
+        };
+        try {
+          const res = await fetch("/api/plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const text = await res.text();
+          if (!res.ok) {
+            if (status) {
+              status.textContent =
+                "Planner error (" + res.status + "): " + (text || res.statusText).slice(0, 200);
+            }
+            return;
+          }
+          const plan = JSON.parse(text);
+          renderModule5FromPlan(plan);
+          if (status) {
+            status.textContent =
+              "Plan updated at " + new Date().toLocaleTimeString() + " (Module 5).";
+          }
+        } catch (err) {
+          if (status) {
+            status.textContent =
+              "Could not reach /api/plan. Run PYTHONPATH=src python3 demos/dashboard_plan_server.py " +
+              "and open the dashboard from http://127.0.0.1:8765/ (not a file:// URL).";
+          }
+        }
+      }
 
       function getSlotByPos(pos) {
         return document.querySelector('.defensive-slot[data-pos="' + pos + '"]');
@@ -734,6 +1285,7 @@
             totalDefenseFitScore().toFixed(1);
         }
         renderWhyThisMove();
+        refreshFocusAfterAssignment();
       }
 
       function clearDropStyles() {
@@ -833,6 +1385,116 @@
                 : "No positions locked.";
           }
         });
+      }
+
+      for (const li of lineupRows) {
+        li.addEventListener("click", () => {
+          const player = li.dataset.player || "";
+          if (player) {
+            activateLineupPlayer(player);
+          }
+        });
+        li.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            const player = li.dataset.player || "";
+            if (player) {
+              activateLineupPlayer(player);
+            }
+          }
+        });
+      }
+
+      for (const slot of slots) {
+        const playerEl = slot.querySelector(".player");
+        if (playerEl) {
+          playerEl.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const player = playerEl.textContent.trim();
+            if (player) {
+              activateFieldPlayer(player);
+            }
+          });
+        }
+      }
+
+      if (module5Root) {
+        module5Root.addEventListener("click", (event) => {
+          const rec = event.target.closest(".rec-item");
+          if (rec && rec.closest("#m5-recommendations")) {
+            lastFocusedPlayer = null;
+            clearSelectionHighlights();
+            rec.classList.add("active");
+            const bench = rec.dataset.benchPlayer || "";
+            const target = rec.dataset.targetPlayer || "";
+            const position = rec.dataset.position || "";
+            if (bench) {
+              highlightPlayerEverywhere(bench);
+            }
+            if (target && target !== "slowest_current_runner") {
+              highlightPlayerEverywhere(target);
+            }
+            renderInspectorRecommendation(bench, target, position);
+            return;
+          }
+          const row = event.target.closest("tr.inning-row");
+          if (row && row.closest("#m5-inning-body")) {
+            lastFocusedPlayer = null;
+            const cells = Array.from(row.querySelectorAll("td"));
+            clearSelectionHighlights();
+            renderInspectorInningSummary(cells);
+          }
+        });
+
+        module5Root.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          const rec = event.target.closest(".rec-item");
+          if (rec && rec.closest("#m5-recommendations")) {
+            event.preventDefault();
+            rec.click();
+            return;
+          }
+          const row = event.target.closest("tr.inning-row");
+          if (row && row.closest("#m5-inning-body")) {
+            event.preventDefault();
+            row.click();
+          }
+        });
+      }
+
+      let replanDebounce = null;
+      function scheduleAutoReplan() {
+        const auto = document.getElementById("gs-auto-refresh");
+        if (!auto || !auto.checked) return;
+        if (replanDebounce) clearTimeout(replanDebounce);
+        replanDebounce = setTimeout(() => {
+          runModule5Replan();
+        }, 450);
+      }
+
+      const refreshPlanBtn = document.getElementById("m5-refresh-plan");
+      if (refreshPlanBtn) {
+        refreshPlanBtn.addEventListener("click", () => {
+          runModule5Replan();
+        });
+      }
+      const gsWatchIds = [
+        "gs-inning",
+        "gs-half",
+        "gs-outs",
+        "gs-score-for",
+        "gs-score-against",
+        "gs-base-1",
+        "gs-base-2",
+        "gs-base-3",
+        "gs-subs-used",
+        "gs-subs-limit",
+      ];
+      for (const gid of gsWatchIds) {
+        const gel = document.getElementById(gid);
+        if (gel) {
+          gel.addEventListener("change", scheduleAutoReplan);
+        }
       }
 
       updateBattingLineupDHTag();

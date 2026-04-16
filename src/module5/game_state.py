@@ -80,7 +80,8 @@ def normalize_game_state(game_state: Mapping[str, Any]) -> NormalizedGameState:
       substitutions_used, substitutions_limit
 
     Optional keys:
-      pitcher_fatigue (default 0.0, clamped to [0, 1]).
+      pitcher_fatigue (default 0.0, clamped to [0, 1]). Reserved for future use; Module 5 does
+      not emit pitching or bullpen recommendations because the project has no pitcher module.
     """
     inning = _coerce_non_negative_int("inning", _require_key(game_state, "inning"))
     if inning < 1:

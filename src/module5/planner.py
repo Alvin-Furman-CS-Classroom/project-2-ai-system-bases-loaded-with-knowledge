@@ -13,7 +13,11 @@ from module5.game_state import (
     validate_bench_players,
     validate_current_lineup,
 )
-from module5.strategy_rules import StrategyRuleError, evaluate_strategy_recommendations
+from module5.strategy_rules import (
+    FIELD_POSITIONS_DEFENSIVE,
+    StrategyRuleError,
+    evaluate_strategy_recommendations,
+)
 
 
 class PlanningInputError(ValueError):
@@ -40,9 +44,12 @@ def _make_default_recommendations(
     offensive_scores: Mapping[str, float],
     defensive_scores: Mapping[str, float],
     bench_players: Sequence[Mapping[str, Any]],
+    current_lineup: Mapping[str, Any],
 ) -> List[Dict[str, Any]]:
     """
-    Deterministic fallback recommendations for Person A baseline planner.
+    Deterministic fallback recommendations when strategy rules emit nothing.
+
+    No pitching/bullpen guidance — the system has no pitcher module or pitching data.
     """
     recommendations: List[Dict[str, Any]] = []
     if state.substitutions_remaining <= 0 or not bench_players:
@@ -52,21 +59,33 @@ def _make_default_recommendations(
     chasing_offense = state.score_diff < 0 and state.inning >= 6
 
     if lead_protection:
-        best_def_player, best_def_score = max(
-            defensive_scores.items(), key=lambda item: (item[1], item[0])
-        )
-        recommendations.append(
-            {
-                "action_type": "defensive_replacement_watch",
-                "inning_window": [state.inning, min(state.inning + 1, 9)],
-                "priority": 1,
-                "confidence": 0.65,
-                "reason": (
-                    "Protecting a late lead: monitor defensive substitution opportunities "
-                    f"around top defender {best_def_player} ({best_def_score:.1f})."
-                ),
-            }
-        )
+        fp = current_lineup.get("field_positions") or {}
+        field_players = [
+            player.strip()
+            for pos, player in fp.items()
+            if str(pos).strip().upper() in FIELD_POSITIONS_DEFENSIVE
+            and isinstance(player, str)
+            and player.strip()
+        ]
+        if field_players:
+            best_def_player = max(
+                field_players,
+                key=lambda p: (float(defensive_scores.get(p, 0.0)), p),
+            )
+            best_def_score = float(defensive_scores.get(best_def_player, 0.0))
+            recommendations.append(
+                {
+                    "action_type": "defensive_replacement_watch",
+                    "inning_window": [state.inning, min(state.inning + 1, 9)],
+                    "priority": 1,
+                    "confidence": 0.65,
+                    "reason": (
+                        "Protecting a late lead: monitor fielding substitutions "
+                        f"(strongest current field profile: {best_def_player} {best_def_score:.1f}; "
+                        "DH is not a defensive position)."
+                    ),
+                }
+            )
 
     if chasing_offense:
         best_off_player, best_off_score = max(
@@ -82,17 +101,6 @@ def _make_default_recommendations(
                     "Trailing in middle/late innings: prepare offense-focused substitutions "
                     f"near strongest bat profile {best_off_player} ({best_off_score:.1f})."
                 ),
-            }
-        )
-
-    if state.pitcher_fatigue >= 0.75:
-        recommendations.append(
-            {
-                "action_type": "bullpen_alert",
-                "inning_window": [state.inning, state.inning],
-                "priority": 1 if not recommendations else 2,
-                "confidence": 0.7,
-                "reason": "Pitcher fatigue is elevated; prepare contingency pitching plan.",
             }
         )
 
@@ -182,6 +190,7 @@ def generate_adaptive_plan(
             normalized_offense,
             normalized_defense,
             bench_players,
+            current_lineup,
         )
     recommendations = sorted(
         recommendations,

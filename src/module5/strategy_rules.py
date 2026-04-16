@@ -11,6 +11,9 @@ class StrategyRuleError(ValueError):
     """Raised when strategy-rule inputs are invalid."""
 
 
+# Positions where defensive ability matters on the field (excludes DH; no pitcher module).
+FIELD_POSITIONS_DEFENSIVE = frozenset({"C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"})
+
 WEIGHTS: Dict[str, float] = {
     "impact": 0.5,
     "urgency": 0.2,
@@ -252,12 +255,19 @@ def evaluate_strategy_recommendations(
                 }
             )
 
-    # Rule 3: defensive replacement to protect a lead.
+    # Rule 3: defensive replacement to protect a lead (field positions only — not DH).
     if inning >= 7 and score_diff > 0:
         def_candidates = [
             b for b in bench.values() if ("DEF" in b["roles"] or "CF" in b["roles"] or "SS" in b["roles"])
         ]
-        if def_candidates:
+        field_assignments = {
+            str(pos).strip().upper(): player.strip()
+            for pos, player in field_positions.items()
+            if str(pos).strip().upper() in FIELD_POSITIONS_DEFENSIVE
+            and isinstance(player, str)
+            and player.strip()
+        }
+        if def_candidates and field_assignments:
             best_bench = max(
                 def_candidates,
                 key=lambda b: (
@@ -266,7 +276,7 @@ def evaluate_strategy_recommendations(
                 ),
             )
             weakest_position, weakest_player = min(
-                field_positions.items(),
+                field_assignments.items(),
                 key=lambda pair: (float(defensive_scores[pair[1]]), pair[0], pair[1]),
             )
             bench_score = float(defensive_scores.get(best_bench["name"], best_bench.get("defense_score", 0.0)))
@@ -291,8 +301,8 @@ def evaluate_strategy_recommendations(
                     "target_player": weakest_player,
                     "position": weakest_position,
                     "reason": (
-                        f"Protecting a lead: improve {weakest_position} defense by replacing "
-                        f"{weakest_player} with {best_bench['name']}."
+                        f"Protecting a lead: strengthen {weakest_position} by bringing in "
+                        f"{best_bench['name']} for {weakest_player}."
                     ),
                 }
             )

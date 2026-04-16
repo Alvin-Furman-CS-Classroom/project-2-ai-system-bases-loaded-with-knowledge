@@ -207,7 +207,7 @@ def compute_module5_ui_plan(seed: int = 42) -> Dict[str, object]:
         "bases": [True, False, True],
         "substitutions_used": 2,
         "substitutions_limit": 5,
-        "pitcher_fatigue": 0.72,
+        "pitcher_fatigue": 0.0,
     }
     bench_players = [
         {"name": "Bench Speed", "roles": ["PR", "CF", "LF"]},
@@ -276,7 +276,7 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
         "bases": [True, False, True],
         "substitutions_used": 2,
         "substitutions_limit": 5,
-        "pitcher_fatigue": 0.72,
+        "pitcher_fatigue": 0.0,
     }
     bench_players = [
         {"name": "Bench Speed", "roles": ["PR", "CF", "LF"]},
@@ -292,10 +292,25 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
         innings_ahead=3,
     )
 
+    planning_offense = dict(offensive_subset)
+    planning_defense = dict(flat_defense)
+    for b in bench_players:
+        bname = b["name"]
+        planning_offense[bname] = float(offensive_scores.get(bname, 58.0))
+        nest = defensive_scores.get(bname) or {}
+        planning_defense[bname] = float(max(nest.values()) if nest else 50.0)
+
     return {
         "batting_order": batting_order,
         "assignment": assignment,
         "module5_plan": module5_plan,
+        "replan_context": {
+            "game_state": game_state,
+            "bench_players": bench_players,
+            "offensive_scores": planning_offense,
+            "defensive_scores": planning_defense,
+            "innings_ahead": 3,
+        },
         "outfield_profiles": compute_outfield_profiles(assignment),
         "outfield_profiles_predicted": compute_outfield_profiles_predicted(assignment),
         "defensive_profiles": compute_defensive_profiles(assignment),

@@ -9,7 +9,82 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, Sequence
 
+from module4.web_ui_script import build_dashboard_script
+from module4.web_ui_styles import get_dashboard_css
+
 REQUIRED_POSITIONS = ("C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH")
+
+
+def _attr_escape(value: Any) -> str:
+    """Escape text for use inside HTML double-quoted attributes."""
+    return html.escape(str(value or ""), quote=True)
+
+
+def _game_state_form_html(game_state: Mapping[str, Any]) -> str:
+    """Markup for editable Module 5 game-state controls (live replan via local server)."""
+    inning = int(game_state.get("inning", 1))
+    half = str(game_state.get("half", "bottom")).strip().lower()
+    if half not in ("top", "bottom"):
+        half = "bottom"
+    outs = max(0, min(2, int(game_state.get("outs", 0))))
+    score_for = max(0, int(game_state.get("score_for", 0)))
+    score_against = max(0, int(game_state.get("score_against", 0)))
+    raw_bases = game_state.get("bases", [False, False, False])
+    b_list = list(raw_bases) if isinstance(raw_bases, (list, tuple)) else [False, False, False]
+    while len(b_list) < 3:
+        b_list.append(False)
+    subs_used = max(0, int(game_state.get("substitutions_used", 0)))
+    subs_limit = max(0, int(game_state.get("substitutions_limit", 5)))
+    top_sel = " selected" if half == "top" else ""
+    bot_sel = " selected" if half == "bottom" else ""
+    o0 = " selected" if outs == 0 else ""
+    o1 = " selected" if outs == 1 else ""
+    o2 = " selected" if outs == 2 else ""
+    c1 = " checked" if bool(b_list[0]) else ""
+    c2 = " checked" if bool(b_list[1]) else ""
+    c3 = " checked" if bool(b_list[2]) else ""
+    return f"""
+      <div class="gs-form">
+        <h3>Game state (editable)</h3>
+        <p class="hint gs-hint">
+          Adjust the situation and click <strong>Refresh plan</strong> to rerun Module 5 with the Python planner.
+          Serve this page with
+          <code>PYTHONPATH=src python3 demos/dashboard_plan_server.py</code>
+          (then open the URL it prints).
+        </p>
+        <div class="gs-grid">
+          <label>Inning <input id="gs-inning" type="number" min="1" max="18" value="{inning}" /></label>
+          <label>Half
+            <select id="gs-half">
+              <option value="top"{top_sel}>Top</option>
+              <option value="bottom"{bot_sel}>Bottom</option>
+            </select>
+          </label>
+          <label>Outs
+            <select id="gs-outs">
+              <option value="0"{o0}>0</option>
+              <option value="1"{o1}>1</option>
+              <option value="2"{o2}>2</option>
+            </select>
+          </label>
+          <label>Runs (us) <input id="gs-score-for" type="number" min="0" max="99" value="{score_for}" /></label>
+          <label>Runs (them) <input id="gs-score-against" type="number" min="0" max="99" value="{score_against}" /></label>
+          <div class="gs-bases">
+            <span class="gs-bases-label">Bases</span>
+            <label><input id="gs-base-1" type="checkbox"{c1} /> 1st</label>
+            <label><input id="gs-base-2" type="checkbox"{c2} /> 2nd</label>
+            <label><input id="gs-base-3" type="checkbox"{c3} /> 3rd</label>
+          </div>
+          <label>Subs used <input id="gs-subs-used" type="number" min="0" max="25" value="{subs_used}" /></label>
+          <label>Subs limit <input id="gs-subs-limit" type="number" min="0" max="25" value="{subs_limit}" /></label>
+        </div>
+        <div class="gs-actions">
+          <button type="button" id="m5-refresh-plan" class="gs-btn">Refresh plan</button>
+          <label class="gs-auto"><input id="gs-auto-refresh" type="checkbox" /> Auto-refresh on change</label>
+        </div>
+        <p id="m5-replan-status" class="hint"></p>
+      </div>
+    """
 
 
 def _validate_inputs(batting_order: Sequence[str], position_assignment: Dict[str, str]) -> None:
@@ -32,6 +107,7 @@ def render_lineup_dashboard_html(
     offensive_profiles: Optional[Mapping[str, float]] = None,
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
+    replan_context: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Return a full HTML page showing batting order and baseball diamond."""
     _validate_inputs(batting_order, position_assignment)
@@ -41,7 +117,7 @@ def render_lineup_dashboard_html(
     for i, name in enumerate(batting_order, start=1):
         badge = " <span class='role-badge'>DH</span>" if name == current_dh else ""
         order_items_parts.append(
-            f"<li data-player='{html.escape(name)}'>"
+            f"<li class=\"lineup-row\" data-player=\"{html.escape(name)}\" tabindex=\"0\" role=\"button\">"
             f"<span class='slot'>{i}.</span> "
             f"<span class='batter-name'>{html.escape(name)}</span>"
             f"{badge}"
@@ -64,7 +140,10 @@ def render_lineup_dashboard_html(
         if recommendations:
             recommendation_items = "\n".join(
                 (
-                    "<li>"
+                    "<li class=\"rec-item\" tabindex=\"0\" role=\"button\" "
+                    f"data-bench-player=\"{_attr_escape(rec.get('bench_player'))}\" "
+                    f"data-target-player=\"{_attr_escape(rec.get('target_player'))}\" "
+                    f"data-position=\"{_attr_escape(rec.get('position'))}\">"
                     f"<strong>{html.escape(str(rec.get('action_type', 'action')))}</strong> "
                     f"(priority {html.escape(str(rec.get('priority', '?')))}, "
                     f"confidence {float(rec.get('confidence', 0.0)):.2f})<br/>"
@@ -83,7 +162,7 @@ def render_lineup_dashboard_html(
         for inning in module5_plan.get("multi_inning_plan", []):
             action_count = len(inning.get("recommended_actions", []))
             inning_rows.append(
-                "<tr>"
+                "<tr class=\"inning-row\" tabindex=\"0\" role=\"row\">"
                 f"<td>{html.escape(str(inning.get('inning', '?')))}</td>"
                 f"<td>{html.escape(str(inning.get('half', 'tbd')))}</td>"
                 f"<td>{html.escape(str(inning.get('objective', 'n/a')))}</td>"
@@ -94,10 +173,15 @@ def render_lineup_dashboard_html(
             "<tr><td colspan='4'>No inning plan generated.</td></tr>"
         )
 
+        gs_form = ""
+        if replan_context and isinstance(replan_context.get("game_state"), Mapping):
+            gs_form = _game_state_form_html(replan_context["game_state"])
+
         module5_section = f"""
-    <section class="card module5">
+    <section class="card module5" id="module5-root">
       <h2>Adaptive Planning (Module 5)</h2>
-      <ul class="recommendations">
+      {gs_form}
+      <ul id="m5-recommendations" class="recommendations">
         {recommendation_items}
       </ul>
       <h3>Multi-Inning Outlook</h3>
@@ -105,7 +189,7 @@ def render_lineup_dashboard_html(
         <thead>
           <tr><th>Inning</th><th>Half</th><th>Objective</th><th>Actions</th></tr>
         </thead>
-        <tbody>
+        <tbody id="m5-inning-body">
           {inning_rows_html}
         </tbody>
       </table>
@@ -136,6 +220,14 @@ def render_lineup_dashboard_html(
     </section>
 """
 
+    replan_json_script = ""
+    if replan_context:
+        replan_json_script = (
+            f'  <script type="application/json" id="replan-context">'
+            f"{json.dumps(replan_context, ensure_ascii=False)}"
+            f"</script>\n"
+        )
+
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -143,331 +235,11 @@ def render_lineup_dashboard_html(
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>{html.escape(title)}</title>
   <style>
-    body {{
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      background: #0b1020;
-      color: #e8ecf3;
-    }}
-    .wrap {{
-      max-width: 1240px;
-      margin: 24px auto;
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: minmax(300px, 340px) minmax(640px, 1fr);
-      gap: 18px;
-      align-items: start;
-    }}
-    .card {{
-      background: #141a2f;
-      border: 1px solid #243050;
-      border-radius: 12px;
-      padding: 16px;
-    }}
-    h2 {{
-      margin-top: 0;
-      font-size: 1.05rem;
-      letter-spacing: 0.02em;
-    }}
-    ol {{
-      margin: 0;
-      padding-left: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }}
-    li {{
-      background: #1a2340;
-      border: 1px solid #2a3760;
-      border-radius: 8px;
-      padding: 8px 10px;
-    }}
-    .slot {{
-      display: inline-block;
-      width: 2ch;
-      color: #7ec8ff;
-      font-weight: 600;
-    }}
-    .batter-name {{
-      font-weight: 500;
-    }}
-    .role-badge {{
-      display: inline-block;
-      margin-left: 8px;
-      padding: 1px 6px;
-      border-radius: 999px;
-      border: 1px solid #3d5892;
-      color: #9ed2ff;
-      background: #192746;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-    }}
-    .lineup-card {{
-      grid-column: 1;
-      grid-row: 1;
-    }}
-    .field {{
-      grid-column: 2;
-      grid-row: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }}
-    .field-visual {{
-      position: relative;
-      min-height: 520px;
-      overflow: hidden;
-      border: 1px solid #2a3760;
-      border-radius: 10px;
-      background:
-        radial-gradient(circle at 50% 72%, #2e6a3f 0%, #225233 45%, #1a3f27 100%);
-    }}
-    .diamond {{
-      position: absolute;
-      left: 50%;
-      top: 58%;
-      width: 240px;
-      height: 240px;
-      border: 3px solid #d8c39a;
-      transform: translate(-50%, -50%) rotate(45deg);
-      box-sizing: border-box;
-    }}
-    .pos {{
-      position: absolute;
-      background: rgba(11,16,32,0.85);
-      border: 1px solid #4b5f97;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 0.82rem;
-      white-space: nowrap;
-      transform: translate(-50%, -50%);
-    }}
-    .label {{
-      display: inline-block;
-      color: #9ed2ff;
-      font-weight: 700;
-      margin-right: 6px;
-    }}
-    .lf {{ left: 18%; top: 24%; }}
-    .cf {{ left: 50%; top: 16%; }}
-    .rf {{ left: 82%; top: 24%; }}
-    .defensive-slot {{
-      cursor: grab;
-      user-select: none;
-      padding-right: 34px;
-    }}
-    .defensive-slot.dragging {{
-      opacity: 0.72;
-      border-color: #8cc6ff;
-    }}
-    .defensive-slot.drop-target {{
-      border-color: #74b8ff;
-      box-shadow: 0 0 0 2px rgba(116,184,255,0.25);
-    }}
-    .defensive-slot.locked {{
-      border-color: #e0b85b;
-      box-shadow: 0 0 0 2px rgba(224,184,91,0.25);
-    }}
-    .lock-btn {{
-      position: absolute;
-      right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 1px solid #4a5f94;
-      border-radius: 999px;
-      background: #1b2846;
-      color: #d8e3ff;
-      font-size: 0.62rem;
-      line-height: 1;
-      padding: 3px 6px;
-      cursor: pointer;
-    }}
-    .lock-btn.active {{
-      border-color: #e0b85b;
-      background: #5a451e;
-      color: #ffe2a3;
-    }}
-    .ss {{ left: 39%; top: 40%; }}
-    .b2 {{ left: 61%; top: 40%; }}
-    .b3 {{ left: 30%; top: 52%; }}
-    .b1 {{ left: 70%; top: 52%; }}
-    .c  {{ left: 50%; top: 76%; }}
-    .dh {{ left: 79%; top: 76%; }}
-    .module5 {{
-      grid-column: 1 / -1;
-      grid-row: 2;
-    }}
-    .field-footer {{
-      background: rgba(11,16,32,0.9);
-      border: 1px solid #30416e;
-      border-radius: 10px;
-      padding: 10px 12px;
-      font-size: 0.88rem;
-      line-height: 1.4;
-    }}
-    .field-footer .value {{
-      color: #8fd1ff;
-      font-weight: 700;
-    }}
-    .field-footer .value.conf-high {{
-      color: #61d095;
-    }}
-    .field-footer .value.conf-medium {{
-      color: #f0c45b;
-    }}
-    .field-footer .value.conf-low {{
-      color: #f17a7a;
-    }}
-    .field-footer .hint {{
-      color: #bdcae6;
-      margin-top: 4px;
-      font-size: 0.82rem;
-    }}
-    .mode-toggle {{
-      margin-top: 8px;
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      border: 1px solid #30416e;
-      border-radius: 999px;
-      padding: 4px;
-      background: rgba(11,16,32,0.7);
-    }}
-    .mode-toggle button {{
-      border: 1px solid #3a4f82;
-      background: #1a2340;
-      color: #c8d6f3;
-      border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.78rem;
-      cursor: pointer;
-    }}
-    .mode-toggle button.active {{
-      background: #24406f;
-      color: #eaf2ff;
-      border-color: #5f93d8;
-      font-weight: 600;
-    }}
-    .mode-label {{
-      margin-top: 6px;
-      color: #9ed2ff;
-      font-size: 0.8rem;
-    }}
-    .predictive-toggle {{
-      margin-top: 8px;
-      color: #c7d5f1;
-      font-size: 0.79rem;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }}
-    .predictive-toggle input {{
-      accent-color: #74b8ff;
-    }}
-    .field-footer .explain {{
-      margin-top: 6px;
-      color: #9ed2ff;
-      font-size: 0.8rem;
-    }}
-    .field-footer .subexplain {{
-      margin-top: 3px;
-      color: #a8b8db;
-      font-size: 0.76rem;
-    }}
-    .field-footer .subexplain.conf-high {{
-      color: #86dfae;
-    }}
-    .field-footer .subexplain.conf-medium {{
-      color: #f2cf73;
-    }}
-    .field-footer .subexplain.conf-low {{
-      color: #ff9a9a;
-    }}
-    .why-panel {{
-      margin-top: 10px;
-      border: 1px solid #30416e;
-      border-radius: 10px;
-      background: rgba(9, 14, 30, 0.9);
-      padding: 10px 12px;
-    }}
-    .why-panel h4 {{
-      margin: 0 0 8px;
-      font-size: 0.86rem;
-      color: #9ed2ff;
-      letter-spacing: 0.02em;
-    }}
-    .why-list {{
-      margin: 0;
-      padding-left: 0;
-      list-style: none;
-      display: grid;
-      gap: 4px;
-      font-size: 0.8rem;
-      color: #c6d2ef;
-    }}
-    .why-list li {{
-      border: 1px solid #26355d;
-      border-radius: 7px;
-      background: #151f3b;
-      padding: 6px 8px;
-      line-height: 1.25;
-    }}
-    .why-score {{
-      color: #8fd1ff;
-      font-weight: 700;
-    }}
-    .recommendations {{
-      margin: 0 0 12px;
-      padding-left: 0;
-      list-style: none;
-      display: grid;
-      gap: 8px;
-    }}
-    .recommendations li {{
-      background: #1a2340;
-      border: 1px solid #2a3760;
-      border-radius: 8px;
-      padding: 10px;
-      line-height: 1.35;
-    }}
-    .recommendations span {{
-      color: #c9d4ee;
-      font-size: 0.9rem;
-    }}
-    h3 {{
-      margin: 0 0 8px;
-      font-size: 0.95rem;
-      color: #bcd3ff;
-    }}
-    table {{
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }}
-    th, td {{
-      border: 1px solid #2a3760;
-      padding: 7px 9px;
-      text-align: left;
-    }}
-    th {{
-      background: #1b2545;
-      color: #9ed2ff;
-      font-weight: 600;
-    }}
-    @media (max-width: 1040px) {{
-      .wrap {{ grid-template-columns: 1fr; }}
-      .lineup-card,
-      .field,
-      .module5 {{
-        grid-column: 1;
-        grid-row: auto;
-      }}
-      .field-visual {{ min-height: 440px; }}
-    }}
+{get_dashboard_css()}
   </style>
 </head>
 <body>
+{replan_json_script}
   <div class="wrap">
     <section class="card lineup-card">
       <h2>Batting Order (Module 4)</h2>
@@ -507,436 +279,25 @@ def render_lineup_dashboard_html(
           <h4>Why This Move</h4>
           <ul id="why-move-list" class="why-list"></ul>
         </div>
+        <div id="player-inspector" class="player-inspector">
+          <h4>Player focus</h4>
+          <p class="hint inspector-body">
+            Click a batter in the lineup, a player name on the diamond, or a Module 5 recommendation to cross-highlight and see scores.
+          </p>
+        </div>
       </div>
     </section>
 {module5_section}
 {pipeline_section}
   </div>
   <script>
-    (function () {{
-      const outfieldProfiles = {profiles_json};
-      const outfieldPredictedProfiles = {predicted_profiles_json};
-      const defensiveProfiles = {defensive_profiles_json};
-      const offensiveProfiles = {offensive_profiles_json};
-      const eligibilityProfiles = {eligibility_profiles_json};
-      const allPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
-      const slots = Array.from(document.querySelectorAll(".defensive-slot"));
-      const valueEl = document.getElementById("outfield-confidence");
-      const outfieldSubEl = document.getElementById("outfield-subexplain");
-      const explainEl = document.getElementById("optimizer-explain");
-      const whyListEl = document.getElementById("why-move-list");
-      const modeLabelEl = document.getElementById("mode-label");
-      const strictBtn = document.getElementById("mode-strict");
-      const freeBtn = document.getElementById("mode-free");
-      const predictiveConfidenceEl = document.getElementById("predictive-confidence");
-      const lockButtons = Array.from(document.querySelectorAll(".lock-btn"));
-      let dragSourcePos = null;
-      let strictMode = false;
-      const lockedPositions = new Set();
-
-      function getSlotByPos(pos) {{
-        return document.querySelector('.defensive-slot[data-pos="' + pos + '"]');
-      }}
-
-      function getPlayerAt(pos) {{
-        const slot = getSlotByPos(pos);
-        if (!slot) return "";
-        const playerEl = slot.querySelector(".player");
-        return playerEl ? playerEl.textContent.trim() : "";
-      }}
-
-      function setPlayerAt(pos, player) {{
-        const slot = getSlotByPos(pos);
-        if (!slot) return;
-        const playerEl = slot.querySelector(".player");
-        if (playerEl) playerEl.textContent = player;
-      }}
-
-      function defensiveScore(player, pos) {{
-        const score = defensiveProfiles[player] ? defensiveProfiles[player][pos] : undefined;
-        const numeric = Number(score);
-        return Number.isFinite(numeric) ? numeric : 0.0;
-      }}
-
-      function offensiveScore(player) {{
-        const numeric = Number(offensiveProfiles[player]);
-        return Number.isFinite(numeric) ? numeric : 0.0;
-      }}
-
-      function scorePlayerForPosition(player, pos) {{
-        if (pos === "DH") return offensiveScore(player);
-        return defensiveScore(player, pos);
-      }}
-
-      function isEligible(player, pos) {{
-        if (!strictMode) return true;
-        if (pos === "DH") return true;
-        const allowed = eligibilityProfiles[player] || [];
-        return allowed.includes(pos);
-      }}
-
-      function currentAssignment() {{
-        const assignment = {{}};
-        for (const pos of allPositions) {{
-          assignment[pos] = getPlayerAt(pos);
-        }}
-        return assignment;
-      }}
-
-      function renderLocks() {{
-        for (const slot of slots) {{
-          const pos = slot.dataset.pos || "";
-          const isLocked = lockedPositions.has(pos);
-          slot.classList.toggle("locked", isLocked);
-        }}
-        for (const btn of lockButtons) {{
-          const pos = btn.dataset.lockPos || "";
-          const isLocked = lockedPositions.has(pos);
-          btn.classList.toggle("active", isLocked);
-          btn.textContent = isLocked ? "LOCKED" : "LOCK";
-        }}
-      }}
-
-      function outfieldScore(player, pos) {{
-        const played = Number(
-          outfieldProfiles[player] ? outfieldProfiles[player][pos] : 0.0
-        );
-        const projected = Number(
-          outfieldPredictedProfiles[player] ? outfieldPredictedProfiles[player][pos] : 0.0
-        );
-        const playedScore = Number.isFinite(played) ? played : 0.0;
-        const projectedScore = Number.isFinite(projected) ? projected : 0.0;
-
-        const usePredictive = predictiveConfidenceEl ? predictiveConfidenceEl.checked : true;
-        if (!usePredictive) return playedScore;
-        if (playedScore <= 0.0) return projectedScore;
-        // Keep real-played value primary, but let projection influence.
-        return 0.7 * playedScore + 0.3 * projectedScore;
-      }}
-
-      function updateOutfieldConfidence() {{
-        const positions = ["LF", "CF", "RF"];
-        const players = positions.map((pos) => getPlayerAt(pos));
-        let currentTotal = 0.0;
-        for (const pos of positions) {{
-          const player = getPlayerAt(pos);
-          currentTotal += outfieldScore(player, pos);
-        }}
-
-        // Normalize against the best OF arrangement achievable with these same three players.
-        const permutations = [
-          [players[0], players[1], players[2]],
-          [players[0], players[2], players[1]],
-          [players[1], players[0], players[2]],
-          [players[1], players[2], players[0]],
-          [players[2], players[0], players[1]],
-          [players[2], players[1], players[0]],
-        ];
-        let bestTotal = 0.0;
-        for (const perm of permutations) {{
-          const score =
-            outfieldScore(perm[0], "LF") +
-            outfieldScore(perm[1], "CF") +
-            outfieldScore(perm[2], "RF");
-          if (score > bestTotal) bestTotal = score;
-        }}
-
-        const relativeFit =
-          bestTotal > 0 ? (currentTotal / bestTotal) * 100.0 : 0.0;
-        const absoluteFit = Math.max(0.0, Math.min((currentTotal / 300.0) * 100.0, 100.0));
-        // Blend absolute quality and arrangement optimality so weak trios do not show 100.
-        const confidence = 0.65 * absoluteFit + 0.35 * relativeFit;
-        valueEl.textContent = confidence.toFixed(1);
-        valueEl.classList.remove("conf-high", "conf-medium", "conf-low");
-        if (outfieldSubEl) {{
-          outfieldSubEl.classList.remove("conf-high", "conf-medium", "conf-low");
-        }}
-        let tierClass = "conf-low";
-        if (confidence >= 85.0) {{
-          tierClass = "conf-high";
-        }} else if (confidence >= 60.0) {{
-          tierClass = "conf-medium";
-        }}
-        valueEl.classList.add(tierClass);
-        if (outfieldSubEl) {{
-          outfieldSubEl.classList.add(tierClass);
-          const tierLabel = tierClass === "conf-high"
-            ? "High"
-            : tierClass === "conf-medium"
-            ? "Medium"
-            : "Low";
-          const predictiveLabel =
-            predictiveConfidenceEl && predictiveConfidenceEl.checked
-              ? "predictive-assisted"
-              : "played-only";
-          outfieldSubEl.textContent =
-            tierLabel +
-            " confidence (" +
-            predictiveLabel +
-            ") | " +
-            "Current OF fit: " +
-            currentTotal.toFixed(1) +
-            " / 300.0"
-            + " | Relative: " + relativeFit.toFixed(1)
-            + " | Trio best: " + bestTotal.toFixed(1);
-        }}
-      }}
-
-      function totalDefenseFitScore() {{
-        let total = 0.0;
-        for (const pos of allPositions) {{
-          const player = getPlayerAt(pos);
-          total += scorePlayerForPosition(player, pos);
-        }}
-        return total;
-      }}
-
-      function renderWhyThisMove() {{
-        if (!whyListEl) return;
-        const rows = [];
-        for (const pos of allPositions) {{
-          const player = getPlayerAt(pos);
-          const score = scorePlayerForPosition(player, pos);
-          const scoreLabel = pos === "DH" ? "offense" : "defense";
-          rows.push(
-            "<li><strong>" +
-              pos +
-              "</strong> -> " +
-              player +
-              " | " +
-              scoreLabel +
-              ": <span class='why-score'>" +
-              score.toFixed(1) +
-              "</span></li>"
-          );
-        }}
-        whyListEl.innerHTML = rows.join("");
-      }}
-
-      function updateBattingLineupDHTag() {{
-        const dhPlayer = getPlayerAt("DH");
-        const lineupItems = Array.from(document.querySelectorAll("ol li[data-player]"));
-        for (const li of lineupItems) {{
-          const player = li.dataset.player || "";
-          let badge = li.querySelector(".role-badge");
-          if (player === dhPlayer) {{
-            if (!badge) {{
-              badge = document.createElement("span");
-              badge.className = "role-badge";
-              badge.textContent = "DH";
-              li.appendChild(document.createTextNode(" "));
-              li.appendChild(badge);
-            }}
-          }} else if (badge) {{
-            badge.remove();
-          }}
-        }}
-      }}
-
-      function applyAssignment(assignment) {{
-        for (const pos of allPositions) {{
-          if (assignment[pos]) setPlayerAt(pos, assignment[pos]);
-        }}
-      }}
-
-      function optimizeDefenseWithLockedPlayer(lockedPlayer, lockedPos) {{
-        if (!lockedPlayer || !lockedPos) return;
-        if (lockedPositions.has(lockedPos)) {{
-          if (explainEl) {{
-            explainEl.textContent = "Target position is locked. Unlock it first to modify.";
-          }}
-          return;
-        }}
-        const current = currentAssignment();
-        const players = Array.from(new Set(Object.values(current).filter(Boolean)));
-        const fixedAssignments = {{}};
-        for (const pos of lockedPositions) {{
-          if (pos === lockedPos) continue;
-          const player = current[pos];
-          if (player) fixedAssignments[pos] = player;
-        }}
-        const fixedPlayers = new Set(Object.values(fixedAssignments));
-        if (fixedPlayers.has(lockedPlayer)) {{
-          if (explainEl) {{
-            explainEl.textContent =
-              "Dragged player is already fixed in another locked position.";
-          }}
-          return;
-        }}
-
-        const remainingPlayers = players.filter(
-          (p) => p !== lockedPlayer && !fixedPlayers.has(p)
-        );
-        const remainingPositions = allPositions.filter(
-          (p) => p !== lockedPos && !(p in fixedAssignments)
-        );
-
-        const best = {{
-          score: -Infinity,
-          assignment: null,
-        }};
-
-        function backtrack(posIdx, availablePlayers, partial, runningScore) {{
-          if (posIdx >= remainingPositions.length) {{
-            if (runningScore > best.score) {{
-              best.score = runningScore;
-              best.assignment = Object.assign({{}}, partial);
-            }}
-            return;
-          }}
-
-          const pos = remainingPositions[posIdx];
-          for (let i = 0; i < availablePlayers.length; i += 1) {{
-            const player = availablePlayers[i];
-            if (!isEligible(player, pos)) {{
-              continue;
-            }}
-            partial[pos] = player;
-            const nextPlayers = availablePlayers.slice(0, i).concat(availablePlayers.slice(i + 1));
-            backtrack(
-              posIdx + 1,
-              nextPlayers,
-              partial,
-              runningScore + scorePlayerForPosition(player, pos),
-            );
-            delete partial[pos];
-          }}
-        }}
-
-        backtrack(0, remainingPlayers, {{}}, 0.0);
-        if (!best.assignment) {{
-          if (explainEl) {{
-            explainEl.textContent =
-              "No valid reassignment found with eligibility constraints for that lock.";
-          }}
-          return;
-        }}
-        const optimized = Object.assign({{}}, fixedAssignments, best.assignment || {{}});
-        optimized[lockedPos] = lockedPlayer;
-        applyAssignment(optimized);
-        updateBattingLineupDHTag();
-        updateOutfieldConfidence();
-        if (explainEl) {{
-          explainEl.textContent =
-            "Locked " +
-            lockedPlayer +
-            " at " +
-            lockedPos +
-            " | Total fit score: " +
-            totalDefenseFitScore().toFixed(1);
-        }}
-        renderWhyThisMove();
-      }}
-
-      function clearDropStyles() {{
-        for (const slot of slots) {{
-          slot.classList.remove("drop-target");
-          slot.classList.remove("dragging");
-        }}
-      }}
-
-      function renderModeUI() {{
-        if (!strictBtn || !freeBtn) return;
-        strictBtn.classList.toggle("active", strictMode);
-        freeBtn.classList.toggle("active", !strictMode);
-        if (modeLabelEl) {{
-          modeLabelEl.textContent = strictMode
-            ? "Strict Mode: only eligible defensive positions are allowed."
-            : "Free Mode: any player can be moved to any defensive position.";
-        }}
-      }}
-
-      if (strictBtn) {{
-        strictBtn.addEventListener("click", () => {{
-          strictMode = true;
-          renderModeUI();
-        }});
-      }}
-      if (freeBtn) {{
-        freeBtn.addEventListener("click", () => {{
-          strictMode = false;
-          renderModeUI();
-        }});
-      }}
-      if (predictiveConfidenceEl) {{
-        predictiveConfidenceEl.addEventListener("change", () => {{
-          updateOutfieldConfidence();
-        }});
-      }}
-
-      for (const slot of slots) {{
-        slot.addEventListener("dragstart", (event) => {{
-          dragSourcePos = slot.dataset.pos || null;
-          if (dragSourcePos && lockedPositions.has(dragSourcePos)) {{
-            event.preventDefault();
-            if (explainEl) {{
-              explainEl.textContent =
-                "Source position is locked. Unlock it first to drag this player.";
-            }}
-            return;
-          }}
-          slot.classList.add("dragging");
-          if (event.dataTransfer) {{
-            event.dataTransfer.effectAllowed = "move";
-            event.dataTransfer.setData("text/plain", dragSourcePos || "");
-          }}
-        }});
-
-        slot.addEventListener("dragover", (event) => {{
-          event.preventDefault();
-          slot.classList.add("drop-target");
-          if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
-        }});
-
-        slot.addEventListener("dragleave", () => {{
-          slot.classList.remove("drop-target");
-        }});
-
-        slot.addEventListener("drop", (event) => {{
-          event.preventDefault();
-          const sourcePos = dragSourcePos || (event.dataTransfer ? event.dataTransfer.getData("text/plain") : "");
-          const targetPos = slot.dataset.pos || "";
-          const draggedPlayer = getPlayerAt(sourcePos);
-          optimizeDefenseWithLockedPlayer(draggedPlayer, targetPos);
-          clearDropStyles();
-        }});
-
-        slot.addEventListener("dragend", () => {{
-          clearDropStyles();
-          dragSourcePos = null;
-        }});
-      }}
-
-      for (const btn of lockButtons) {{
-        btn.addEventListener("click", (event) => {{
-          event.stopPropagation();
-          const pos = btn.dataset.lockPos || "";
-          if (!pos) return;
-          if (lockedPositions.has(pos)) {{
-            lockedPositions.delete(pos);
-          }} else {{
-            lockedPositions.add(pos);
-          }}
-          renderLocks();
-          if (explainEl) {{
-            explainEl.textContent =
-              lockedPositions.size > 0
-                ? "Locked positions: " + Array.from(lockedPositions).sort().join(", ")
-                : "No positions locked.";
-          }}
-        }});
-      }}
-
-      updateBattingLineupDHTag();
-      updateOutfieldConfidence();
-      renderWhyThisMove();
-      renderModeUI();
-      renderLocks();
-      if (explainEl) {{
-        explainEl.textContent =
-          "Initial total fit score: " + totalDefenseFitScore().toFixed(1);
-      }}
-    }})();
+{build_dashboard_script(
+    profiles_json=profiles_json,
+    predicted_profiles_json=predicted_profiles_json,
+    defensive_profiles_json=defensive_profiles_json,
+    offensive_profiles_json=offensive_profiles_json,
+    eligibility_profiles_json=eligibility_profiles_json,
+)}
   </script>
 </body>
 </html>
@@ -956,6 +317,7 @@ def write_lineup_dashboard_html(
     offensive_profiles: Optional[Mapping[str, float]] = None,
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
+    replan_context: Optional[Mapping[str, Any]] = None,
 ) -> Path:
     """Write dashboard HTML to disk and return path."""
     rendered = render_lineup_dashboard_html(
@@ -969,6 +331,7 @@ def write_lineup_dashboard_html(
         offensive_profiles=offensive_profiles,
         eligibility_profiles=eligibility_profiles,
         pipeline_context=pipeline_context,
+        replan_context=replan_context,
     )
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)

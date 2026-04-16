@@ -60,7 +60,59 @@ def _defense_scores():
     return scores
 
 
+def _lineup_dh_no_pitcher():
+    """Nine spots including DH (no P), matching the dashboard pipeline."""
+    names = [f"P{i}" for i in range(1, 10)]
+    return {
+        "batting_order": names,
+        "field_positions": {
+            "C": "P2",
+            "1B": "P1",
+            "2B": "P3",
+            "3B": "P4",
+            "SS": "P5",
+            "LF": "P6",
+            "CF": "P7",
+            "RF": "P8",
+            "DH": "P9",
+        },
+    }
+
+
 class TestStrategyRules(unittest.TestCase):
+    def test_defensive_replacement_never_uses_dh_slot(self):
+        """DH does not play the field; weakest defensive spot must be a real position."""
+        st = {
+            "inning": 8,
+            "half": "top",
+            "outs": 1,
+            "score_for": 6,
+            "score_against": 2,
+            "bases": [False, False, False],
+            "substitutions_used": 1,
+            "substitutions_limit": 5,
+            "pitcher_fatigue": 0.0,
+        }
+        offense = {f"P{i}": 50.0 + i for i in range(1, 10)}
+        offense["BenchDef"] = 55.0
+        defense = {f"P{i}": 88.0 for i in range(1, 10)}
+        defense["P1"] = 22.0
+        defense["P9"] = 0.0
+        defense["BenchDef"] = 90.0
+        recs = evaluate_strategy_recommendations(
+            state=st,
+            current_lineup=_lineup_dh_no_pitcher(),
+            bench_players=[{"name": "BenchDef", "roles": ["DEF"]}],
+            offensive_scores=offense,
+            defensive_scores=defense,
+            innings_ahead=2,
+        )
+        dr = [r for r in recs if r["action_type"] == "defensive_replacement"]
+        self.assertEqual(len(dr), 1)
+        self.assertEqual(dr[0]["position"], "1B")
+        self.assertEqual(dr[0]["target_player"], "P1")
+        self.assertNotEqual(dr[0]["position"], "DH")
+
     def test_favorable_scenario_ranks_above_poor_choice(self):
         bench = [
             {"name": "BenchGoodPH", "roles": ["PH"]},

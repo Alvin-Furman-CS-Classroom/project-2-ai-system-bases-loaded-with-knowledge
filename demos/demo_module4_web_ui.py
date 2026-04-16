@@ -35,8 +35,13 @@ def main() -> None:
         offensive_profiles=bundle["offensive_profiles"],
         eligibility_profiles=bundle["eligibility_profiles"],
         pipeline_context=bundle["pipeline_context"],
+        replan_context=bundle.get("replan_context"),
     )
     print(f"Wrote dashboard: {out.resolve()}")
+    print(
+        "Live game-state replan: PYTHONPATH=src python3 demos/dashboard_plan_server.py "
+        "then open http://127.0.0.1:8765/module4_dashboard.html"
+    )
 
 
 if __name__ == "__main__":
