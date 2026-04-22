@@ -4,6 +4,7 @@ node_modules/
 _pycache_/
 *.pyc
 .venv/
+.venv_paper/
 .pytest_cache/
 .mypy_cache/
 .coverage

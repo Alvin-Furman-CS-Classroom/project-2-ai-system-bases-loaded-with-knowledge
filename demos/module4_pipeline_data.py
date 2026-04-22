@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 from module1.matchup_analyzer import analyze_matchup_performance
 from module2.defensive_analyzer import analyze_defensive_performance
@@ -20,6 +20,40 @@ MATCHUP_JSON = TEST_DATA_DIR / "matchup_stats.json"
 DEFENSIVE_JSON = TEST_DATA_DIR / "defensive_stats.json"
 UI_POSITIONS = [pos for pos in DEFAULT_POSITIONS if pos != "P"] + ["DH"]
 DEFENSIVE_FIELD_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
+
+
+def _build_bench_players(
+    offensive_scores: Dict[str, float],
+    selected_players: List[str],
+    eligibility: Dict[str, List[str]],
+    *,
+    bench_size: int = 4,
+) -> List[Dict[str, List[str]]]:
+    """
+    Build bench from real dataset players not currently in the selected lineup.
+    Prefers stronger offensive players for more realistic late-game substitutions.
+    """
+    selected_set = set(selected_players)
+    candidates = [
+        (name, float(score))
+        for name, score in offensive_scores.items()
+        if name not in selected_set
+    ]
+    candidates.sort(key=lambda item: item[1], reverse=True)
+
+    bench: List[Dict[str, List[str]]] = []
+    for name, _score in candidates:
+        roles = [
+            pos
+            for pos in eligibility.get(name, ["DH"])
+            if pos in DEFENSIVE_FIELD_POSITIONS
+        ]
+        if not roles:
+            roles = ["PH"]
+        bench.append({"name": name, "roles": roles})
+        if len(bench) >= bench_size:
+            break
+    return bench
 
 
 def _load_position_eligibility(offensive_scores: Dict[str, float]) -> Dict[str, List[str]]:
@@ -94,45 +128,41 @@ def compute_module4_ui_inputs(seed: int = 42) -> Tuple[List[str], Dict[str, str]
     return optimized["optimized_order"], assignment
 
 
-def compute_outfield_profiles(position_assignment: Dict[str, str]) -> Dict[str, Dict[str, float]]:
-    """
-    Return per-player outfield defensive scores for LF/CF/RF confidence calculations.
-    """
-    defensive_scores = analyze_defensive_performance(str(DEFENSIVE_JSON), predict_all_positions=False)
-    outfield_positions = ("LF", "CF", "RF")
-    profiles: Dict[str, Dict[str, float]] = {}
-    for player in set(position_assignment.values()):
-        per_pos = defensive_scores.get(player, {})
-        profiles[player] = {
-            of_pos: float(per_pos.get(of_pos, 0.0)) for of_pos in outfield_positions
-        }
-    return profiles
-
-
-def compute_outfield_profiles_predicted(
+def compute_defensive_profiles(
     position_assignment: Dict[str, str],
+    extra_players: Sequence[str] = (),
 ) -> Dict[str, Dict[str, float]]:
     """
-    Return projected outfield scores (includes unplayed positions).
+    Return per-player defensive scores across all fielding positions.
+
+    extra_players (e.g. bench) are included so the dashboard JSON has real per-position
+    Module 2 scores instead of the client repeating a single aggregate for every column.
     """
-    defensive_scores = analyze_defensive_performance(str(DEFENSIVE_JSON), predict_all_positions=True)
-    outfield_positions = ("LF", "CF", "RF")
+    defensive_scores = analyze_defensive_performance(str(DEFENSIVE_JSON), predict_all_positions=False)
+    players = set(position_assignment.values()) | set(extra_players)
     profiles: Dict[str, Dict[str, float]] = {}
-    for player in set(position_assignment.values()):
+    for player in players:
         per_pos = defensive_scores.get(player, {})
         profiles[player] = {
-            of_pos: float(per_pos.get(of_pos, 0.0)) for of_pos in outfield_positions
+            pos: float(per_pos.get(pos, 0.0)) for pos in DEFENSIVE_FIELD_POSITIONS
         }
     return profiles
 
 
-def compute_defensive_profiles(position_assignment: Dict[str, str]) -> Dict[str, Dict[str, float]]:
+def compute_defensive_profiles_predicted(
+    position_assignment: Dict[str, str],
+    extra_players: Sequence[str] = (),
+) -> Dict[str, Dict[str, float]]:
     """
-    Return per-player defensive scores across all fielding positions.
+    Return per-player defensive scores across all fielding positions, including predicted
+    scores for unplayed positions.
+
+    extra_players (e.g. bench) are included for the same reason as compute_defensive_profiles.
     """
-    defensive_scores = analyze_defensive_performance(str(DEFENSIVE_JSON), predict_all_positions=False)
+    defensive_scores = analyze_defensive_performance(str(DEFENSIVE_JSON), predict_all_positions=True)
+    players = set(position_assignment.values()) | set(extra_players)
     profiles: Dict[str, Dict[str, float]] = {}
-    for player in set(position_assignment.values()):
+    for player in players:
         per_pos = defensive_scores.get(player, {})
         profiles[player] = {
             pos: float(per_pos.get(pos, 0.0)) for pos in DEFENSIVE_FIELD_POSITIONS
@@ -190,6 +220,7 @@ def compute_module5_ui_plan(seed: int = 42) -> Dict[str, object]:
     defensive_full = analyze_defensive_performance(
         str(DEFENSIVE_JSON), predict_all_positions=False
     )
+    eligibility = _load_position_eligibility(offensive_scores)
 
     offensive_subset = {player: float(offensive_scores[player]) for player in selected}
     defensive_subset = {}
@@ -209,10 +240,7 @@ def compute_module5_ui_plan(seed: int = 42) -> Dict[str, object]:
         "substitutions_limit": 5,
         "pitcher_fatigue": 0.0,
     }
-    bench_players = [
-        {"name": "Bench Speed", "roles": ["PR", "CF", "LF"]},
-        {"name": "Bench Power", "roles": ["PH", "1B", "RF"]},
-    ]
+    bench_players = _build_bench_players(offensive_scores, selected, eligibility)
     current_lineup = {
         "batting_order": batting_order,
         "field_positions": assignment,
@@ -278,10 +306,8 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
         "substitutions_limit": 5,
         "pitcher_fatigue": 0.0,
     }
-    bench_players = [
-        {"name": "Bench Speed", "roles": ["PR", "CF", "LF"]},
-        {"name": "Bench Power", "roles": ["PH", "1B", "RF"]},
-    ]
+    bench_players = _build_bench_players(offensive_scores, selected_players, eligibility)
+    bench_names = [b["name"] for b in bench_players]
     current_lineup = {"batting_order": batting_order, "field_positions": assignment}
     module5_plan = generate_adaptive_plan(
         game_state,
@@ -296,7 +322,7 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
     planning_defense = dict(flat_defense)
     for b in bench_players:
         bname = b["name"]
-        planning_offense[bname] = float(offensive_scores.get(bname, 58.0))
+        planning_offense[bname] = float(offensive_scores.get(bname, 50.0))
         nest = defensive_scores.get(bname) or {}
         planning_defense[bname] = float(max(nest.values()) if nest else 50.0)
 
@@ -311,9 +337,8 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
             "defensive_scores": planning_defense,
             "innings_ahead": 3,
         },
-        "outfield_profiles": compute_outfield_profiles(assignment),
-        "outfield_profiles_predicted": compute_outfield_profiles_predicted(assignment),
-        "defensive_profiles": compute_defensive_profiles(assignment),
+        "defensive_profiles": compute_defensive_profiles(assignment, bench_names),
+        "defensive_profiles_predicted": compute_defensive_profiles_predicted(assignment, bench_names),
         "offensive_profiles": compute_offensive_profiles(assignment),
         "eligibility_profiles": compute_eligibility_profiles(assignment),
         "pipeline_context": {

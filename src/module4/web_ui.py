@@ -9,7 +9,7 @@ import json
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional, Sequence
 
-from module4.web_ui_script import build_dashboard_script
+from module4.web_ui_script_v2 import build_dashboard_script
 from module4.web_ui_styles import get_dashboard_css
 
 REQUIRED_POSITIONS = ("C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH")
@@ -101,9 +101,8 @@ def render_lineup_dashboard_html(
     *,
     title: str = "Module 4 Lineup Dashboard",
     module5_plan: Optional[Mapping[str, Any]] = None,
-    outfield_profiles: Optional[Mapping[str, Mapping[str, float]]] = None,
-    outfield_profiles_predicted: Optional[Mapping[str, Mapping[str, float]]] = None,
     defensive_profiles: Optional[Mapping[str, Mapping[str, float]]] = None,
+    defensive_profiles_predicted: Optional[Mapping[str, Mapping[str, float]]] = None,
     offensive_profiles: Optional[Mapping[str, float]] = None,
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
@@ -128,9 +127,10 @@ def render_lineup_dashboard_html(
     def p(pos: str) -> str:
         return html.escape(position_assignment[pos])
 
-    profiles_json = json.dumps(outfield_profiles or {}, ensure_ascii=False)
-    predicted_profiles_json = json.dumps(outfield_profiles_predicted or {}, ensure_ascii=False)
     defensive_profiles_json = json.dumps(defensive_profiles or {}, ensure_ascii=False)
+    defensive_profiles_predicted_json = json.dumps(
+        defensive_profiles_predicted or {}, ensure_ascii=False
+    )
     offensive_profiles_json = json.dumps(offensive_profiles or {}, ensure_ascii=False)
     eligibility_profiles_json = json.dumps(eligibility_profiles or {}, ensure_ascii=False)
 
@@ -181,6 +181,29 @@ def render_lineup_dashboard_html(
     <section class="card module5" id="module5-root">
       <h2>Adaptive Planning (Module 5)</h2>
       {gs_form}
+      <h3>Bench Player Scores</h3>
+      <div class="bench-table-wrap">
+        <table id="bench-score-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Roles</th>
+              <th>OFF (DH)</th>
+              <th>C</th>
+              <th>1B</th>
+              <th>2B</th>
+              <th>3B</th>
+              <th>SS</th>
+              <th>LF</th>
+              <th>CF</th>
+              <th>RF</th>
+            </tr>
+          </thead>
+          <tbody id="bench-score-body">
+            <tr><td colspan="11">Bench score table will load from planner context.</td></tr>
+          </tbody>
+        </table>
+      </div>
       <ul id="m5-recommendations" class="recommendations">
         {recommendation_items}
       </ul>
@@ -240,6 +263,12 @@ def render_lineup_dashboard_html(
 </head>
 <body>
 {replan_json_script}
+  <header class="site-header" role="banner">
+    <div class="site-header-inner">
+      <h1 class="site-title">{html.escape(title)}</h1>
+      <span class="site-tagline">Batting order · field · planning</span>
+    </div>
+  </header>
   <div class="wrap">
     <section class="card lineup-card">
       <h2>Batting Order (Module 4)</h2>
@@ -262,16 +291,38 @@ def render_lineup_dashboard_html(
         <div class="pos dh defensive-slot" data-pos="DH" draggable="true"><span class="label">DH</span><span class="player">{p("DH")}</span><button class="lock-btn" data-lock-pos="DH" type="button">LOCK</button></div>
       </div>
       <div class="field-footer">
-        Outfield Confidence: <span id="outfield-confidence" class="value">--</span>/100
+        <div class="placement-metric" aria-describedby="lineup-defense-subexplain">
+          <div class="placement-metric-title">Shuffle efficiency (same 9 players)</div>
+          <div id="lineup-change-compare" class="lineup-compare" aria-live="polite">
+            <p class="lineup-compare-placeholder">When the field changes, a before → after breakdown and fit totals will appear here.</p>
+          </div>
+          <div class="confidence-row placement-metric-scoreline">
+            <span class="placement-metric-score-label">Match to best possible total:</span>
+            <span id="lineup-defense-confidence" class="value" title="100 = current total equals best permutation total for this roster.">--</span><span class="placement-metric-unit">/100</span>
+          </div>
+          <div id="lineup-defense-subexplain" class="subexplain placement-metric-detail"></div>
+        </div>
         <div class="hint">Use LOCK on a position to freeze it. Dropping another player re-optimizes all unlocked positions.</div>
-        <div id="outfield-subexplain" class="subexplain"></div>
-        <div class="mode-toggle">
-          <button id="mode-strict" type="button">Strict Mode</button>
-          <button id="mode-free" type="button" class="active">Free Mode</button>
+        <div class="field-actions">
+          <div class="mode-toggle">
+            <button id="mode-strict" type="button">Strict Mode</button>
+            <button id="mode-free" type="button" class="active">Free Mode</button>
+          </div>
+          <button id="dashboard-reset" type="button" class="btn-reset">Reset</button>
         </div>
         <label class="predictive-toggle">
-          <input id="predictive-confidence" type="checkbox" checked />
-          Use projected outfield fit for unplayed positions
+          Unavailable natural position
+          <select id="unavailable-position">
+            <option value="">None</option>
+            <option value="C">C</option>
+            <option value="1B">1B</option>
+            <option value="2B">2B</option>
+            <option value="3B">3B</option>
+            <option value="SS">SS</option>
+            <option value="LF">LF</option>
+            <option value="CF">CF</option>
+            <option value="RF">RF</option>
+          </select>
         </label>
         <div id="mode-label" class="mode-label"></div>
         <div id="optimizer-explain" class="explain"></div>
@@ -292,9 +343,8 @@ def render_lineup_dashboard_html(
   </div>
   <script>
 {build_dashboard_script(
-    profiles_json=profiles_json,
-    predicted_profiles_json=predicted_profiles_json,
     defensive_profiles_json=defensive_profiles_json,
+    defensive_profiles_predicted_json=defensive_profiles_predicted_json,
     offensive_profiles_json=offensive_profiles_json,
     eligibility_profiles_json=eligibility_profiles_json,
 )}
@@ -311,9 +361,8 @@ def write_lineup_dashboard_html(
     *,
     title: str = "Module 4 Lineup Dashboard",
     module5_plan: Optional[Mapping[str, Any]] = None,
-    outfield_profiles: Optional[Mapping[str, Mapping[str, float]]] = None,
-    outfield_profiles_predicted: Optional[Mapping[str, Mapping[str, float]]] = None,
     defensive_profiles: Optional[Mapping[str, Mapping[str, float]]] = None,
+    defensive_profiles_predicted: Optional[Mapping[str, Mapping[str, float]]] = None,
     offensive_profiles: Optional[Mapping[str, float]] = None,
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
@@ -325,9 +374,8 @@ def write_lineup_dashboard_html(
         position_assignment,
         title=title,
         module5_plan=module5_plan,
-        outfield_profiles=outfield_profiles,
-        outfield_profiles_predicted=outfield_profiles_predicted,
         defensive_profiles=defensive_profiles,
+        defensive_profiles_predicted=defensive_profiles_predicted,
         offensive_profiles=offensive_profiles,
         eligibility_profiles=eligibility_profiles,
         pipeline_context=pipeline_context,
