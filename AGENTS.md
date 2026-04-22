@@ -1,12 +1,19 @@
 ## Project Context
 
-- System title: [Your System Title]
-- Theme: [Your Theme]
-- Proposal link or summary: [Your Proposal Link or Summary]
+- **System title:** Baseball/Softball Lineup Optimization System
+- **Theme:** AI-supported lineup construction and in-game adaptation using FOL, knowledge bases, CSP, genetic search, and planning—stdlib Python, test-driven modules, browser dashboard for Module 4–5.
+- **Proposal link or summary:** Approved proposal in [`proposal.md`](proposal.md) at repo root; aligns with README overview and module plan.
 
 **Module plan:**
 
-[Your Module Plan Table copied from README.md]
+| Module | Topic(s) | Inputs | Outputs | Depends On | Checkpoint |
+| ------ | -------- | ------ | ------- | ---------- | ---------- |
+| 1 | First-Order Logic | CSV/JSON with batter stats (BA, K, OBP, SLG, HR, RBI) and pitcher stats (ERA, WHIP, K rate, handedness, walk rate) | Performance scores (0-100) for each batter | None | Checkpoint 2 (Feb 26) |
+| 2 | Knowledge Bases | CSV/JSON with defensive stats (fielding %, errors, putouts; catcher-specific stats) | Position-specific defensive scores (0-100) | None | Checkpoint 1 (Feb 11) |
+| 3 | CSP | Offensive scores (Module 1), defensive scores (Module 2), position eligibility | Assignment of 9 players to positions | Modules 1, 2 | Checkpoint 3 (March 19) |
+| 4 | Genetic Algorithms | 9 selected players from Module 3, detailed batter stats | Optimal batting order (1-9) | Modules 1, 2, 3 | Checkpoint 4 (April 2) |
+| 5 | Planning | Game state, bench players, performance scores, current lineup | Adaptive recommendations and multi-inning plan | Modules 1, 2, 3, 4 | Checkpoint 5 (April 16) |
+| 6 (optional) |  |  |  |  |  |
 
 ## Constraints
 

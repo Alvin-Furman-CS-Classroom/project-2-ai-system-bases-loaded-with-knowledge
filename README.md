@@ -1,18 +1,19 @@
-# [Your System Title]
+# Baseball/Softball Lineup Optimization System
 
 ## Overview
 
-Provide a concise system overview (200-300 words). Explain the unifying theme and how the modules combine into a coherent AI system.
+This system uses AI-driven optimization to support lineup construction and strategic decision-making in baseball/softball by selecting, ordering, and dynamically adjusting players to maximize performance under changing game conditions. The system assists coaches by analyzing player statistics, opponent characteristics, and game context to recommend pre-game lineups and make adaptive in-game adjustments.
+
+The workflow begins with first-order logic-based matchup analysis using quantified rules to predict how each batter performs against the opponent pitcher, complemented by defensive performance evaluation using knowledge-based rules. These analyses feed into a constraint satisfaction problem assigning players to optimal defensive positions while balancing offensive and defensive capabilities. A genetic algorithm then optimizes the batting order by iteratively evolving lineup candidates to place high on-base percentage players early, power hitters in the middle, and lower-performing players near the end. Finally, a planning module monitors game state and creates adaptive strategies, recommending substitutions, lineup modifications, and tactical shifts across multiple innings.
 
 ## Team
 
-- Member 1
-- Member 2
-- Member 3 (if applicable)
+- Kali Javetski
+- Sylvia Burroughs
 
 ## Proposal
 
-Link to the approved Project 1 proposal (or paste a short summary here).
+See `proposal.md` for the full approved proposal.
 
 ## Module Plan
 
@@ -20,12 +21,205 @@ Your system must include 5-6 modules. Fill in the table below as you plan each m
 
 | Module | Topic(s) | Inputs | Outputs | Depends On | Checkpoint |
 | ------ | -------- | ------ | ------- | ---------- | ---------- |
-| 1 |  |  |  |  |  |
-| 2 |  |  |  |  |  |
-| 3 |  |  |  |  |  |
-| 4 |  |  |  |  |  |
-| 5 |  |  |  |  |  |
+| 1 | First-Order Logic | CSV/JSON with batter stats (BA, K, OBP, SLG, HR, RBI) and pitcher stats (ERA, WHIP, K rate, handedness, walk rate) | Performance scores (0-100) for each batter | None | Checkpoint 2 (Feb 26) |
+| 2 | Knowledge Bases | CSV/JSON with defensive stats (fielding %, errors, putouts; catcher-specific stats) | Position-specific defensive scores (0-100) | None | Checkpoint 1 (Feb 11) |
+| 3 | CSP | Offensive scores (Module 1), defensive scores (Module 2), position eligibility | Assignment of 9 players to positions | Modules 1, 2 | Checkpoint 3 (March 19) |
+| 4 | Genetic Algorithms | 9 selected players from Module 3, detailed batter stats | Optimal batting order (1-9) | Modules 1, 2, 3 | Checkpoint 4 (April 2) |
+| 5 | Planning | Game state, bench players, performance scores, current lineup | Adaptive recommendations and multi-inning plan | Modules 1, 2, 3, 4 | Checkpoint 5 (April 16) |
 | 6 (optional) |  |  |  |  |  |
+
+## Module 1 Specification: Matchup Analysis
+
+**Topic:** First-Order Logic
+
+**Inputs:**
+- CSV or JSON file containing player statistics:
+  - **Batter statistics:** batting average (BA), strikeouts (K), on-base percentage (OBP), slugging percentage (SLG), home runs (HR), runs batted in (RBI), handedness (L/R)
+  - **Opponent pitcher statistics:** ERA, WHIP, strikeout rate (K rate), handedness (LHP/RHP), walk rate
+
+**Outputs:**
+- Performance scores (0-100) for each batter representing their expected effectiveness against the opponent pitcher
+- Output format: Dictionary/map or JSON structure mapping each batter name to their performance score
+- Scores derived through logical inference from first-order logic rules encoding matchup relationships using quantifiers (∀ for all, ∃ there exists)
+- **No head-to-head data required:** the module predicts performance for every batter against every pitcher using only batter and pitcher profiles (e.g. season stats, handedness), so it works for pairs who have never faced each other
+
+**Dependencies:** None
+
+**Integration with Other Modules:**
+- Module 1 outputs offensive performance scores that will be combined with defensive scores (from Module 2) in Module 3 (CSP) to assign players to optimal defensive positions.
+- Module 1 scores will also be used by Module 4 (Search Algorithms) to optimize the batting order.
+- The `analyze_matchup_performance` function returns a dictionary `{batter_name: score}` that can be directly used as input to subsequent modules.
+- Example usage in Module 3: `offensive_scores = analyze_matchup_performance('matchup_stats.json')` (pitcher stats are in the file; optionally pass `rule_evaluator=RuleEvaluator()` for first-order logic adjustments)
+
+**First-Order Logic Rules:**
+The module uses quantified logical rules to evaluate matchups. Examples include:
+- Universal quantifier (∀): "For all batters, if batter OBP > 0.350 and pitcher walk rate > 0.10, then increase score"
+- Universal quantifier with conditions: "For all left-handed batters, if the pitcher is left-handed, then reduce performance score by 15%"
+- Existential quantifier (∃): "There exists a batter such that their slugging percentage > 0.500 and pitcher ERA > 4.00, then increase score"
+- Rules combine batter statistics with pitcher statistics to predict performance
+
+**Tests:**
+- Unit tests for:
+  - First-order logic rule evaluation (universal and existential quantifiers)
+  - Score calculation for various batter-pitcher combinations
+  - Handedness matchup rules (same-handed vs. opposite-handed)
+  - Statistical threshold rules (OBP, SLG, ERA, etc.)
+  - Edge cases (missing data, extreme values, boundary conditions)
+  - Input parsing (CSV and JSON formats)
+  - Output formatting
+  - Score normalization (ensuring scores are in 0-100 range)
+
+## Module 2 Specification: Defensive Performance Analysis
+
+**Topic:** Knowledge Bases
+
+**Inputs:**
+- CSV or JSON file containing defensive statistics for each player:
+  - **For all players:** fielding percentage, errors, putouts
+  - **For catchers only:** passed balls, caught stealing percentage, fielding percentage
+
+**Outputs:**
+- Position-specific defensive performance scores (0-100) for each player at each position they can play
+- Output format: Dictionary/map or JSON structure mapping each player-position combination to their defensive score
+- Scores calculated using heuristic rules that combine relevant defensive statistics:
+  - Catchers: fielding percentage, passed balls, caught stealing percentage
+  - Other positions: fielding percentage, errors, putouts
+
+**Dependencies:** None
+
+**Integration with Other Modules:**
+- Module 2 outputs defensive scores that will be combined with offensive scores (from Module 1) in Module 3 (CSP) to assign players to optimal defensive positions.
+- The `analyze_defensive_performance` function returns a dictionary `{player_name: {position: score}}` that can be directly used as input to Module 3's constraint satisfaction problem.
+- Example usage in Module 3: `defensive_scores = analyze_defensive_performance('defensive_stats.json')`
+
+**Tests:**
+- Unit tests for:
+  - Knowledge base rule evaluation
+  - Position-specific score calculations (catcher vs. other positions)
+  - Score calculation for various player-position combinations
+  - Edge cases (missing data, players with no position eligibility)
+  - Input parsing (CSV and JSON formats)
+  - Output formatting
+
+## Module 3 Specification: Defensive Position Assignment (CSP)
+
+**Topic:** Constraint Satisfaction Problems (CSP)
+
+**Inputs:**
+- **`offensive_scores`:** `{player_name: float}` — typically from Module 1, `analyze_matchup_performance(...)`.
+- **`defensive_scores`:** `{player_name: {position: float}}` — from Module 2, `analyze_defensive_performance(...)`.
+- **`position_eligibility`:** `{player_name: [position_codes...]}` — who may play which of `P`, `C`, `1B`, `2B`, `3B`, `SS`, `LF`, `CF`, `RF`.
+- **Optional:** `weights` (`None`, `(w_def, w_off)`, or `{"w_def":..., "w_off":...}`; defaults **0.65 / 0.35**), `lock_positions`, `positions` (override default nine positions), `defensive_stress_profile` (`None`, `"flat"`, or `"up_the_middle"`).
+
+**Outputs:**
+- **`{position: player_name}`** — one unique player per position solved for; maximizes  
+  `sum (w_def * defense * leverage_mult + w_off * offense)` per assignment.  
+  For `P`, Module 2 does not supply a defensive grade; defense term is **0** and leverage multiplier is neutral unless you change pitcher handling.
+
+**Dependencies:** Modules 1 & 2 (dict inputs). Internal CSP engine: `src/module3/csp_solver.py` (`solve_max_csp`). Optional leverage multipliers follow **FanGraphs positional adjustment** runs — see `docs/MODULE3_DEFENSIVE_LEVERAGE_SOURCES.md`.
+
+**Integration with Other Modules:**
+- Module 4 should consume the nine assigned players plus batter stats for batting order.
+- Example:
+
+```python
+from src.module1.matchup_analyzer import analyze_matchup_performance
+from src.module1.rule_evaluator import RuleEvaluator
+from src.module2.defensive_analyzer import analyze_defensive_performance
+from src.module3.position_assignment import assign_defensive_positions
+
+offensive = analyze_matchup_performance(
+    "test_data/matchup_stats.json",
+    rule_evaluator=RuleEvaluator(),  # recommended for full Module 1 behavior
+)
+defensive = analyze_defensive_performance("test_data/defensive_stats.json")
+eligibility = {"Player A": ["1B", "LF"], ...}  # nine players covering all positions
+assignment = assign_defensive_positions(offensive, defensive, eligibility)
+# Optional: defensive_stress_profile="up_the_middle"
+```
+
+**Tests:**
+- CSP solver: `unit_tests/module3/test_csp_solver.py`
+- Assignment + stress profile: `unit_tests/module3/test_position_assignment.py`
+- End-to-end: `integration_tests/module3/test_module1_2_3_integration.py`
+
+**Work split reference:** `MODULE3_WORK_SPLIT.md` (if present in repo).
+
+## Module 4 Specification: Batting Order (Genetic Algorithms)
+
+**Topic:** Genetic Algorithms
+
+**Inputs:**
+- **`selected_players`:** sequence of **9 unique** player names (typically the values from Module 3’s `{position: player}` assignment).
+- **`batter_stats`:** `{player_name: {obp, slg, hr, rbi}}` — required keys per selected player.
+- **Optional:** `offensive_scores` (`{player_name: float}`) from Module 1 for fitness blending; `fitness_weights` (`LineupFitnessWeights`); `seed` for reproducibility; GA hyperparameters: `population_size` (default **120**), `generations` (default **250**), `mutation_rate` (default **0.08**), `elite_count` (default **6**). The GA engine also uses **`stagnation_limit`** (default **60**) to stop early when fitness plateaus.
+
+**Outputs:**
+- **`optimize_batting_order(...)`** returns a dict:
+  - `optimized_order`: list of 9 unique names (batting slots 1–9)
+  - `best_fitness`, `generations_run`, `seed`
+
+**Dependencies:** Modules 1, 2, 3 for typical pipeline (data only into wrapper). Core code: `src/module4/genetic_optimizer.py`, `src/module4/lineup_fitness.py`, `src/module4/batting_order.py`.
+
+**Integration with Other Modules:**
+- Module 5 can consume `optimized_order` plus game state. Optional UI: `web/module4_dashboard.html` (generate via `PYTHONPATH=src python3 demos/demo_module4_web_ui.py`); see `web/README.md`.
+
+**Tests:**
+- GA + fitness + field UI helpers: `unit_tests/module4/`
+- End-to-end: `integration_tests/module4/test_module3_4_integration.py`
+
+**Work split reference:** `MODULE4_WORK_SPLIT.md`.
+
+## Module 5 Specification: Adaptive Planning
+
+**Topic:** Planning
+
+**Inputs:**
+- **`game_state`:** mapping with inning context and constraints:
+  - required keys: `inning`, `half`, `outs`, `score_for`, `score_against`, `bases`, `substitutions_used`, `substitutions_limit`
+  - optional key: `pitcher_fatigue` (accepted for compatibility; **not** used for recommendations—there is no pitching module, so the planner does not suggest bullpen or pitching changes)
+- **`current_lineup`:**
+  - `batting_order`: list of 9 unique players
+  - `field_positions`: `{position: player}`
+- **`bench_players`:** list of bench player objects with:
+  - required: `name`, `roles`
+  - optional: `speed`, `offense_score`, `defense_score` (used by specific rules)
+- **`offensive_scores`:** `{player: float}` (must include active lineup players; bench entries optional but recommended)
+- **`defensive_scores`:** `{player: float}` flat defensive mapping for currently fielded players (plus optional bench defenders)
+- **Optional:** `innings_ahead` (default **3**)
+
+**Outputs:**
+- **`generate_adaptive_plan(...)`** returns:
+  - `recommendations`: prioritized, explainable action objects (`action_type`, `priority`, `confidence`, `reason`, `inning_window`, etc.)
+  - `multi_inning_plan`: inning-by-inning outlook with objective and recommended actions
+  - `summary`: plan metadata (`start_inning`, `horizon_innings`, `score_diff`, `substitutions_remaining`, `lineup_snapshot`)
+
+**Dependencies:** Uses outputs from Modules 1-4 in normal pipeline usage. Core code:
+- `src/module5/game_state.py` (validation/normalization)
+- `src/module5/strategy_rules.py` (scored tactical recommendations + conflict resolution)
+- `src/module5/planner.py` (public API orchestration + fallback recommendations)
+
+**Integration with Other Modules:**
+- Typical flow:
+  1. Module 1 offensive scores
+  2. Module 2 defensive scores
+  3. Module 3 assignment
+  4. Module 4 batting order
+  5. Module 5 adaptive plan
+- End-to-end integration test:
+  - `integration_tests/module5/test_module1_2_3_4_5_integration.py`
+- Demo dashboard integration:
+  - `demos/demo_module4_web_ui.py` now renders Module 4 + Module 5 in `web/module4_dashboard.html`
+
+**Tests:**
+- Unit:
+  - `unit_tests/module5/test_game_state.py`
+  - `unit_tests/module5/test_strategy_rules.py`
+  - `unit_tests/module5/test_planner.py`
+- Integration:
+  - `integration_tests/module5/test_module1_2_3_4_5_integration.py`
+
+**Work split reference:** `MODULE5_WORK_SPLIT.md`.
 
 ## Repository Layout
 
@@ -41,28 +235,189 @@ your-repo/
 
 ## Setup
 
-List dependencies, setup steps, and any environment variables required to run the system.
+**Dependencies:**
+- Python 3.8 or higher
+- Standard library modules only (no external dependencies required)
+
+**Setup Steps:**
+1. Ensure Python 3.8+ is installed
+2. No additional package installation required (uses only standard library)
 
 ## Running
 
-Provide commands or scripts for running modules and demos.
+### Module 3: Defensive position assignment (CSP)
+
+**Environment:** Add `src` to `PYTHONPATH` so `module1` / `module2` / `module3` resolve (matches unit/integration tests).
+
+```python
+from src.module3.position_assignment import (
+    assign_defensive_positions,
+    DEFAULT_POSITIONS,
+    DEFENSIVE_LEVERAGE_UP_THE_MIDDLE,
+)
+
+assignment = assign_defensive_positions(offensive_scores, defensive_scores, position_eligibility)
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
+```
+
+### Module 4: Batting order (genetic algorithm)
+
+**Environment:** Same as Module 3 — `PYTHONPATH=src`.
+
+```python
+from module4.batting_order import optimize_batting_order
+
+result = optimize_batting_order(selected_players, batter_stats, seed=42)
+# result["optimized_order"] -> batting order 1–9
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module4 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module4.test_module3_4_integration -v
+```
+
+### Module 5: Adaptive planning
+
+**Environment:** Same as Modules 3 and 4 — `PYTHONPATH=src`.
+
+```python
+from module5.planner import generate_adaptive_plan
+
+plan = generate_adaptive_plan(
+    game_state,
+    current_lineup,
+    bench_players,
+    offensive_scores,
+    defensive_scores,
+    innings_ahead=3,
+)
+```
+
+**Running tests (from repository root):**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module5 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module5.test_module1_2_3_4_5_integration -v
+```
+
+### Module 2: Defensive Performance Analysis
+
+**Using the module programmatically:**
+```python
+from src.module2.defensive_analyzer import analyze_defensive_performance
+
+# Analyze defensive statistics (default: predicts all positions)
+scores = analyze_defensive_performance('test_data/defensive_stats.json')
+
+# scores is a dictionary: {player_name: {position: score}}
+# Example: {'John Doe': {'1B': 85.5, 'LF': 82.3, 'RF': 78.2, ...}}
+# By default, scores include predicted performance at unplayed positions.
+
+# Only evaluate played positions (no predictions):
+scores = analyze_defensive_performance('defensive_stats.json', predict_all_positions=False)
+```
+
+**Cross-Position Prediction:**
+By default, the module predicts each player's performance at positions they have not played, using position similarity rules (e.g., LF↔RF, SS↔2B) and stat transfer heuristics. Set `predict_all_positions=False` to only return scores for positions each player has actually played.
+
+**Input File Format:**
+
+JSON format:
+```json
+[
+  {
+    "name": "John Doe",
+    "fielding_pct": 0.950,
+    "errors": 5,
+    "putouts": 150,
+    "positions": ["1B", "LF"]
+  },
+  {
+    "name": "Jane Smith",
+    "fielding_pct": 0.980,
+    "errors": 2,
+    "putouts": 200,
+    "passed_balls": 3,
+    "caught_stealing_pct": 0.350,
+    "positions": ["C"]
+  }
+]
+```
+
+CSV format:
+```csv
+name,fielding_pct,errors,putouts,passed_balls,caught_stealing_pct,positions
+John Doe,0.950,5,150,,,"1B,LF"
+Jane Smith,0.980,2,200,3,0.350,C
+```
+
+**Output Format:**
+Dictionary mapping player names to position scores (0-100):
+```python
+{
+  "John Doe": {"1B": 85.5, "LF": 82.3},
+  "Jane Smith": {"C": 88.7}
+}
+```
 
 ## Testing
 
 **Unit Tests** (`unit_tests/`): Mirror the structure of `src/`. Each module should have corresponding unit tests.
 
-**Integration Tests** (`integration_tests/`): Create a new subfolder for each module beyond the first, demonstrating how modules work together.
+**Running Module 2 Tests:**
+```bash
+# Run all Module 2 unit tests
+python3 -m unittest discover -s unit_tests/module2 -p "test_*.py" -v
 
-Provide commands to run tests and describe any test data needed.
+# Run a specific test file
+python3 -m unittest unit_tests.module2.test_defensive_analyzer -v
+```
+
+**Running Module 3 tests:**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module3 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module3.test_module1_2_3_integration -v
+```
+
+**Running Module 4 tests:**
+
+```bash
+PYTHONPATH=src python3 -m unittest discover -s unit_tests/module4 -p "test_*.py" -v
+PYTHONPATH=src python3 -m unittest integration_tests.module4.test_module3_4_integration -v
+```
+
+**Test Coverage:**
+- Input parser (CSV and JSON formats)
+- Knowledge base rules (catcher and general positions)
+- Position evaluator
+- Score calculator
+- Full integration tests
+
+**Test Data:**
+Sample test data files are available in `test_data/`:
+- `defensive_stats.json` - JSON format example
+- `defensive_stats.csv` - CSV format example
+
+**Integration Tests** (`integration_tests/`): Create a new subfolder for each module beyond the first, demonstrating how modules work together.
 
 ## Checkpoint Log
 
 | Checkpoint | Date | Modules Included | Status | Evidence |
 | ---------- | ---- | ---------------- | ------ | -------- |
-| 1 |  |  |  |  |
-| 2 |  |  |  |  |
-| 3 |  |  |  |  |
-| 4 |  |  |  |  |
+| 1 | Feb 11 | Module 2 (Knowledge Bases) | Complete | README **Module 2 Specification**; `checkpoints/checkpoint_1_elegance_report.md`; **Running Module 2** / unit tests (`PYTHONPATH=src`) |
+| 2 | Feb 26 | Module 1 (First-Order Logic) | Complete | README **Module 1 Specification**; `checkpoints/checkpoint_2_module_report.md`; `checkpoints/checkpoint_2_elegance_report.md`; **Running Module 1** / unit tests (`PYTHONPATH=src`) |
+| 3 | March 19 | Module 3 (CSP) | Complete | README Module 3 spec; `checkpoints/checkpoint_3_module_report.md`; `checkpoints/checkpoint_3_elegance_report.md`; **Running Module 3** / **Running Module 3 tests** (`PYTHONPATH=src`) |
+| 4 | April 2 | Module 4 (Genetic Algorithms) | Complete | README **Module 4 Specification**; `checkpoints/checkpoint_4_module_report.md`; `checkpoints/checkpoint_4_elegance_report.md`; **Running Module 4** / **Running Module 4 tests** (`PYTHONPATH=src`); `MODULE4_WORK_SPLIT.md` |
+| 5 | April 16 | Module 5 (Planning) | Complete | README **Module 5 Specification**; `checkpoints/checkpoint_5_module_report.md`; `checkpoints/checkpoint_5_elegance_report.md`; `checkpoints/project_module_rubric_report.md`; `checkpoints/project_elegance_report.md`; **Running Module 5** tests (`PYTHONPATH=src`); `web/module4_dashboard.html`; `demos/dashboard_plan_server.py` |
 
 ## Required Workflow (Agent-Guided)
 

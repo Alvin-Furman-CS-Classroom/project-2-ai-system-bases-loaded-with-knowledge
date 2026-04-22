@@ -1,0 +1,2271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Module 4 + Module 5 Dashboard</title>
+  <style>
+/* Module 4 + 5 lineup dashboard — shared stylesheet (loaded by web_ui_styles.get_dashboard_css). */
+
+:root {
+  --color-bg: #0b1020;
+  --color-bg-glow: radial-gradient(ellipse 100% 55% at 50% 0%, rgba(64, 120, 200, 0.16), transparent 52%);
+  --color-surface: #141a2f;
+  --color-surface-item: #1a2340;
+  --color-border: #243050;
+  --color-border-strong: #2a3760;
+  --color-text: #e8ecf3;
+  --color-accent: #74b8ff;
+  --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.32);
+  --radius-card: 12px;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  background: var(--color-bg-glow), var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+.site-header {
+  border-bottom: 1px solid rgba(55, 74, 120, 0.55);
+  background: linear-gradient(180deg, rgba(20, 26, 47, 0.97) 0%, rgba(11, 16, 32, 0.94) 100%);
+  backdrop-filter: blur(10px);
+}
+
+.site-header-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 18px;
+}
+
+.site-title {
+  margin: 0;
+  font-size: 1.14rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: #f2f5fc;
+}
+
+.site-tagline {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #8aa4d4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.wrap {
+  max-width: 1240px;
+  margin: 18px auto 32px;
+  padding: 0 16px;
+  display: grid;
+  grid-template-columns: minmax(300px, 340px) minmax(640px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 18px 18px 16px;
+  box-shadow: var(--shadow-card);
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(116, 184, 255, 0.14);
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: 0.015em;
+  color: #dce6fb;
+}
+
+ol {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+li {
+  background: var(--color-surface-item);
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.slot {
+  display: inline-block;
+  width: 2ch;
+  color: #7ec8ff;
+  font-weight: 600;
+}
+
+.batter-name {
+  font-weight: 500;
+}
+
+.lineup-row {
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.lineup-row:hover {
+  border-color: #4b6cb0;
+  background: rgba(26, 35, 64, 0.95);
+}
+
+.lineup-row.highlighted {
+  border-color: #74b8ff;
+  box-shadow: 0 0 0 2px rgba(116, 184, 255, 0.35);
+}
+
+.lineup-row:focus-visible {
+  outline: 2px solid #74b8ff;
+  outline-offset: 2px;
+}
+
+.role-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid #3d5892;
+  color: #9ed2ff;
+  background: #192746;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.lineup-card {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.field {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-visual {
+  position: relative;
+  min-height: 520px;
+  overflow: hidden;
+  border: 1px solid #2a3760;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  background:
+    radial-gradient(circle at 50% 72%, #2e6a3f 0%, #225233 45%, #1a3f27 100%);
+}
+
+.diamond {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  width: 240px;
+  height: 240px;
+  border: 3px solid #d8c39a;
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-sizing: border-box;
+}
+
+.pos {
+  position: absolute;
+  background: rgba(11, 16, 32, 0.88);
+  border: 1px solid #4b5f97;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+.label {
+  display: inline-block;
+  color: #9ed2ff;
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.lf { left: 18%; top: 24%; }
+.cf { left: 50%; top: 16%; }
+.rf { left: 82%; top: 24%; }
+
+.defensive-slot {
+  cursor: grab;
+  user-select: none;
+  padding-right: 34px;
+}
+
+.defensive-slot .player {
+  cursor: pointer;
+  text-decoration: underline dotted rgba(142, 209, 255, 0.45);
+  text-underline-offset: 2px;
+}
+
+.defensive-slot.highlighted {
+  border-color: #74b8ff !important;
+  box-shadow: 0 0 0 2px rgba(116, 184, 255, 0.35);
+}
+
+.defensive-slot.dragging {
+  opacity: 0.72;
+  border-color: #8cc6ff;
+}
+
+.defensive-slot.drop-target {
+  border-color: #74b8ff;
+  box-shadow: 0 0 0 2px rgba(116, 184, 255, 0.25);
+}
+
+.defensive-slot.locked {
+  border-color: #e0b85b;
+  box-shadow: 0 0 0 2px rgba(224, 184, 91, 0.25);
+}
+
+.lock-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: 1px solid #4a5f94;
+  border-radius: 999px;
+  background: #1b2846;
+  color: #d8e3ff;
+  font-size: 0.62rem;
+  line-height: 1;
+  padding: 3px 6px;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.lock-btn:hover {
+  background: #243458;
+}
+
+.lock-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.lock-btn.active {
+  border-color: #e0b85b;
+  background: #5a451e;
+  color: #ffe2a3;
+}
+
+.ss { left: 39%; top: 40%; }
+.b2 { left: 61%; top: 40%; }
+.b3 { left: 30%; top: 52%; }
+.b1 { left: 70%; top: 52%; }
+.c  { left: 50%; top: 76%; }
+.dh { left: 79%; top: 76%; }
+
+/* Full-width rows below the top row; use auto rows so multiple .module5 blocks stack
+   (Adaptive Planning + Pipeline Connections) instead of sharing grid-row: 2 and overlapping. */
+.module5 {
+  grid-column: 1 / -1;
+  grid-row: auto;
+}
+
+.field-footer {
+  background: rgba(11, 16, 32, 0.9);
+  border: 1px solid #30416e;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.field-footer .value {
+  color: #8fd1ff;
+  font-weight: 700;
+}
+
+.field-footer .value.conf-high {
+  color: #61d095;
+}
+
+.field-footer .value.conf-medium {
+  color: #f0c45b;
+}
+
+.field-footer .value.conf-low {
+  color: #f17a7a;
+}
+
+.field-footer .confidence-row {
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.placement-metric {
+  margin-bottom: 4px;
+}
+
+.placement-metric-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #9ed2ff;
+  margin-bottom: 6px;
+}
+
+.lineup-compare {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #30416e;
+  background: rgba(9, 14, 30, 0.55);
+}
+
+.lineup-compare-placeholder {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: #9aaac9;
+}
+
+.lineup-compare-intro {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #c6d2ef;
+}
+
+.lineup-compare-intro strong {
+  color: #eaf2ff;
+}
+
+.lineup-compare-note {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #9aaac9;
+}
+
+.lineup-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
+}
+
+.lineup-compare-table th,
+.lineup-compare-table td {
+  border: 1px solid #2a3760;
+  padding: 5px 7px;
+  text-align: left;
+}
+
+.lineup-compare-table th {
+  background: #1b2545;
+  color: #9ed2ff;
+  font-weight: 600;
+}
+
+.lineup-compare-delta {
+  font-weight: 600;
+  color: #8fd1ff;
+  white-space: nowrap;
+}
+
+.lineup-compare-totals {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: #dce6fb;
+}
+
+.lineup-compare-why {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: #9aaac9;
+}
+
+.placement-metric-scoreline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+}
+
+.placement-metric-score-label {
+  font-size: 0.84rem;
+  color: #dce6fb;
+}
+
+.placement-metric-unit {
+  font-size: 0.88rem;
+  color: #9ed2ff;
+  font-weight: 600;
+}
+
+.placement-metric-detail {
+  margin-top: 6px;
+}
+
+.field-footer .hint {
+  color: #bdcae6;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+
+.field-actions {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.mode-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid #30416e;
+  border-radius: 999px;
+  padding: 4px;
+  background: rgba(11, 16, 32, 0.7);
+}
+
+.field-actions .btn-reset {
+  border: 1px solid #4a5d8f;
+  background: #1e2844;
+  color: #c8d6f3;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.field-actions .btn-reset:hover {
+  background: #263256;
+  border-color: #5f7ab8;
+  color: #eaf2ff;
+}
+
+.field-actions .btn-reset:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.mode-toggle button {
+  border: 1px solid #3a4f82;
+  background: #1a2340;
+  color: #c8d6f3;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.mode-toggle button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.mode-toggle button.active {
+  background: #24406f;
+  color: #eaf2ff;
+  border-color: #5f93d8;
+  font-weight: 600;
+}
+
+.mode-label {
+  margin-top: 6px;
+  color: #9ed2ff;
+  font-size: 0.8rem;
+}
+
+.predictive-toggle {
+  margin-top: 8px;
+  color: #c7d5f1;
+  font-size: 0.79rem;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.predictive-toggle input {
+  accent-color: #74b8ff;
+}
+
+.emergency-toggle {
+  margin-top: 8px;
+  color: #f2cf73;
+  font-size: 0.79rem;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.emergency-toggle input {
+  accent-color: #f2cf73;
+}
+
+.field-footer .explain {
+  margin-top: 6px;
+  color: #9ed2ff;
+  font-size: 0.8rem;
+}
+
+.field-footer .subexplain {
+  margin-top: 3px;
+  color: #a8b8db;
+  font-size: 0.76rem;
+}
+
+.field-footer .subexplain.conf-high {
+  color: #86dfae;
+}
+
+.field-footer .subexplain.conf-medium {
+  color: #f2cf73;
+}
+
+.field-footer .subexplain.conf-low {
+  color: #ff9a9a;
+}
+
+.why-panel {
+  margin-top: 10px;
+  border: 1px solid #30416e;
+  border-radius: 10px;
+  background: rgba(9, 14, 30, 0.9);
+  padding: 10px 12px;
+}
+
+.why-panel h4 {
+  margin: 0 0 8px;
+  font-size: 0.86rem;
+  color: #9ed2ff;
+  letter-spacing: 0.02em;
+}
+
+.why-list {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: #c6d2ef;
+}
+
+.why-list li {
+  border: 1px solid #26355d;
+  border-radius: 7px;
+  background: #151f3b;
+  padding: 6px 8px;
+  line-height: 1.25;
+}
+
+.player-inspector {
+  margin-top: 12px;
+  border: 1px solid #30416e;
+  border-radius: 10px;
+  background: rgba(9, 14, 30, 0.92);
+  padding: 10px 12px;
+}
+
+.player-inspector h4 {
+  margin: 0 0 8px;
+  font-size: 0.86rem;
+  color: #9ed2ff;
+}
+
+.player-inspector .inspector-name {
+  font-weight: 700;
+  color: #eaf2ff;
+  margin-bottom: 6px;
+}
+
+.player-inspector .inspector-grid {
+  display: grid;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: #b8c8e8;
+}
+
+.player-inspector .inspector-pos {
+  color: #8fd1ff;
+  font-weight: 600;
+}
+
+.why-score {
+  color: #8fd1ff;
+  font-weight: 700;
+}
+
+.recommendations {
+  margin: 0 0 12px;
+  padding-left: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.recommendations li {
+  background: #1a2340;
+  border: 1px solid #2a3760;
+  border-radius: 8px;
+  padding: 10px;
+  line-height: 1.35;
+}
+
+.rec-item {
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.rec-item:hover {
+  border-color: #4b6cb0;
+  background: rgba(26, 35, 64, 0.85);
+}
+
+.rec-item.active {
+  border-color: #61d095;
+  box-shadow: 0 0 0 2px rgba(97, 208, 149, 0.28);
+}
+
+.rec-item:focus-visible {
+  outline: 2px solid #61d095;
+  outline-offset: 2px;
+}
+
+tbody tr.inning-row {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+tbody tr.inning-row:hover {
+  background: #1e2a4d;
+}
+
+tbody tr.inning-row:focus-visible {
+  outline: 2px solid #74b8ff;
+  outline-offset: -2px;
+}
+
+.gs-form {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #2a3760;
+}
+
+.gs-form h3 {
+  margin-top: 0;
+  font-size: 0.95rem;
+  color: #bcd3ff;
+}
+
+.gs-hint code {
+  font-size: 0.72rem;
+  color: #9ed2ff;
+}
+
+.gs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px 14px;
+  align-items: end;
+  margin-top: 10px;
+}
+
+.gs-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: #b8c8e8;
+}
+
+.gs-grid input[type="number"],
+.gs-grid select {
+  padding: 6px 8px;
+  border-radius: 8px;
+  border: 1px solid #3a4f82;
+  background: #121a32;
+  color: #e8ecf3;
+  font-size: 0.85rem;
+}
+
+.gs-grid input:focus-visible,
+.gs-grid select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.gs-bases {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  font-size: 0.78rem;
+  color: #b8c8e8;
+}
+
+.gs-bases-label {
+  font-weight: 600;
+  color: #9ed2ff;
+  margin-right: 4px;
+}
+
+.gs-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+
+.gs-btn {
+  border: 1px solid #5f93d8;
+  background: #24406f;
+  color: #eaf2ff;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.gs-btn:hover {
+  background: #2d4f85;
+}
+
+.gs-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.gs-auto {
+  font-size: 0.78rem;
+  color: #c7d5f1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+#m5-replan-status {
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.recommendations span {
+  color: #c9d4ee;
+  font-size: 0.9rem;
+}
+
+h3 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #bcd3ff;
+  font-weight: 600;
+}
+
+.bench-table-wrap {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: min(320px, 50vh);
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #2a3760;
+  background: rgba(9, 14, 30, 0.4);
+}
+
+.bench-table-wrap table {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.bench-table-wrap th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-shadow: 0 1px 0 #2a3760;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  border: 1px solid #2a3760;
+  padding: 7px 9px;
+  text-align: left;
+}
+
+th {
+  background: #1b2545;
+  color: #9ed2ff;
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(20, 26, 47, 0.35);
+}
+
+@media (max-width: 1040px) {
+  .wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .lineup-card,
+  .field,
+  .module5 {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .field-visual {
+    min-height: 440px;
+  }
+
+  .site-header-inner {
+    padding: 12px 14px 10px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <script type="application/json" id="replan-context">{"game_state": {"inning": 7, "half": "bottom", "outs": 1, "score_for": 4, "score_against": 3, "bases": [true, false, true], "substitutions_used": 2, "substitutions_limit": 5, "pitcher_fatigue": 0.0}, "bench_players": [{"name": "Austin Riley", "roles": ["3B"]}, {"name": "Jake Fraley", "roles": ["LF", "RF"]}, {"name": "Vidal Bruján", "roles": ["3B", "RF", "SS"]}, {"name": "Ha-Seong Kim", "roles": ["SS"]}], "offensive_scores": {"Matt Olson": 37.32, "Ozzie Albies": 30.39, "Michael Harris II": 30.459999999999997, "Sean Murphy": 30.240000000000002, "Jonathan Ornelas": 50.0, "Nick Allen": 25.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 40.92, "Drake Baldwin": 35.93, "Austin Riley": 32.99999999999999, "Jake Fraley": 32.879999999999995, "Vidal Bruján": 32.03, "Ha-Seong Kim": 31.269999999999996}, "defensive_scores": {"Matt Olson": 100.0, "Ozzie Albies": 100.0, "Michael Harris II": 100.0, "Sean Murphy": 100.0, "Jonathan Ornelas": 80.0, "Nick Allen": 100.0, "Jurickson Profar": 100.0, "Ronald Acuña Jr.": 100.0, "Drake Baldwin": 0.0, "Austin Riley": 60.0, "Jake Fraley": 80.0, "Vidal Bruján": 80.0, "Ha-Seong Kim": 80.0}, "innings_ahead": 3}</script>
+
+  <header class="site-header" role="banner">
+    <div class="site-header-inner">
+      <h1 class="site-title">Module 4 + Module 5 Dashboard</h1>
+      <span class="site-tagline">Batting order · field · planning</span>
+    </div>
+  </header>
+  <div class="wrap">
+    <section class="card lineup-card">
+      <h2>Batting Order (Module 4)</h2>
+      <ol>
+        <li class="lineup-row" data-player="Ronald Acuña Jr." tabindex="0" role="button"><span class='slot'>1.</span> <span class='batter-name'>Ronald Acuña Jr.</span></li>
+<li class="lineup-row" data-player="Jonathan Ornelas" tabindex="0" role="button"><span class='slot'>2.</span> <span class='batter-name'>Jonathan Ornelas</span></li>
+<li class="lineup-row" data-player="Matt Olson" tabindex="0" role="button"><span class='slot'>3.</span> <span class='batter-name'>Matt Olson</span></li>
+<li class="lineup-row" data-player="Drake Baldwin" tabindex="0" role="button"><span class='slot'>4.</span> <span class='batter-name'>Drake Baldwin</span> <span class='role-badge'>DH</span></li>
+<li class="lineup-row" data-player="Michael Harris II" tabindex="0" role="button"><span class='slot'>5.</span> <span class='batter-name'>Michael Harris II</span></li>
+<li class="lineup-row" data-player="Sean Murphy" tabindex="0" role="button"><span class='slot'>6.</span> <span class='batter-name'>Sean Murphy</span></li>
+<li class="lineup-row" data-player="Nick Allen" tabindex="0" role="button"><span class='slot'>7.</span> <span class='batter-name'>Nick Allen</span></li>
+<li class="lineup-row" data-player="Ozzie Albies" tabindex="0" role="button"><span class='slot'>8.</span> <span class='batter-name'>Ozzie Albies</span></li>
+<li class="lineup-row" data-player="Jurickson Profar" tabindex="0" role="button"><span class='slot'>9.</span> <span class='batter-name'>Jurickson Profar</span></li>
+      </ol>
+    </section>
+    <section class="card field">
+      <h2>Defensive Diamond</h2>
+      <div class="field-visual">
+        <div class="diamond"></div>
+        <div class="pos lf defensive-slot" data-pos="LF" draggable="true"><span class="label">LF</span><span class="player">Jurickson Profar</span><button class="lock-btn" data-lock-pos="LF" type="button">LOCK</button></div>
+        <div class="pos cf defensive-slot" data-pos="CF" draggable="true"><span class="label">CF</span><span class="player">Michael Harris II</span><button class="lock-btn" data-lock-pos="CF" type="button">LOCK</button></div>
+        <div class="pos rf defensive-slot" data-pos="RF" draggable="true"><span class="label">RF</span><span class="player">Ronald Acuña Jr.</span><button class="lock-btn" data-lock-pos="RF" type="button">LOCK</button></div>
+        <div class="pos ss defensive-slot" data-pos="SS" draggable="true"><span class="label">SS</span><span class="player">Nick Allen</span><button class="lock-btn" data-lock-pos="SS" type="button">LOCK</button></div>
+        <div class="pos b2 defensive-slot" data-pos="2B" draggable="true"><span class="label">2B</span><span class="player">Ozzie Albies</span><button class="lock-btn" data-lock-pos="2B" type="button">LOCK</button></div>
+        <div class="pos b3 defensive-slot" data-pos="3B" draggable="true"><span class="label">3B</span><span class="player">Jonathan Ornelas</span><button class="lock-btn" data-lock-pos="3B" type="button">LOCK</button></div>
+        <div class="pos b1 defensive-slot" data-pos="1B" draggable="true"><span class="label">1B</span><span class="player">Matt Olson</span><button class="lock-btn" data-lock-pos="1B" type="button">LOCK</button></div>
+        <div class="pos c defensive-slot" data-pos="C" draggable="true"><span class="label">C</span><span class="player">Sean Murphy</span><button class="lock-btn" data-lock-pos="C" type="button">LOCK</button></div>
+        <div class="pos dh defensive-slot" data-pos="DH" draggable="true"><span class="label">DH</span><span class="player">Drake Baldwin</span><button class="lock-btn" data-lock-pos="DH" type="button">LOCK</button></div>
+      </div>
+      <div class="field-footer">
+        <div class="placement-metric" aria-describedby="lineup-defense-subexplain">
+          <div class="placement-metric-title">Shuffle efficiency (same 9 players)</div>
+          <div id="lineup-change-compare" class="lineup-compare" aria-live="polite">
+            <p class="lineup-compare-placeholder">When the field changes, a before → after breakdown and fit totals will appear here.</p>
+          </div>
+          <div class="confidence-row placement-metric-scoreline">
+            <span class="placement-metric-score-label">Match to best possible total:</span>
+            <span id="lineup-defense-confidence" class="value" title="100 = current total equals best permutation total for this roster.">--</span><span class="placement-metric-unit">/100</span>
+          </div>
+          <div id="lineup-defense-subexplain" class="subexplain placement-metric-detail"></div>
+        </div>
+        <div class="hint">Use LOCK on a position to freeze it. Dropping another player re-optimizes all unlocked positions.</div>
+        <div class="field-actions">
+          <div class="mode-toggle">
+            <button id="mode-strict" type="button">Strict Mode</button>
+            <button id="mode-free" type="button" class="active">Free Mode</button>
+          </div>
+          <button id="dashboard-reset" type="button" class="btn-reset">Reset</button>
+        </div>
+        <label class="predictive-toggle">
+          Unavailable natural position
+          <select id="unavailable-position">
+            <option value="">None</option>
+            <option value="C">C</option>
+            <option value="1B">1B</option>
+            <option value="2B">2B</option>
+            <option value="3B">3B</option>
+            <option value="SS">SS</option>
+            <option value="LF">LF</option>
+            <option value="CF">CF</option>
+            <option value="RF">RF</option>
+          </select>
+        </label>
+        <div id="mode-label" class="mode-label"></div>
+        <div id="optimizer-explain" class="explain"></div>
+        <div class="why-panel">
+          <h4>Why This Move</h4>
+          <ul id="why-move-list" class="why-list"></ul>
+        </div>
+        <div id="player-inspector" class="player-inspector">
+          <h4>Player focus</h4>
+          <p class="hint inspector-body">
+            Click a batter in the lineup, a player name on the diamond, or a Module 5 recommendation to cross-highlight and see scores.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="card module5" id="module5-root">
+      <h2>Adaptive Planning (Module 5)</h2>
+      
+      <div class="gs-form">
+        <h3>Game state (editable)</h3>
+        <p class="hint gs-hint">
+          Adjust the situation and click <strong>Refresh plan</strong> to rerun Module 5 with the Python planner.
+          Serve this page with
+          <code>PYTHONPATH=src python3 demos/dashboard_plan_server.py</code>
+          (then open the URL it prints).
+        </p>
+        <div class="gs-grid">
+          <label>Inning <input id="gs-inning" type="number" min="1" max="18" value="7" /></label>
+          <label>Half
+            <select id="gs-half">
+              <option value="top">Top</option>
+              <option value="bottom" selected>Bottom</option>
+            </select>
+          </label>
+          <label>Outs
+            <select id="gs-outs">
+              <option value="0">0</option>
+              <option value="1" selected>1</option>
+              <option value="2">2</option>
+            </select>
+          </label>
+          <label>Runs (us) <input id="gs-score-for" type="number" min="0" max="99" value="4" /></label>
+          <label>Runs (them) <input id="gs-score-against" type="number" min="0" max="99" value="3" /></label>
+          <div class="gs-bases">
+            <span class="gs-bases-label">Bases</span>
+            <label><input id="gs-base-1" type="checkbox" checked /> 1st</label>
+            <label><input id="gs-base-2" type="checkbox" /> 2nd</label>
+            <label><input id="gs-base-3" type="checkbox" checked /> 3rd</label>
+          </div>
+          <label>Subs used <input id="gs-subs-used" type="number" min="0" max="25" value="2" /></label>
+          <label>Subs limit <input id="gs-subs-limit" type="number" min="0" max="25" value="5" /></label>
+        </div>
+        <div class="gs-actions">
+          <button type="button" id="m5-refresh-plan" class="gs-btn">Refresh plan</button>
+          <label class="gs-auto"><input id="gs-auto-refresh" type="checkbox" /> Auto-refresh on change</label>
+        </div>
+        <p id="m5-replan-status" class="hint"></p>
+      </div>
+    
+      <h3>Bench Player Scores</h3>
+      <div class="bench-table-wrap">
+        <table id="bench-score-table">
+          <thead>
+            <tr>
+              <th>Player</th>
+              <th>Roles</th>
+              <th>OFF (DH)</th>
+              <th>C</th>
+              <th>1B</th>
+              <th>2B</th>
+              <th>3B</th>
+              <th>SS</th>
+              <th>LF</th>
+              <th>CF</th>
+              <th>RF</th>
+            </tr>
+          </thead>
+          <tbody id="bench-score-body">
+            <tr><td colspan="11">Bench score table will load from planner context.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <ul id="m5-recommendations" class="recommendations">
+        <li class="rec-item" tabindex="0" role="button" data-bench-player="Vidal Bruján" data-target-player="Jonathan Ornelas" data-position="3B"><strong>defensive_replacement</strong> (priority 1, confidence 0.64)<br/><span>Protecting a lead: strengthen 3B by bringing in Vidal Bruján for Jonathan Ornelas.</span></li>
+<li class="rec-item" tabindex="0" role="button" data-bench-player="" data-target-player="Jonathan Ornelas" data-position=""><strong>lineup_matchup_adjustment</strong> (priority 2, confidence 0.60)<br/><span>Center next high-leverage plate appearance around Jonathan Ornelas based on projected matchup edge.</span></li>
+      </ul>
+      <h3>Multi-Inning Outlook</h3>
+      <table>
+        <thead>
+          <tr><th>Inning</th><th>Half</th><th>Objective</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="m5-inning-body">
+          <tr class="inning-row" tabindex="0" role="row"><td>7</td><td>bottom</td><td>protect_lead</td><td>2</td></tr>
+<tr class="inning-row" tabindex="0" role="row"><td>8</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
+<tr class="inning-row" tabindex="0" role="row"><td>9</td><td>tbd</td><td>protect_lead</td><td>2</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+
+    <section class="card module5">
+      <h2>Pipeline Connections</h2>
+      <ul class="recommendations">
+        <li><strong>Module 1 -> Offensive scores:</strong> 25 players</li>
+        <li><strong>Module 2 -> Defensive scores:</strong> 25 players</li>
+        <li><strong>Module 3 -> Assignment:</strong> 9 positions solved</li>
+        <li><strong>Module 4 -> Batting optimization:</strong> fitness 7.179, generations 74</li>
+        <li><strong>Module 5 -> Planning:</strong> 2 recommendations</li>
+      </ul>
+      <h3>Data Sources</h3>
+      <table>
+        <tbody>
+          <tr><td>Matchup stats (M1/M4)</td><td>/Users/kalijavetski/Documents/csc343/project-2-ai-system-bases-loaded-with-knowledge/test_data/matchup_stats.json</td></tr>
+          <tr><td>Defensive stats (M2/M3)</td><td>/Users/kalijavetski/Documents/csc343/project-2-ai-system-bases-loaded-with-knowledge/test_data/defensive_stats.json</td></tr>
+          <tr><td>Pipeline seed</td><td>42</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+  <script>
+    (function () {
+      const defensiveProfiles = {"Jake Fraley": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 80.0, "CF": 0.0, "RF": 80.0}, "Michael Harris II": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 100.0, "RF": 0.0}, "Ha-Seong Kim": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Austin Riley": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 60.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Drake Baldwin": {"C": 80.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"C": 100.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Vidal Bruján": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 80.0}, "Jurickson Profar": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Ozzie Albies": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ronald Acuña Jr.": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 100.0}, "Nick Allen": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 100.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"C": 0.0, "1B": 100.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}};
+      const defensivePredictedProfiles = {"Jake Fraley": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Michael Harris II": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ha-Seong Kim": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jonathan Ornelas": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Austin Riley": {"C": 60.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Drake Baldwin": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}, "Sean Murphy": {"C": 100.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 80.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Vidal Bruján": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jurickson Profar": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 80.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ozzie Albies": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 100.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ronald Acuña Jr.": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Nick Allen": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Matt Olson": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}};
+      const offensiveProfiles = {"Michael Harris II": 30.459999999999997, "Jonathan Ornelas": 50.0, "Drake Baldwin": 35.93, "Sean Murphy": 30.240000000000002, "Jurickson Profar": 34.489999999999995, "Ozzie Albies": 30.39, "Ronald Acuña Jr.": 40.92, "Nick Allen": 25.52, "Matt Olson": 37.32};
+      const eligibilityProfiles = {"Michael Harris II": ["CF", "DH", "LF", "RF"], "Jonathan Ornelas": ["3B", "DH", "SS"], "Drake Baldwin": ["C", "DH"], "Sean Murphy": ["C", "DH"], "Jurickson Profar": ["CF", "DH", "LF", "RF"], "Ozzie Albies": ["2B", "DH"], "Ronald Acuña Jr.": ["CF", "DH", "LF", "RF"], "Nick Allen": ["2B", "DH", "SS"], "Matt Olson": ["1B", "DH"]};
+      const allPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+      const slots = Array.from(document.querySelectorAll(".defensive-slot"));
+      const lineupDefenseEl = document.getElementById("lineup-defense-confidence");
+      const lineupDefenseSubEl = document.getElementById("lineup-defense-subexplain");
+      const lineupCompareEl = document.getElementById("lineup-change-compare");
+      const explainEl = document.getElementById("optimizer-explain");
+      const whyListEl = document.getElementById("why-move-list");
+      const modeLabelEl = document.getElementById("mode-label");
+      const strictBtn = document.getElementById("mode-strict");
+      const freeBtn = document.getElementById("mode-free");
+      const unavailablePosEl = document.getElementById("unavailable-position");
+      const lockButtons = Array.from(document.querySelectorAll(".lock-btn"));
+      const inspectorEl = document.getElementById("player-inspector");
+      const lineupRows = Array.from(document.querySelectorAll(".lineup-card ol li[data-player]"));
+      const module5Root = document.getElementById("module5-root");
+      const replanContextEl = document.getElementById("replan-context");
+      let replanContext = {};
+      if (replanContextEl && replanContextEl.textContent) {
+        try {
+          replanContext = JSON.parse(replanContextEl.textContent);
+        } catch (err) {
+          replanContext = {};
+        }
+      }
+      let dragSourcePos = null;
+      let strictMode = false;
+      const lockedPositions = new Set();
+      let lastFocusedPlayer = null;
+      let inactivePlayer = "";
+      let injectedReplacementPlayer = "";
+      let inactiveForPosition = "";
+      const originalAssignment = {};
+      for (const pos of allPositions) {
+        const slot = document.querySelector('.defensive-slot[data-pos="' + pos + '"]');
+        const playerEl = slot ? slot.querySelector(".player") : null;
+        originalAssignment[pos] = playerEl ? playerEl.textContent.trim() : "";
+      }
+      const originalLineupOrder = lineupRows.map((li) => li.dataset.player || "");
+
+      function getUnavailablePosition() {
+        const raw = unavailablePosEl ? unavailablePosEl.value : "";
+        return allPositions.includes(raw) && raw !== "DH" ? raw : "";
+      }
+
+      function getBenchCandidates() {
+        const bench = Array.isArray(replanContext.bench_players) ? replanContext.bench_players : [];
+        return bench
+          .map((b) => (b && b.name ? String(b.name).trim() : ""))
+          .filter(Boolean);
+      }
+
+      function ensureBenchProfiles(playerName, unavailablePos) {
+        if (!playerName) return;
+        if (!Object.prototype.hasOwnProperty.call(offensiveProfiles, playerName)) {
+          offensiveProfiles[playerName] = Number(
+            (replanContext.offensive_scores && replanContext.offensive_scores[playerName]) || 50.0
+          );
+        }
+        if (!Object.prototype.hasOwnProperty.call(defensiveProfiles, playerName)) {
+          defensiveProfiles[playerName] = {};
+        }
+        if (!Object.prototype.hasOwnProperty.call(defensivePredictedProfiles, playerName)) {
+          defensivePredictedProfiles[playerName] = {};
+        }
+
+        for (const pos of allPositions) {
+          if (pos === "DH") continue;
+          if (!Object.prototype.hasOwnProperty.call(defensiveProfiles[playerName], pos)) {
+            defensiveProfiles[playerName][pos] = Number(
+              (replanContext.defensive_scores && replanContext.defensive_scores[playerName]) || 50.0
+            );
+          }
+          if (!Object.prototype.hasOwnProperty.call(defensivePredictedProfiles[playerName], pos)) {
+            defensivePredictedProfiles[playerName][pos] = Number(defensiveProfiles[playerName][pos]);
+          }
+        }
+
+        if (!Object.prototype.hasOwnProperty.call(eligibilityProfiles, playerName)) {
+          const roleSource = (Array.isArray(replanContext.bench_players) ? replanContext.bench_players : [])
+            .find((b) => b && b.name === playerName);
+          const roles = Array.isArray(roleSource && roleSource.roles) ? roleSource.roles : [];
+          const allowed = new Set(["DH"]);
+          for (const role of roles) {
+            const norm = String(role || "").trim().toUpperCase();
+            if (allPositions.includes(norm) && norm !== "DH") allowed.add(norm);
+          }
+          eligibilityProfiles[playerName] = Array.from(allowed);
+        }
+      }
+
+      function hydrateBenchProfiles(unavailablePos) {
+        const benchNames = getBenchCandidates();
+        for (const name of benchNames) ensureBenchProfiles(name, unavailablePos || "");
+      }
+
+      function hydrateCurrentAssignmentProfiles(unavailablePos) {
+        for (const pos of allPositions) {
+          const player = getPlayerAt(pos);
+          if (player) ensureBenchProfiles(player, unavailablePos || "");
+        }
+      }
+
+      function replacePlayerEverywhere(oldName, newName) {
+        if (!oldName || !newName || oldName === newName) return;
+        for (const pos of allPositions) {
+          if (getPlayerAt(pos) === oldName) setPlayerAt(pos, newName);
+        }
+        for (const li of lineupRows) {
+          if ((li.dataset.player || "") === oldName) {
+            li.dataset.player = newName;
+            const nameEl = li.querySelector(".batter-name");
+            if (nameEl) nameEl.textContent = newName;
+          }
+        }
+      }
+
+      function chooseBenchReplacement(unavailablePos, outPlayer) {
+        const currentPlayers = new Set(Object.values(currentAssignment()).filter(Boolean));
+        const benchNames = getBenchCandidates().filter((name) => !currentPlayers.has(name) && name !== outPlayer);
+        if (benchNames.length === 0) return "";
+        const basePlayers = Array.from(currentPlayers).filter((name) => name !== outPlayer);
+        const emergencyPenalty = 0.75;
+
+        function scoreForPos(player, pos) {
+          if (player === outPlayer) return -1000.0;
+          if (pos === "DH") return offensiveScore(player);
+          const base = defensiveScore(player, pos);
+          if (pos === unavailablePos && unavailablePos) {
+            const allowed = eligibilityProfiles[player] || [];
+            const isNatural = allowed.includes(unavailablePos);
+            if (!isNatural) {
+              const predicted = defensiveScorePredicted(player, unavailablePos);
+              const emergencyScore = predicted > 0.0 ? predicted : base;
+              return emergencyPenalty * emergencyScore;
+            }
+            return base;
+          }
+          return base;
+        }
+
+        function eligibleForPos(player, pos) {
+          if (player === outPlayer) return false;
+          if (pos === "DH") return true;
+          if (pos === unavailablePos && unavailablePos) {
+            return true;
+          }
+          // During replacement simulation, allow out-of-position assignments so
+          // we choose the candidate that maximizes total lineup fit.
+          return true;
+        }
+
+        function bestAssignmentScore(playerPool) {
+          const players = Array.from(playerPool);
+          if (players.length !== allPositions.length) return -Infinity;
+          let best = -Infinity;
+
+          function backtrack(posIdx, availablePlayers, runningScore) {
+            if (posIdx >= allPositions.length) {
+              if (runningScore > best) best = runningScore;
+              return;
+            }
+            const pos = allPositions[posIdx];
+            for (let i = 0; i < availablePlayers.length; i += 1) {
+              const player = availablePlayers[i];
+              if (!eligibleForPos(player, pos)) continue;
+              const next = availablePlayers.slice(0, i).concat(availablePlayers.slice(i + 1));
+              backtrack(posIdx + 1, next, runningScore + scoreForPos(player, pos));
+            }
+          }
+
+          backtrack(0, players, 0.0);
+          return best;
+        }
+
+        let bestName = "";
+        let bestTotal = -Infinity;
+        for (const name of benchNames) {
+          ensureBenchProfiles(name, unavailablePos);
+          const pool = basePlayers.concat(name);
+          const total = bestAssignmentScore(pool);
+          if (Number.isFinite(total) && total > bestTotal) {
+            bestTotal = total;
+            bestName = name;
+          }
+        }
+        return bestName;
+      }
+
+      function applyUnavailablePlayerReplacement() {
+        const unavailablePos = getUnavailablePosition();
+        hydrateBenchProfiles(unavailablePos);
+        hydrateCurrentAssignmentProfiles(unavailablePos);
+        if (!unavailablePos) {
+          inactivePlayer = "";
+          injectedReplacementPlayer = "";
+          inactiveForPosition = "";
+          return true;
+        }
+        if (inactivePlayer && inactiveForPosition === unavailablePos) return true;
+        if (inactivePlayer && inactiveForPosition !== unavailablePos) {
+          inactivePlayer = "";
+          injectedReplacementPlayer = "";
+          inactiveForPosition = "";
+        }
+
+        const outPlayer = getPlayerAt(unavailablePos);
+        if (!outPlayer) return false;
+        const replacement = chooseBenchReplacement(unavailablePos, outPlayer);
+        if (!replacement) {
+          if (explainEl) {
+            explainEl.textContent =
+              "No bench replacement available for unavailable " + unavailablePos + ".";
+          }
+          return false;
+        }
+        inactivePlayer = outPlayer;
+        injectedReplacementPlayer = replacement;
+        inactiveForPosition = unavailablePos;
+        replacePlayerEverywhere(outPlayer, replacement);
+        return true;
+      }
+
+      function restoreOriginalState() {
+        inactivePlayer = "";
+        injectedReplacementPlayer = "";
+        inactiveForPosition = "";
+        lockedPositions.clear();
+        for (const pos of allPositions) {
+          if (originalAssignment[pos]) setPlayerAt(pos, originalAssignment[pos]);
+        }
+        for (let i = 0; i < lineupRows.length; i += 1) {
+          const li = lineupRows[i];
+          const player = originalLineupOrder[i] || "";
+          if (!player) continue;
+          li.dataset.player = player;
+          const nameEl = li.querySelector(".batter-name");
+          if (nameEl) nameEl.textContent = player;
+        }
+        renderLocks();
+      }
+
+      function resetDashboardToInitial() {
+        if (unavailablePosEl) unavailablePosEl.value = "";
+        restoreOriginalState();
+        strictMode = false;
+        renderModeUI();
+        hydrateBenchProfiles("");
+        hydrateCurrentAssignmentProfiles("");
+        renderBenchScoreTable();
+        updateBattingLineupDHTag();
+        lastFocusedPlayer = null;
+        clearSelectionHighlights();
+        renderInspectorPrimary("");
+        const snap = cloneAssignment();
+        const shuffled = applyBestShuffleIfBelowPerfect();
+        updateOverallDefenseConfidence();
+        renderLineupCompare(snap, cloneAssignment(), { kind: "load" });
+        renderWhyThisMove();
+        if (explainEl) {
+          explainEl.textContent =
+            "Dashboard reset. Total fit score: " + totalDefenseFitScore().toFixed(1) +
+            (shuffled ? " (auto-shuffle improved placement among the same nine.)" : "");
+        }
+        refreshFocusAfterAssignment();
+      }
+
+      function clearSelectionHighlights() {
+        for (const li of lineupRows) li.classList.remove("highlighted");
+        for (const slot of slots) slot.classList.remove("highlighted");
+        document.querySelectorAll("#m5-recommendations .rec-item").forEach((el) => {
+          el.classList.remove("active");
+        });
+      }
+
+      function highlightPlayerEverywhere(player) {
+        if (!player) return;
+        for (const li of lineupRows) {
+          if ((li.dataset.player || "") === player) li.classList.add("highlighted");
+        }
+        for (const pos of allPositions) {
+          if (getPlayerAt(pos) === player) {
+            const slot = getSlotByPos(pos);
+            if (slot) slot.classList.add("highlighted");
+          }
+        }
+      }
+
+      function positionsForPlayer(player) {
+        const out = [];
+        for (const pos of allPositions) {
+          if (getPlayerAt(pos) === player) out.push(pos);
+        }
+        return out;
+      }
+
+      function renderInspectorPrimary(player) {
+        if (!inspectorEl) return;
+        if (!player) {
+          inspectorEl.innerHTML =
+            "<h4>Player focus</h4>" +
+            "<p class=\"hint inspector-body\">" +
+            "Click a batter in the lineup, a player name on the diamond, or a Module 5 recommendation.</p>";
+          return;
+        }
+        const off = offensiveScore(player);
+        const posList = positionsForPlayer(player);
+        const offLabel = Object.prototype.hasOwnProperty.call(offensiveProfiles, player)
+          ? off.toFixed(1)
+          : "—";
+        const defMap = defensiveProfiles[player] || {};
+        const defLines = Object.keys(defMap)
+          .sort()
+          .map((pos) => "<div><span class=\"inspector-pos\">" + pos + "</span>: " + Number(defMap[pos]).toFixed(1) + "</div>")
+          .join("");
+        const posSummary = posList.length > 0 ? posList.join(", ") : "(not on diamond in current assignment)";
+        inspectorEl.innerHTML =
+          "<h4>Player focus</h4>" +
+          "<div class=\"inspector-name\">" + player + "</div>" +
+          "<div class=\"inspector-grid\">" +
+          "<div><span class=\"inspector-pos\">Module 1 offense</span>: " + offLabel + "</div>" +
+          "<div><span class=\"inspector-pos\">Current positions</span>: " + posSummary + "</div>" +
+          (defLines
+            ? "<div style=\"margin-top:6px\"><span class=\"inspector-pos\">Module 2 defense by position</span></div>" + defLines
+            : "<div><span class=\"inspector-pos\">Module 2 defense</span>: —</div>") +
+          "</div>";
+      }
+
+      function renderInspectorRecommendation(bench, target, position) {
+        if (!inspectorEl) return;
+        const parts = [];
+        parts.push("<h4>Recommendation focus</h4><div class=\"inspector-grid\">");
+        if (bench) parts.push("<div><span class=\"inspector-pos\">Bench / sub</span>: " + bench + "</div>");
+        if (target) parts.push("<div><span class=\"inspector-pos\">On-field target</span>: " + target + "</div>");
+        if (position) parts.push("<div><span class=\"inspector-pos\">Position</span>: " + position + "</div>");
+        parts.push("<div class=\"hint\" style=\"margin-top:8px\">Highlighted players match this action where they appear in the lineup or on the diamond.</div></div>");
+        inspectorEl.innerHTML = parts.join("");
+      }
+
+      function renderInspectorInningSummary(cells) {
+        if (!inspectorEl || !cells || cells.length < 4) return;
+        const inn = cells[0].textContent.trim();
+        const half = cells[1].textContent.trim();
+        const objective = cells[2].textContent.trim();
+        const actions = cells[3].textContent.trim();
+        inspectorEl.innerHTML =
+          "<h4>Inning window</h4>" +
+          "<div class=\"inspector-grid\">" +
+          "<div><span class=\"inspector-pos\">Inning</span>: " + inn + " (" + half + ")</div>" +
+          "<div><span class=\"inspector-pos\">Objective</span>: " + objective + "</div>" +
+          "<div><span class=\"inspector-pos\">Planned actions</span>: " + actions + "</div>" +
+          "</div><p class=\"hint\" style=\"margin-top:8px\">Use the Adaptive Planning list above for full rationale.</p>";
+      }
+
+      function activateLineupPlayer(player) {
+        lastFocusedPlayer = player || null;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(player);
+        renderInspectorPrimary(player);
+      }
+
+      function activateFieldPlayer(player) {
+        lastFocusedPlayer = player || null;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(player);
+        renderInspectorPrimary(player);
+      }
+
+      function refreshFocusAfterAssignment() {
+        if (!lastFocusedPlayer) return;
+        clearSelectionHighlights();
+        highlightPlayerEverywhere(lastFocusedPlayer);
+        renderInspectorPrimary(lastFocusedPlayer);
+      }
+
+      function escapeHtml(str) {
+        return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+
+      function cloneAssignment() {
+        const a = {};
+        for (const pos of allPositions) a[pos] = getPlayerAt(pos);
+        return a;
+      }
+
+      function totalFitForAssignment(ass) {
+        let t = 0.0;
+        for (const pos of allPositions) {
+          const pl = ass[pos];
+          if (!pl) continue;
+          t += scorePlayerForPosition(pl, pos);
+        }
+        return t;
+      }
+
+      function diffAssignmentPositions(before, after) {
+        const out = [];
+        for (const pos of allPositions) {
+          if (before[pos] !== after[pos]) out.push(pos);
+        }
+        return out;
+      }
+
+      function renderLineupCompare(before, after, meta) {
+        if (!lineupCompareEl) return;
+        const bFit = totalFitForAssignment(before);
+        const aFit = totalFitForAssignment(after);
+        const diffPos = diffAssignmentPositions(before, after);
+        if (diffPos.length === 0 && Math.abs(aFit - bFit) < 0.05) {
+          lineupCompareEl.innerHTML =
+            "<p class=\"lineup-compare-note\">No defensive positions changed in this step.</p>";
+          return;
+        }
+
+        const k = meta && meta.kind ? meta.kind : "shuffle";
+        let intro = "";
+        if (k === "load") {
+          intro =
+            "<p class=\"lineup-compare-intro\">Compared to the <strong>original</strong> field loaded on this page, the layout below is the best reordering of the <strong>same nine players</strong> for total fit (Module 2 defense + Module 1 offense at DH), honoring locks and Strict/Free rules.</p>";
+        } else if (k === "drag") {
+          const pl = escapeHtml(meta.player || "");
+          const tp = escapeHtml(meta.targetPos || "");
+          intro =
+            "<p class=\"lineup-compare-intro\">You moved <strong>" +
+            pl +
+            "</strong> to <strong>" +
+            tp +
+            "</strong>. After re-optimizing the other unlocked spots, this field is the best full assignment the dashboard can build for these nine under the current rules.</p>";
+        } else if (k === "unavailable") {
+          const pp = escapeHtml(meta.position || "");
+          intro =
+            "<p class=\"lineup-compare-intro\">With <strong>" +
+            pp +
+            "</strong> treated as unavailable for the natural starter, the bench swap and reshuffle change the defense versus the lineup <strong>before</strong> this adjustment.</p>";
+        } else if (k === "mode") {
+          const m = meta.strict ? "Strict" : "Free";
+          intro =
+            "<p class=\"lineup-compare-intro\">After switching to <strong>" +
+            m +
+            "</strong> placement rules, the best-supported field for the same nine changed as follows.</p>";
+        } else if (k === "lock") {
+          intro =
+            "<p class=\"lineup-compare-intro\">Lock settings changed; unlocked positions were re-balanced toward the best total fit.</p>";
+        } else {
+          intro =
+            "<p class=\"lineup-compare-intro\">Unlocked positions were adjusted toward the best total fit for these nine players.</p>";
+        }
+
+        const rows = [];
+        for (const pos of diffPos) {
+          const bp = escapeHtml(before[pos] || "");
+          const ap = escapeHtml(after[pos] || "");
+          const ds =
+            scorePlayerForPosition(after[pos], pos) - scorePlayerForPosition(before[pos], pos);
+          const dsL = ds >= 0 ? "+" + ds.toFixed(1) : ds.toFixed(1);
+          rows.push(
+            "<tr><td><strong>" +
+              escapeHtml(pos) +
+              "</strong></td><td>" +
+              bp +
+              "</td><td>" +
+              ap +
+              "</td><td class=\"lineup-compare-delta\">" +
+              dsL +
+              "</td></tr>"
+          );
+        }
+
+        const gain = aFit - bFit;
+        const gainS = gain >= 0 ? "+" + gain.toFixed(1) : gain.toFixed(1);
+
+        lineupCompareEl.innerHTML =
+          intro +
+          "<table class=\"lineup-compare-table\"><thead><tr><th>Pos</th><th>Before</th><th>After</th><th>Δ fit</th></tr></thead><tbody>" +
+          rows.join("") +
+          "</tbody></table>" +
+          "<p class=\"lineup-compare-totals\"><strong>Total fit</strong> (sum over positions): " +
+          bFit.toFixed(1) +
+          " → " +
+          aFit.toFixed(1) +
+          " (" +
+          gainS +
+          ")</p>" +
+          "<p class=\"lineup-compare-why\">Higher total means a better combined matchup score for this roster — individual cells do not need to be 100.</p>";
+      }
+
+      function renderBenchScoreTable() {
+        const body = document.getElementById("bench-score-body");
+        if (!body) return;
+        const bench = Array.isArray(replanContext.bench_players) ? replanContext.bench_players : [];
+        if (bench.length === 0) {
+          body.innerHTML = "<tr><td colspan='11'>No bench players in planner context.</td></tr>";
+          return;
+        }
+
+        const posCols = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+        const rows = [];
+        for (const playerInfo of bench) {
+          if (!playerInfo || !playerInfo.name) continue;
+          const name = String(playerInfo.name);
+          // Bench players are not part of the initial 9 rendered profiles;
+          // hydrate their offense/defense maps from replan_context first.
+          ensureBenchProfiles(name, "");
+          const roles = Array.isArray(playerInfo.roles) ? playerInfo.roles.map((r) => String(r)).join(", ") : "—";
+          const off = offensiveScore(name).toFixed(1);
+          const scoreCells = posCols.map((pos) => {
+            const played = defensiveScore(name, pos);
+            const predicted = defensiveScorePredicted(name, pos);
+            if (predicted > 0.0 && Math.abs(predicted - played) > 0.01) {
+              return played.toFixed(1) + " / " + predicted.toFixed(1);
+            }
+            return played.toFixed(1);
+          });
+          rows.push(
+            "<tr>" +
+              "<td>" + escapeHtml(name) + "</td>" +
+              "<td>" + escapeHtml(roles) + "</td>" +
+              "<td>" + off + "</td>" +
+              scoreCells.map((v) => "<td>" + v + "</td>").join("") +
+            "</tr>"
+          );
+        }
+        body.innerHTML = rows.length > 0
+          ? rows.join("")
+          : "<tr><td colspan='11'>No bench players in planner context.</td></tr>";
+      }
+
+      function readGameStateForm() {
+        const inning = parseInt(document.getElementById("gs-inning")?.value || "1", 10);
+        const half = document.getElementById("gs-half")?.value || "bottom";
+        const outs = parseInt(document.getElementById("gs-outs")?.value || "0", 10);
+        const scoreFor = parseInt(document.getElementById("gs-score-for")?.value || "0", 10);
+        const scoreAgainst = parseInt(document.getElementById("gs-score-against")?.value || "0", 10);
+        const b1 = document.getElementById("gs-base-1")?.checked || false;
+        const b2 = document.getElementById("gs-base-2")?.checked || false;
+        const b3 = document.getElementById("gs-base-3")?.checked || false;
+        const subsUsed = parseInt(document.getElementById("gs-subs-used")?.value || "0", 10);
+        const subsLimit = parseInt(document.getElementById("gs-subs-limit")?.value || "5", 10);
+        return {
+          inning: Math.max(1, inning),
+          half: half,
+          outs: Math.max(0, Math.min(2, outs)),
+          score_for: Math.max(0, scoreFor),
+          score_against: Math.max(0, scoreAgainst),
+          bases: [b1, b2, b3],
+          substitutions_used: Math.max(0, subsUsed),
+          substitutions_limit: Math.max(0, subsLimit),
+          pitcher_fatigue: 0.0,
+        };
+      }
+
+      function battingOrderFromDom() {
+        return lineupRows.map((li) => li.dataset.player || "").filter(Boolean);
+      }
+
+      function buildPlanningDefensiveScores() {
+        hydrateCurrentAssignmentProfiles(getUnavailablePosition());
+        const base = Object.assign({}, replanContext.defensive_scores || {});
+        for (const pos of allPositions) {
+          const player = getPlayerAt(pos);
+          if (!player) continue;
+          const byPos = defensiveProfiles[player];
+          if (byPos && Object.prototype.hasOwnProperty.call(byPos, pos)) {
+            base[player] = Number(byPos[pos]);
+          } else if (!Object.prototype.hasOwnProperty.call(base, player)) {
+            base[player] = 0.0;
+          }
+        }
+        return base;
+      }
+
+      function renderModule5FromPlan(plan) {
+        const list = document.getElementById("m5-recommendations");
+        const tbody = document.getElementById("m5-inning-body");
+        if (!list || !tbody || !plan) return;
+        const recs = plan.recommendations || [];
+        if (recs.length === 0) {
+          list.innerHTML = "<li><strong>No immediate recommendations.</strong> <span>Module 5 did not flag a high-priority action for this state.</span></li>";
+        } else {
+          list.innerHTML = recs.map((rec) => {
+            const at = escapeHtml(rec.action_type || "action");
+            const pr = escapeHtml(String(rec.priority != null ? rec.priority : "?"));
+            const conf = Number(rec.confidence != null ? rec.confidence : 0).toFixed(2);
+            const reason = escapeHtml(rec.reason || "No rationale provided.");
+            const bp = escapeHtml(rec.bench_player || "");
+            const tp = escapeHtml(rec.target_player || "");
+            const ps = escapeHtml(rec.position || "");
+            return '<li class="rec-item" tabindex="0" role="button" data-bench-player="' + bp + '" data-target-player="' + tp + '" data-position="' + ps + '"><strong>' + at + "</strong> (priority " + pr + ", confidence " + conf + ")<br/><span>" + reason + "</span></li>";
+          }).join("");
+        }
+        const rows = plan.multi_inning_plan || [];
+        if (rows.length === 0) {
+          tbody.innerHTML = "<tr><td colspan='4'>No inning plan generated.</td></tr>";
+        } else {
+          tbody.innerHTML = rows.map((row) => {
+            const inn = escapeHtml(String(row.inning != null ? row.inning : "?"));
+            const hf = escapeHtml(String(row.half || "tbd"));
+            const obj = escapeHtml(String(row.objective || "n/a"));
+            const cnt = Array.isArray(row.recommended_actions) ? row.recommended_actions.length : 0;
+            return '<tr class="inning-row" tabindex="0" role="row"><td>' + inn + "</td><td>" + hf + "</td><td>" + obj + "</td><td>" + cnt + "</td></tr>";
+          }).join("");
+        }
+      }
+
+      async function runModule5Replan() {
+        const status = document.getElementById("m5-replan-status");
+        if (!replanContext || !replanContext.bench_players) {
+          if (status) status.textContent = "";
+          return;
+        }
+        if (status) status.textContent = "Contacting planner…";
+        const payload = {
+          game_state: readGameStateForm(),
+          current_lineup: {
+            batting_order: battingOrderFromDom(),
+            field_positions: currentAssignment(),
+          },
+          bench_players: replanContext.bench_players,
+          offensive_scores: replanContext.offensive_scores,
+          defensive_scores: buildPlanningDefensiveScores(),
+          innings_ahead: replanContext.innings_ahead || 3,
+        };
+        try {
+          const res = await fetch("/api/plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const text = await res.text();
+          if (!res.ok) {
+            if (status) status.textContent = "Planner error (" + res.status + "): " + (text || res.statusText).slice(0, 200);
+            return;
+          }
+          const plan = JSON.parse(text);
+          renderModule5FromPlan(plan);
+          if (status) status.textContent = "Plan updated at " + new Date().toLocaleTimeString() + " (Module 5).";
+        } catch (err) {
+          if (status) status.textContent = "Could not reach /api/plan. Run PYTHONPATH=src python3 demos/dashboard_plan_server.py and open the dashboard from http://127.0.0.1:8765/ (not a file:// URL).";
+        }
+      }
+
+      function getSlotByPos(pos) {
+        return document.querySelector('.defensive-slot[data-pos="' + pos + '"]');
+      }
+
+      function getPlayerAt(pos) {
+        const slot = getSlotByPos(pos);
+        if (!slot) return "";
+        const playerEl = slot.querySelector(".player");
+        return playerEl ? playerEl.textContent.trim() : "";
+      }
+
+      function setPlayerAt(pos, player) {
+        const slot = getSlotByPos(pos);
+        if (!slot) return;
+        const playerEl = slot.querySelector(".player");
+        if (playerEl) playerEl.textContent = player;
+      }
+
+      function defensiveScore(player, pos) {
+        const score = defensiveProfiles[player] ? defensiveProfiles[player][pos] : undefined;
+        const numeric = Number(score);
+        return Number.isFinite(numeric) ? numeric : 0.0;
+      }
+
+      function defensiveScorePredicted(player, pos) {
+        const score = defensivePredictedProfiles[player] ? defensivePredictedProfiles[player][pos] : undefined;
+        const numeric = Number(score);
+        return Number.isFinite(numeric) ? numeric : 0.0;
+      }
+
+      function offensiveScore(player) {
+        const numeric = Number(offensiveProfiles[player]);
+        return Number.isFinite(numeric) ? numeric : 0.0;
+      }
+
+      function scorePlayerForPosition(player, pos) {
+        if (player === inactivePlayer) return -1000.0;
+        if (pos === "DH") return offensiveScore(player);
+        const base = defensiveScore(player, pos);
+        const unavailablePos = getUnavailablePosition();
+        if (pos === unavailablePos && unavailablePos) {
+          const allowed = eligibilityProfiles[player] || [];
+          const isNatural = allowed.includes(unavailablePos);
+          if (!isNatural) {
+            const predicted = defensiveScorePredicted(player, unavailablePos);
+            const emergencyScore = predicted > 0.0 ? predicted : base;
+            return 0.75 * emergencyScore;
+          }
+          return base;
+        }
+        return base;
+      }
+
+      function isEligible(player, pos) {
+        if (!strictMode) return true;
+        if (pos === "DH") return true;
+        if (player === inactivePlayer) return false;
+        const unavailablePos = getUnavailablePosition();
+        if (pos === unavailablePos && unavailablePos) {
+          return true;
+        }
+        const allowed = eligibilityProfiles[player] || [];
+        return allowed.includes(pos);
+      }
+
+      function currentAssignment() {
+        const assignment = {};
+        for (const pos of allPositions) assignment[pos] = getPlayerAt(pos);
+        return assignment;
+      }
+
+      function renderLocks() {
+        for (const slot of slots) {
+          const pos = slot.dataset.pos || "";
+          slot.classList.toggle("locked", lockedPositions.has(pos));
+        }
+        for (const btn of lockButtons) {
+          const pos = btn.dataset.lockPos || "";
+          const isLocked = lockedPositions.has(pos);
+          btn.classList.toggle("active", isLocked);
+          btn.textContent = isLocked ? "LOCKED" : "LOCK";
+        }
+      }
+
+      function bestFullLineupPermutationResult() {
+        const positions = [...allPositions];
+        const roster = positions.map((pos) => getPlayerAt(pos));
+        const fixed = {};
+        for (const pos of lockedPositions) {
+          fixed[pos] = getPlayerAt(pos);
+        }
+        const remainingPositions = positions.filter((pos) => !lockedPositions.has(pos));
+        const fixedPlayers = new Set();
+        for (const pos of lockedPositions) {
+          const name = getPlayerAt(pos);
+          if (name) fixedPlayers.add(name);
+        }
+        const remainingPlayers = roster.filter((p) => !fixedPlayers.has(p));
+        const n = remainingPositions.length;
+        if (remainingPlayers.length !== n) {
+          return { score: -Infinity, assignment: null };
+        }
+
+        function fullScore(assignObj) {
+          let sum = 0.0;
+          for (const pos of positions) {
+            const pl = assignObj[pos];
+            if (!pl) return -Infinity;
+            sum += scorePlayerForPosition(pl, pos);
+          }
+          return sum;
+        }
+
+        if (n === 0) {
+          const merged = {};
+          for (const pos of positions) {
+            merged[pos] = getPlayerAt(pos);
+          }
+          const s = fullScore(merged);
+          return { score: s, assignment: merged };
+        }
+
+        let bestScore = -Infinity;
+        let bestAssignment = null;
+        const used = new Array(n).fill(false);
+        const pickIdx = new Array(n);
+
+        function dfs(depth) {
+          if (depth === n) {
+            const merged = Object.assign({}, fixed);
+            for (let j = 0; j < n; j += 1) {
+              merged[remainingPositions[j]] = remainingPlayers[pickIdx[j]];
+            }
+            const sum = fullScore(merged);
+            if (sum > bestScore) {
+              bestScore = sum;
+              bestAssignment = merged;
+            }
+            return;
+          }
+          for (let i = 0; i < n; i += 1) {
+            if (used[i]) continue;
+            const player = remainingPlayers[i];
+            const pos = remainingPositions[depth];
+            if (!isEligible(player, pos)) continue;
+            used[i] = true;
+            pickIdx[depth] = i;
+            dfs(depth + 1);
+            used[i] = false;
+          }
+        }
+
+        dfs(0);
+        return { score: bestScore, assignment: bestAssignment };
+      }
+
+      function totalDefenseFitScore() {
+        let total = 0.0;
+        for (const pos of allPositions) total += scorePlayerForPosition(getPlayerAt(pos), pos);
+        return total;
+      }
+
+      function applyBestShuffleIfBelowPerfect() {
+        const result = bestFullLineupPermutationResult();
+        if (!result.assignment || !Number.isFinite(result.score)) return false;
+        const current = totalDefenseFitScore();
+        if (result.score - current <= 0.01) return false;
+        applyAssignment(result.assignment);
+        updateBattingLineupDHTag();
+        updateOverallDefenseConfidence();
+        refreshFocusAfterAssignment();
+        return true;
+      }
+
+      function updateOverallDefenseConfidence() {
+        if (!lineupDefenseEl) return;
+        const currentTotal = totalDefenseFitScore();
+        const bestTotal = bestFullLineupPermutationResult().score;
+        lineupDefenseEl.classList.remove("conf-high", "conf-medium", "conf-low");
+        if (lineupDefenseSubEl) lineupDefenseSubEl.classList.remove("conf-high", "conf-medium", "conf-low");
+
+        if (!Number.isFinite(bestTotal) || bestTotal <= 0.0) {
+          lineupDefenseEl.textContent = "—";
+          lineupDefenseEl.classList.add("conf-low");
+          if (lineupDefenseSubEl) {
+            lineupDefenseSubEl.textContent = strictMode
+              ? "Strict mode: no complete eligible assignment found for these nine players."
+              : "Could not score best-case reassignment.";
+          }
+          return;
+        }
+
+        const efficiency = Math.min(100.0, (currentTotal / bestTotal) * 100.0);
+        lineupDefenseEl.textContent = efficiency.toFixed(1);
+        let tierClass = "conf-low";
+        if (efficiency >= 85.0) tierClass = "conf-high";
+        else if (efficiency >= 60.0) tierClass = "conf-medium";
+        lineupDefenseEl.classList.add(tierClass);
+        if (lineupDefenseSubEl) {
+          lineupDefenseSubEl.classList.add(tierClass);
+          const modeBits = strictMode ? "Strict eligibility" : "Free placement";
+          lineupDefenseSubEl.textContent =
+            "Totals for this shuffle comparison: current " +
+            currentTotal.toFixed(1) +
+            " · best among all permutations " +
+            bestTotal.toFixed(1) +
+            " · " +
+            modeBits +
+            ".";
+        }
+      }
+
+      function renderWhyThisMove() {
+        if (!whyListEl) return;
+        const rows = [];
+        const unavailablePos = getUnavailablePosition();
+        for (const pos of allPositions) {
+          const player = getPlayerAt(pos);
+          const score = scorePlayerForPosition(player, pos);
+          const scoreLabel = pos === "DH" ? "offense" : "defense";
+          const emergencyTag = unavailablePos && pos === unavailablePos ? " (emergency)" : "";
+          rows.push("<li><strong>" + pos + "</strong> -> " + player + emergencyTag + " | " + scoreLabel + ": <span class='why-score'>" + score.toFixed(1) + "</span></li>");
+        }
+        whyListEl.innerHTML = rows.join("");
+      }
+
+      function updateBattingLineupDHTag() {
+        const dhPlayer = getPlayerAt("DH");
+        const lineupItems = Array.from(document.querySelectorAll("ol li[data-player]"));
+        for (const li of lineupItems) {
+          const player = li.dataset.player || "";
+          let badge = li.querySelector(".role-badge");
+          if (player === dhPlayer) {
+            if (!badge) {
+              badge = document.createElement("span");
+              badge.className = "role-badge";
+              badge.textContent = "DH";
+              li.appendChild(document.createTextNode(" "));
+              li.appendChild(badge);
+            }
+          } else if (badge) {
+            badge.remove();
+          }
+        }
+      }
+
+      function applyAssignment(assignment) {
+        for (const pos of allPositions) {
+          if (assignment[pos]) setPlayerAt(pos, assignment[pos]);
+        }
+      }
+
+      function optimizeDefenseWithLockedPlayer(lockedPlayer, lockedPos, compareMeta) {
+        if (!lockedPlayer || !lockedPos) return;
+        if (lockedPositions.has(lockedPos)) {
+          if (explainEl) explainEl.textContent = "Target position is locked. Unlock it first to modify.";
+          return;
+        }
+        const beforeFieldMutation = cloneAssignment();
+        const current = currentAssignment();
+        const players = Array.from(new Set(Object.values(current).filter(Boolean)));
+        const fixedAssignments = {};
+        for (const pos of lockedPositions) {
+          if (pos === lockedPos) continue;
+          const player = current[pos];
+          if (player) fixedAssignments[pos] = player;
+        }
+        const fixedPlayers = new Set(Object.values(fixedAssignments));
+        if (fixedPlayers.has(lockedPlayer)) {
+          if (explainEl) explainEl.textContent = "Dragged player is already fixed in another locked position.";
+          return;
+        }
+
+        const remainingPlayers = players.filter((p) => p !== lockedPlayer && !fixedPlayers.has(p));
+        const remainingPositions = allPositions.filter((p) => p !== lockedPos && !(p in fixedAssignments));
+        const best = { score: -Infinity, assignment: null };
+
+        function backtrack(posIdx, availablePlayers, partial, runningScore) {
+          if (posIdx >= remainingPositions.length) {
+            if (runningScore > best.score) {
+              best.score = runningScore;
+              best.assignment = Object.assign({}, partial);
+            }
+            return;
+          }
+          const pos = remainingPositions[posIdx];
+          for (let i = 0; i < availablePlayers.length; i += 1) {
+            const player = availablePlayers[i];
+            if (!isEligible(player, pos)) continue;
+            partial[pos] = player;
+            const nextPlayers = availablePlayers.slice(0, i).concat(availablePlayers.slice(i + 1));
+            backtrack(posIdx + 1, nextPlayers, partial, runningScore + scorePlayerForPosition(player, pos));
+            delete partial[pos];
+          }
+        }
+
+        backtrack(0, remainingPlayers, {}, 0.0);
+        if (!best.assignment) {
+          if (explainEl) explainEl.textContent = "No valid reassignment found with current constraints for that lock.";
+          return;
+        }
+        const optimized = Object.assign({}, fixedAssignments, best.assignment || {});
+        optimized[lockedPos] = lockedPlayer;
+        applyAssignment(optimized);
+        updateBattingLineupDHTag();
+        // Diamond drag: do not run global permutation shuffle afterward — it can move
+        // the player off the cell they dropped on and feels like the drag did nothing.
+        const isDiamondDrag = !compareMeta || compareMeta.kind === "drag";
+        const autoShuffle = isDiamondDrag ? false : applyBestShuffleIfBelowPerfect();
+        if (!autoShuffle) {
+          updateOverallDefenseConfidence();
+        }
+        if (explainEl && !autoShuffle) {
+          const unavailablePos = getUnavailablePosition();
+          const extra = unavailablePos ? " | Unavailable natural position: " + unavailablePos : "";
+          explainEl.textContent = "Locked " + lockedPlayer + " at " + lockedPos + extra + " | Total fit score: " + totalDefenseFitScore().toFixed(1);
+        }
+        const afterFieldMutation = cloneAssignment();
+        const meta =
+          compareMeta && compareMeta.kind
+            ? compareMeta
+            : { kind: "drag", player: lockedPlayer, targetPos: lockedPos };
+        const beforeForCompare =
+          compareMeta && compareMeta.beforeAssignment ? compareMeta.beforeAssignment : beforeFieldMutation;
+        renderLineupCompare(beforeForCompare, afterFieldMutation, meta);
+        renderWhyThisMove();
+        refreshFocusAfterAssignment();
+      }
+
+      function clearDropStyles() {
+        for (const slot of slots) {
+          slot.classList.remove("drop-target");
+          slot.classList.remove("dragging");
+        }
+      }
+
+      function renderModeUI() {
+        if (!strictBtn || !freeBtn) return;
+        strictBtn.classList.toggle("active", strictMode);
+        freeBtn.classList.toggle("active", !strictMode);
+        if (modeLabelEl) {
+          modeLabelEl.textContent = strictMode
+            ? "Strict Mode: only eligible defensive positions are allowed."
+            : "Free Mode: any player can be moved to any defensive position.";
+        }
+      }
+
+      if (strictBtn) strictBtn.addEventListener("click", () => {
+        const snap = cloneAssignment();
+        strictMode = true;
+        renderModeUI();
+        applyBestShuffleIfBelowPerfect();
+        updateOverallDefenseConfidence();
+        renderLineupCompare(snap, cloneAssignment(), { kind: "mode", strict: true });
+        renderWhyThisMove();
+        refreshFocusAfterAssignment();
+      });
+      if (freeBtn) freeBtn.addEventListener("click", () => {
+        const snap = cloneAssignment();
+        strictMode = false;
+        renderModeUI();
+        applyBestShuffleIfBelowPerfect();
+        updateOverallDefenseConfidence();
+        renderLineupCompare(snap, cloneAssignment(), { kind: "mode", strict: false });
+        renderWhyThisMove();
+        refreshFocusAfterAssignment();
+      });
+      const resetBtn = document.getElementById("dashboard-reset");
+      if (resetBtn) resetBtn.addEventListener("click", () => { resetDashboardToInitial(); });
+      if (unavailablePosEl) {
+        unavailablePosEl.addEventListener("change", () => {
+          const unavailablePos = getUnavailablePosition();
+          hydrateBenchProfiles(unavailablePos);
+          restoreOriginalState();
+          const snap = cloneAssignment();
+          const applied = applyUnavailablePlayerReplacement();
+          let ranOptimize = false;
+          if (unavailablePos && applied) {
+            const seedPlayer = getPlayerAt(unavailablePos);
+            if (seedPlayer) {
+              optimizeDefenseWithLockedPlayer(seedPlayer, unavailablePos, {
+                kind: "unavailable",
+                position: unavailablePos,
+                beforeAssignment: snap,
+              });
+              ranOptimize = true;
+            }
+          }
+          if (!ranOptimize) {
+            const shuffled = applyBestShuffleIfBelowPerfect();
+            if (!shuffled) {
+              updateOverallDefenseConfidence();
+            }
+            renderLineupCompare(snap, cloneAssignment(), {
+              kind: "unavailable",
+              position: unavailablePos || "",
+            });
+          }
+          renderWhyThisMove();
+          refreshFocusAfterAssignment();
+          if (explainEl) {
+            const parts = [];
+            if (unavailablePos) {
+              parts.push("Unavailable natural position: " + unavailablePos + ".");
+              if (typeof inactivePlayer === "string" && inactivePlayer) {
+                parts.push("Player out: " + inactivePlayer + ".");
+              }
+            } else {
+              parts.push("No unavailable-position override.");
+            }
+            parts.push("Total fit score: " + totalDefenseFitScore().toFixed(1));
+            explainEl.textContent = parts.join(" ");
+          }
+        });
+      }
+
+      for (const slot of slots) {
+        slot.addEventListener("dragstart", (event) => {
+          dragSourcePos = slot.dataset.pos || null;
+          if (dragSourcePos && lockedPositions.has(dragSourcePos)) {
+            event.preventDefault();
+            if (explainEl) explainEl.textContent = "Source position is locked. Unlock it first to drag this player.";
+            return;
+          }
+          slot.classList.add("dragging");
+          if (event.dataTransfer) {
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", dragSourcePos || "");
+          }
+        });
+        slot.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          slot.classList.add("drop-target");
+          if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+        });
+        slot.addEventListener("dragleave", () => { slot.classList.remove("drop-target"); });
+        slot.addEventListener("drop", (event) => {
+          event.preventDefault();
+          const sourcePos = dragSourcePos || (event.dataTransfer ? event.dataTransfer.getData("text/plain") : "");
+          const targetPos = slot.dataset.pos || "";
+          const draggedPlayer = getPlayerAt(sourcePos);
+          optimizeDefenseWithLockedPlayer(draggedPlayer, targetPos);
+          clearDropStyles();
+        });
+        slot.addEventListener("dragend", () => { clearDropStyles(); dragSourcePos = null; });
+      }
+
+      for (const btn of lockButtons) {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const pos = btn.dataset.lockPos || "";
+          if (!pos) return;
+          const snap = cloneAssignment();
+          if (lockedPositions.has(pos)) lockedPositions.delete(pos);
+          else lockedPositions.add(pos);
+          renderLocks();
+          const shuffled = applyBestShuffleIfBelowPerfect();
+          updateOverallDefenseConfidence();
+          renderLineupCompare(snap, cloneAssignment(), { kind: "lock" });
+          renderWhyThisMove();
+          refreshFocusAfterAssignment();
+          if (explainEl && !shuffled) {
+            explainEl.textContent = lockedPositions.size > 0
+              ? "Locked positions: " + Array.from(lockedPositions).sort().join(", ")
+              : "No positions locked.";
+          }
+        });
+      }
+
+      for (const li of lineupRows) {
+        li.addEventListener("click", () => {
+          const player = li.dataset.player || "";
+          if (player) activateLineupPlayer(player);
+        });
+        li.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            const player = li.dataset.player || "";
+            if (player) activateLineupPlayer(player);
+          }
+        });
+      }
+
+      for (const slot of slots) {
+        const playerEl = slot.querySelector(".player");
+        if (playerEl) {
+          playerEl.addEventListener("click", (event) => {
+            event.stopPropagation();
+            const player = playerEl.textContent.trim();
+            if (player) activateFieldPlayer(player);
+          });
+        }
+      }
+
+      if (module5Root) {
+        module5Root.addEventListener("click", (event) => {
+          const rec = event.target.closest(".rec-item");
+          if (rec && rec.closest("#m5-recommendations")) {
+            lastFocusedPlayer = null;
+            clearSelectionHighlights();
+            rec.classList.add("active");
+            const bench = rec.dataset.benchPlayer || "";
+            const target = rec.dataset.targetPlayer || "";
+            const position = rec.dataset.position || "";
+            if (bench) highlightPlayerEverywhere(bench);
+            if (target && target !== "slowest_current_runner") highlightPlayerEverywhere(target);
+            renderInspectorRecommendation(bench, target, position);
+            return;
+          }
+          const row = event.target.closest("tr.inning-row");
+          if (row && row.closest("#m5-inning-body")) {
+            lastFocusedPlayer = null;
+            const cells = Array.from(row.querySelectorAll("td"));
+            clearSelectionHighlights();
+            renderInspectorInningSummary(cells);
+          }
+        });
+        module5Root.addEventListener("keydown", (event) => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          const rec = event.target.closest(".rec-item");
+          if (rec && rec.closest("#m5-recommendations")) {
+            event.preventDefault();
+            rec.click();
+            return;
+          }
+          const row = event.target.closest("tr.inning-row");
+          if (row && row.closest("#m5-inning-body")) {
+            event.preventDefault();
+            row.click();
+          }
+        });
+      }
+
+      let replanDebounce = null;
+      function scheduleAutoReplan() {
+        const auto = document.getElementById("gs-auto-refresh");
+        if (!auto || !auto.checked) return;
+        if (replanDebounce) clearTimeout(replanDebounce);
+        replanDebounce = setTimeout(() => { runModule5Replan(); }, 450);
+      }
+
+      const refreshPlanBtn = document.getElementById("m5-refresh-plan");
+      if (refreshPlanBtn) refreshPlanBtn.addEventListener("click", () => { runModule5Replan(); });
+      const gsWatchIds = [
+        "gs-inning", "gs-half", "gs-outs", "gs-score-for", "gs-score-against",
+        "gs-base-1", "gs-base-2", "gs-base-3", "gs-subs-used", "gs-subs-limit",
+      ];
+      for (const gid of gsWatchIds) {
+        const gel = document.getElementById(gid);
+        if (gel) gel.addEventListener("change", scheduleAutoReplan);
+      }
+
+      updateBattingLineupDHTag();
+      renderModeUI();
+      renderLocks();
+      hydrateBenchProfiles(getUnavailablePosition());
+      hydrateCurrentAssignmentProfiles(getUnavailablePosition());
+      renderBenchScoreTable();
+      const bootSnap = cloneAssignment();
+      const bootShuffle = applyBestShuffleIfBelowPerfect();
+      updateOverallDefenseConfidence();
+      renderLineupCompare(bootSnap, cloneAssignment(), { kind: "load" });
+      renderWhyThisMove();
+      if (explainEl && !bootShuffle) {
+        explainEl.textContent = "Initial total fit score: " + totalDefenseFitScore().toFixed(1);
+      }
+    })();
+  </script>
+</body>
+</html>
