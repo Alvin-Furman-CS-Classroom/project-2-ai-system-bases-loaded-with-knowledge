@@ -27,7 +27,7 @@ def main() -> None:
         bundle["batting_order"],
         bundle["assignment"],
         output_path=str(Path("web") / "module4_dashboard.html"),
-        title="Module 4 + Module 5 Dashboard",
+        title="Bases Loaded With Knowledge",
         module5_plan=bundle["module5_plan"],
         defensive_profiles=bundle["defensive_profiles"],
         defensive_profiles_predicted=bundle["defensive_profiles_predicted"],
@@ -35,6 +35,7 @@ def main() -> None:
         eligibility_profiles=bundle["eligibility_profiles"],
         pipeline_context=bundle["pipeline_context"],
         replan_context=bundle.get("replan_context"),
+        pitcher_context=bundle.get("pitcher_context"),
     )
     print(f"Wrote dashboard: {out.resolve()}")
     print(

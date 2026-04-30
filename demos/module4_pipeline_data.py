@@ -9,6 +9,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
 
 from module1.matchup_analyzer import analyze_matchup_performance
+from module1.matchup_analyzer import analyze_matchups_matrix
+from module1.models import Batter, Pitcher
+from module1.rule_evaluator import RuleEvaluator
 from module2.defensive_analyzer import analyze_defensive_performance
 from module3.position_assignment import DEFAULT_POSITIONS, assign_defensive_positions
 from module4.batting_order import optimize_batting_order
@@ -18,6 +21,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 TEST_DATA_DIR = REPO_ROOT / "test_data"
 MATCHUP_JSON = TEST_DATA_DIR / "matchup_stats.json"
 DEFENSIVE_JSON = TEST_DATA_DIR / "defensive_stats.json"
+MATCHUPS_MATRIX_JSON = TEST_DATA_DIR / "matchups_matrix.json"
 UI_POSITIONS = [pos for pos in DEFAULT_POSITIONS if pos != "P"] + ["DH"]
 DEFENSIVE_FIELD_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"]
 
@@ -95,11 +99,77 @@ def _batter_stats_from_matchup_json() -> Dict[str, Dict[str, float]]:
     return out
 
 
+def _batter_models_from_matchup_json() -> List[Batter]:
+    with open(MATCHUP_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    batters: List[Batter] = []
+    for b in data.get("batters", []):
+        name = b.get("name")
+        if not name:
+            continue
+        batters.append(
+            Batter(
+                name=str(name),
+                ba=float(b.get("ba", 0.0)),
+                k=int(float(b.get("k", 0))),
+                obp=float(b.get("obp", 0.0)),
+                slg=float(b.get("slg", 0.0)),
+                hr=int(float(b.get("hr", 0))),
+                rbi=int(float(b.get("rbi", 0))),
+                handedness=str(b.get("handedness", "R")),
+            )
+        )
+    return batters
+
+
+def _default_pitcher_from_matchup_json() -> Dict[str, Any]:
+    with open(MATCHUP_JSON, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    pitcher = data.get("pitcher", {})
+    return pitcher if isinstance(pitcher, dict) else {}
+
+
+def _load_pitcher_options(limit: int = 8) -> List[Dict[str, Any]]:
+    options: List[Dict[str, Any]] = []
+    seen: set[str] = set()
+
+    default_pitcher = _default_pitcher_from_matchup_json()
+    default_name = str(default_pitcher.get("name", "")).strip()
+    if default_name:
+        options.append(default_pitcher)
+        seen.add(default_name)
+
+    with open(MATCHUPS_MATRIX_JSON, "r", encoding="utf-8") as f:
+        matrix_data = json.load(f)
+    for p in matrix_data.get("pitchers", []):
+        name = str((p or {}).get("name", "")).strip()
+        if not name or name in seen:
+            continue
+        options.append(p)
+        seen.add(name)
+        if len(options) >= limit:
+            break
+    return options
+
+
+def _pitcher_model_from_dict(raw: Dict[str, Any]) -> Pitcher:
+    return Pitcher(
+        name=str(raw.get("name", "")).strip() or None,
+        era=float(raw.get("era", 0.0)),
+        whip=float(raw.get("whip", 0.0)),
+        k_rate=float(raw.get("k_rate", 0.0)),
+        handedness=str(raw.get("handedness", "RHP")),
+        walk_rate=float(raw.get("walk_rate", 0.0)),
+    )
+
+
 def compute_module4_ui_inputs(seed: int = 42) -> Tuple[List[str], Dict[str, str]]:
     """
     Return (batting_order, position_assignment) from real module data/files.
     """
-    offensive_scores = analyze_matchup_performance(str(MATCHUP_JSON))
+    offensive_scores = analyze_matchup_performance(
+        str(MATCHUP_JSON), rule_evaluator=RuleEvaluator()
+    )
     defensive_scores = analyze_defensive_performance(
         str(DEFENSIVE_JSON), predict_all_positions=False
     )
@@ -203,7 +273,9 @@ def compute_offensive_profiles(position_assignment: Dict[str, str]) -> Dict[str,
     """
     Return per-player offensive scores used for DH optimization.
     """
-    offensive_scores = analyze_matchup_performance(str(MATCHUP_JSON))
+    offensive_scores = analyze_matchup_performance(
+        str(MATCHUP_JSON), rule_evaluator=RuleEvaluator()
+    )
     return {
         player: float(offensive_scores.get(player, 0.0))
         for player in set(position_assignment.values())
@@ -216,7 +288,9 @@ def compute_module5_ui_plan(seed: int = 42) -> Dict[str, object]:
     """
     batting_order, assignment = compute_module4_ui_inputs(seed=seed)
     selected = list(assignment.values())
-    offensive_scores = analyze_matchup_performance(str(MATCHUP_JSON))
+    offensive_scores = analyze_matchup_performance(
+        str(MATCHUP_JSON), rule_evaluator=RuleEvaluator()
+    )
     defensive_full = analyze_defensive_performance(
         str(DEFENSIVE_JSON), predict_all_positions=False
     )
@@ -263,7 +337,9 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
     This ensures the UI is sourced from a single consistent pipeline run:
     Module 1 -> Module 2 -> Module 3 -> Module 4 -> Module 5.
     """
-    offensive_scores = analyze_matchup_performance(str(MATCHUP_JSON))
+    offensive_scores = analyze_matchup_performance(
+        str(MATCHUP_JSON), rule_evaluator=RuleEvaluator()
+    )
     defensive_scores = analyze_defensive_performance(
         str(DEFENSIVE_JSON), predict_all_positions=False
     )
@@ -279,22 +355,6 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
     )
 
     selected_players = list(assignment.values())
-    batter_stats = _batter_stats_from_matchup_json()
-    offensive_subset = {p: float(offensive_scores[p]) for p in selected_players}
-    optimized = optimize_batting_order(
-        selected_players,
-        batter_stats,
-        offensive_scores=offensive_subset,
-        seed=seed,
-        generations=80,
-        population_size=80,
-    )
-    batting_order = optimized["optimized_order"]
-
-    flat_defense: Dict[str, float] = {}
-    for pos, player in assignment.items():
-        flat_defense[player] = float(defensive_scores.get(player, {}).get(pos, 0.0))
-
     game_state = {
         "inning": 7,
         "half": "bottom",
@@ -308,6 +368,70 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
     }
     bench_players = _build_bench_players(offensive_scores, selected_players, eligibility)
     bench_names = [b["name"] for b in bench_players]
+    batter_stats = _batter_stats_from_matchup_json()
+
+    pitcher_options = _load_pitcher_options(limit=8)
+    default_pitcher_name = (
+        str(_default_pitcher_from_matchup_json().get("name", "")).strip()
+        or (str(pitcher_options[0].get("name", "")).strip() if pitcher_options else "")
+    )
+    if default_pitcher_name and not any(
+        str((p or {}).get("name", "")).strip() == default_pitcher_name
+        for p in pitcher_options
+    ):
+        pitcher_options.insert(0, _default_pitcher_from_matchup_json())
+
+    selected_and_bench = list(dict.fromkeys(selected_players + bench_names))
+    batter_models = _batter_models_from_matchup_json()
+    batter_models = [b for b in batter_models if b.name in set(selected_and_bench)]
+    pitcher_models = [_pitcher_model_from_dict(p) for p in pitcher_options if p]
+    score_matrix = analyze_matchups_matrix(
+        batter_models,
+        pitcher_models,
+        rule_evaluator=RuleEvaluator(),
+    )
+
+    offensive_profiles_by_pitcher: Dict[str, Dict[str, float]] = {}
+    batting_order_by_pitcher: Dict[str, List[str]] = {}
+    for p in pitcher_options:
+        p_name = str((p or {}).get("name", "")).strip()
+        if not p_name:
+            continue
+        per_pitcher_scores: Dict[str, float] = {}
+        for player in selected_and_bench:
+            player_scores = score_matrix.get(player, {})
+            per_pitcher_scores[player] = float(player_scores.get(p_name, 0.0))
+        offensive_profiles_by_pitcher[p_name] = per_pitcher_scores
+        selected_subset = {name: per_pitcher_scores.get(name, 0.0) for name in selected_players}
+        optimized = optimize_batting_order(
+            selected_players,
+            batter_stats,
+            offensive_scores=selected_subset,
+            seed=seed,
+            generations=80,
+            population_size=80,
+        )
+        batting_order_by_pitcher[p_name] = list(optimized["optimized_order"])
+
+    active_pitcher = default_pitcher_name or next(iter(offensive_profiles_by_pitcher.keys()), "")
+    offensive_subset = {
+        p: float(offensive_profiles_by_pitcher.get(active_pitcher, {}).get(p, 0.0))
+        for p in selected_players
+    }
+    batting_order = batting_order_by_pitcher.get(active_pitcher, selected_players)
+    optimized = optimize_batting_order(
+        selected_players,
+        batter_stats,
+        offensive_scores=offensive_subset,
+        seed=seed,
+        generations=80,
+        population_size=80,
+    )
+
+    flat_defense: Dict[str, float] = {}
+    for pos, player in assignment.items():
+        flat_defense[player] = float(defensive_scores.get(player, {}).get(pos, 0.0))
+
     current_lineup = {"batting_order": batting_order, "field_positions": assignment}
     module5_plan = generate_adaptive_plan(
         game_state,
@@ -336,6 +460,23 @@ def compute_ui_bundle(seed: int = 42) -> Dict[str, Any]:
             "offensive_scores": planning_offense,
             "defensive_scores": planning_defense,
             "innings_ahead": 3,
+        },
+        "pitcher_context": {
+            "default_pitcher": active_pitcher,
+            "pitchers": [
+                {
+                    "name": str((p or {}).get("name", "")).strip(),
+                    "handedness": str((p or {}).get("handedness", "")).strip().upper(),
+                    "era": float((p or {}).get("era", 0.0)),
+                    "whip": float((p or {}).get("whip", 0.0)),
+                    "k_rate": float((p or {}).get("k_rate", 0.0)),
+                    "walk_rate": float((p or {}).get("walk_rate", 0.0)),
+                }
+                for p in pitcher_options
+                if str((p or {}).get("name", "")).strip()
+            ],
+            "offensive_profiles_by_pitcher": offensive_profiles_by_pitcher,
+            "batting_order_by_pitcher": batting_order_by_pitcher,
         },
         "defensive_profiles": compute_defensive_profiles(assignment, bench_names),
         "defensive_profiles_predicted": compute_defensive_profiles_predicted(assignment, bench_names),

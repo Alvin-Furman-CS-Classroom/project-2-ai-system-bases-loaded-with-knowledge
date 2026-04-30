@@ -34,12 +34,22 @@ def build_dashboard_script(
       const lineupRows = Array.from(document.querySelectorAll(".lineup-card ol li[data-player]"));
       const module5Root = document.getElementById("module5-root");
       const replanContextEl = document.getElementById("replan-context");
+      const pitcherContextEl = document.getElementById("pitcher-context");
+      const opponentPitcherEl = document.getElementById("opponent-pitcher");
       let replanContext = {{}};
+      let pitcherContext = {{}};
       if (replanContextEl && replanContextEl.textContent) {{
         try {{
           replanContext = JSON.parse(replanContextEl.textContent);
         }} catch (err) {{
           replanContext = {{}};
+        }}
+      }}
+      if (pitcherContextEl && pitcherContextEl.textContent) {{
+        try {{
+          pitcherContext = JSON.parse(pitcherContextEl.textContent);
+        }} catch (err) {{
+          pitcherContext = {{}};
         }}
       }}
       let dragSourcePos = null;
@@ -56,6 +66,7 @@ def build_dashboard_script(
         originalAssignment[pos] = playerEl ? playerEl.textContent.trim() : "";
       }}
       const originalLineupOrder = lineupRows.map((li) => li.dataset.player || "");
+      let activePitcher = "";
 
       function getUnavailablePosition() {{
         const raw = unavailablePosEl ? unavailablePosEl.value : "";
@@ -259,9 +270,105 @@ def build_dashboard_script(
         renderLocks();
       }}
 
+      function getPitcherChoices() {{
+        const items = Array.isArray(pitcherContext.pitchers) ? pitcherContext.pitchers : [];
+        return items
+          .map((p) => {{
+            return {{
+              name: String((p && p.name) || "").trim(),
+              handedness: String((p && p.handedness) || "").trim(),
+            }};
+          }})
+          .filter((p) => p.name);
+      }}
+
+      function lineupForPitcher(pitcherName) {{
+        const table = pitcherContext.batting_order_by_pitcher || {{}};
+        const order = table[pitcherName];
+        return Array.isArray(order) ? order.map((p) => String(p || "").trim()).filter(Boolean) : [];
+      }}
+
+      function offenseForPitcher(pitcherName) {{
+        const table = pitcherContext.offensive_profiles_by_pitcher || {{}};
+        const scores = table[pitcherName];
+        return scores && typeof scores === "object" ? scores : null;
+      }}
+
+      function setBattingOrder(order) {{
+        if (!Array.isArray(order) || order.length !== lineupRows.length) return false;
+        for (let i = 0; i < lineupRows.length; i += 1) {{
+          const player = String(order[i] || "").trim();
+          if (!player) return false;
+          const li = lineupRows[i];
+          li.dataset.player = player;
+          const nameEl = li.querySelector(".batter-name");
+          if (nameEl) nameEl.textContent = player;
+        }}
+        updateBattingLineupDHTag();
+        return true;
+      }}
+
+      function applyPitcherContext(pitcherName) {{
+        const scores = offenseForPitcher(pitcherName);
+        if (!scores) return false;
+        activePitcher = pitcherName;
+        for (const [player, score] of Object.entries(scores)) {{
+          offensiveProfiles[player] = Number(score);
+          if (replanContext && replanContext.offensive_scores) {{
+            replanContext.offensive_scores[player] = Number(score);
+          }}
+        }}
+        const changedLineup = setBattingOrder(lineupForPitcher(pitcherName));
+        renderBenchScoreTable();
+        renderWhyThisMove();
+        updateOverallDefenseConfidence();
+        refreshFocusAfterAssignment();
+        if (explainEl) {{
+          explainEl.textContent =
+            "Opponent pitcher: " +
+            pitcherName +
+            " | Total fit score: " +
+            totalDefenseFitScore().toFixed(1) +
+            (changedLineup ? " | Batting order updated from Module 1 matchup scores." : "");
+        }}
+        return true;
+      }}
+
+      function initPitcherSelector() {{
+        if (!opponentPitcherEl) return;
+        const pitchers = getPitcherChoices();
+        if (pitchers.length === 0) {{
+          opponentPitcherEl.innerHTML = "<option value=''>N/A</option>";
+          opponentPitcherEl.disabled = true;
+          return;
+        }}
+        opponentPitcherEl.innerHTML = pitchers
+          .map((p) => {{
+            const label = p.handedness ? p.name + " (" + p.handedness + ")" : p.name;
+            return "<option value='" + escapeHtml(p.name) + "'>" + escapeHtml(label) + "</option>";
+          }})
+          .join("");
+        const preferred = String(pitcherContext.default_pitcher || "").trim();
+        const initial = pitchers.some((p) => p.name === preferred) ? preferred : pitchers[0].name;
+        opponentPitcherEl.value = initial;
+        applyPitcherContext(initial);
+        opponentPitcherEl.addEventListener("change", () => {{
+          const next = String(opponentPitcherEl.value || "").trim();
+          if (!next) return;
+          applyPitcherContext(next);
+          scheduleAutoReplan();
+        }});
+      }}
+
       function resetDashboardToInitial() {{
         if (unavailablePosEl) unavailablePosEl.value = "";
+        if (opponentPitcherEl) {{
+          const preferred = String(pitcherContext.default_pitcher || "").trim();
+          if (preferred) opponentPitcherEl.value = preferred;
+          activePitcher = preferred;
+        }}
         restoreOriginalState();
+        if (activePitcher) applyPitcherContext(activePitcher);
         strictMode = false;
         renderModeUI();
         hydrateBenchProfiles("");
@@ -523,12 +630,9 @@ def build_dashboard_script(
           const roles = Array.isArray(playerInfo.roles) ? playerInfo.roles.map((r) => String(r)).join(", ") : "—";
           const off = offensiveScore(name).toFixed(1);
           const scoreCells = posCols.map((pos) => {{
-            const played = defensiveScore(name, pos);
-            const predicted = defensiveScorePredicted(name, pos);
-            if (predicted > 0.0 && Math.abs(predicted - played) > 0.01) {{
-              return played.toFixed(1) + " / " + predicted.toFixed(1);
-            }}
-            return played.toFixed(1);
+            // Use one consistent score source/format per table cell.
+            // This avoids mixed "played / predicted" representations.
+            return defensiveScore(name, pos).toFixed(1);
           }});
           rows.push(
             "<tr>" +
@@ -916,6 +1020,14 @@ def build_dashboard_script(
           if (explainEl) explainEl.textContent = "Target position is locked. Unlock it first to modify.";
           return;
         }}
+        const sourcePos = Object.keys(currentAssignment()).find((p) => getPlayerAt(p) === lockedPlayer) || "";
+        if (sourcePos && sourcePos === lockedPos) {{
+          if (explainEl) {{
+            explainEl.textContent =
+              "No change: " + lockedPlayer + " is already at " + lockedPos + ".";
+          }}
+          return;
+        }}
         const beforeFieldMutation = cloneAssignment();
         const current = currentAssignment();
         const players = Array.from(new Set(Object.values(current).filter(Boolean)));
@@ -933,12 +1045,20 @@ def build_dashboard_script(
 
         const remainingPlayers = players.filter((p) => p !== lockedPlayer && !fixedPlayers.has(p));
         const remainingPositions = allPositions.filter((p) => p !== lockedPos && !(p in fixedAssignments));
-        const best = {{ score: -Infinity, assignment: null }};
+        const best = {{ score: -Infinity, stability: -Infinity, assignment: null }};
 
         function backtrack(posIdx, availablePlayers, partial, runningScore) {{
           if (posIdx >= remainingPositions.length) {{
+            let stability = 0;
+            for (const pos of remainingPositions) {{
+              if (partial[pos] === current[pos]) stability += 1;
+            }}
             if (runningScore > best.score) {{
               best.score = runningScore;
+              best.stability = stability;
+              best.assignment = Object.assign({{}}, partial);
+            }} else if (Math.abs(runningScore - best.score) <= 0.0001 && stability > best.stability) {{
+              best.stability = stability;
               best.assignment = Object.assign({{}}, partial);
             }}
             return;
@@ -973,7 +1093,14 @@ def build_dashboard_script(
         if (explainEl && !autoShuffle) {{
           const unavailablePos = getUnavailablePosition();
           const extra = unavailablePos ? " | Unavailable natural position: " + unavailablePos : "";
-          explainEl.textContent = "Locked " + lockedPlayer + " at " + lockedPos + extra + " | Total fit score: " + totalDefenseFitScore().toFixed(1);
+          explainEl.textContent =
+            "Pinned " +
+            lockedPlayer +
+            " at " +
+            lockedPos +
+            extra +
+            " | Re-optimized all other unlocked positions for best defense | Total fit score: " +
+            totalDefenseFitScore().toFixed(1);
         }}
         const afterFieldMutation = cloneAssignment();
         const meta =
@@ -1210,6 +1337,7 @@ def build_dashboard_script(
         if (gel) gel.addEventListener("change", scheduleAutoReplan);
       }}
 
+      initPitcherSelector();
       updateBattingLineupDHTag();
       renderModeUI();
       renderLocks();

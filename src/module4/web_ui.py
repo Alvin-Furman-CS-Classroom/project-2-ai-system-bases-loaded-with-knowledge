@@ -107,6 +107,7 @@ def render_lineup_dashboard_html(
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
     replan_context: Optional[Mapping[str, Any]] = None,
+    pitcher_context: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Return a full HTML page showing batting order and baseball diamond."""
     _validate_inputs(batting_order, position_assignment)
@@ -250,6 +251,13 @@ def render_lineup_dashboard_html(
             f"{json.dumps(replan_context, ensure_ascii=False)}"
             f"</script>\n"
         )
+    pitcher_json_script = ""
+    if pitcher_context:
+        pitcher_json_script = (
+            f'  <script type="application/json" id="pitcher-context">'
+            f"{json.dumps(pitcher_context, ensure_ascii=False)}"
+            f"</script>\n"
+        )
 
     return f"""<!doctype html>
 <html lang="en">
@@ -263,6 +271,7 @@ def render_lineup_dashboard_html(
 </head>
 <body>
 {replan_json_script}
+{pitcher_json_script}
   <header class="site-header" role="banner">
     <div class="site-header-inner">
       <h1 class="site-title">{html.escape(title)}</h1>
@@ -324,6 +333,10 @@ def render_lineup_dashboard_html(
             <option value="RF">RF</option>
           </select>
         </label>
+        <label class="predictive-toggle">
+          Opponent pitcher (Module 1)
+          <select id="opponent-pitcher"></select>
+        </label>
         <div id="mode-label" class="mode-label"></div>
         <div id="optimizer-explain" class="explain"></div>
         <div class="why-panel">
@@ -367,6 +380,7 @@ def write_lineup_dashboard_html(
     eligibility_profiles: Optional[Mapping[str, Sequence[str]]] = None,
     pipeline_context: Optional[Mapping[str, Any]] = None,
     replan_context: Optional[Mapping[str, Any]] = None,
+    pitcher_context: Optional[Mapping[str, Any]] = None,
 ) -> Path:
     """Write dashboard HTML to disk and return path."""
     rendered = render_lineup_dashboard_html(
@@ -380,6 +394,7 @@ def write_lineup_dashboard_html(
         eligibility_profiles=eligibility_profiles,
         pipeline_context=pipeline_context,
         replan_context=replan_context,
+        pitcher_context=pitcher_context,
     )
     path = Path(output_path)
     path.parent.mkdir(parents=True, exist_ok=True)

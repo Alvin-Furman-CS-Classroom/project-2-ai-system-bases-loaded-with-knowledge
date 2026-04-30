@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800">
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="700" y="50" text-anchor="middle" font-size="30" font-family="Arial" font-weight="bold">Figure 1. End-to-End AI System Architecture</text>
+  <rect x="80" y="170" width="300" height="140" rx="16" fill="#f7faff" stroke="#1f3b5b" stroke-width="3"/>
+  <text x="230" y="220" text-anchor="middle" font-size="20" font-family="Arial">Module 1: FOL Matchup</text>
+  <text x="230" y="250" text-anchor="middle" font-size="18" font-family="Arial">Out: Offensive scores</text>
+  <rect x="80" y="380" width="300" height="140" rx="16" fill="#f7faff" stroke="#1f3b5b" stroke-width="3"/>
+  <text x="230" y="430" text-anchor="middle" font-size="20" font-family="Arial">Module 2: Defensive KB</text>
+  <text x="230" y="460" text-anchor="middle" font-size="18" font-family="Arial">Out: Defensive scores</text>
+  <rect x="560" y="280" width="300" height="140" rx="16" fill="#f7faff" stroke="#1f3b5b" stroke-width="3"/>
+  <text x="710" y="330" text-anchor="middle" font-size="20" font-family="Arial">Module 3: CSP Assignment</text>
+  <text x="710" y="360" text-anchor="middle" font-size="18" font-family="Arial">Out: {position -&gt; player}</text>
+  <rect x="980" y="280" width="300" height="140" rx="16" fill="#f7faff" stroke="#1f3b5b" stroke-width="3"/>
+  <text x="1130" y="330" text-anchor="middle" font-size="20" font-family="Arial">Module 4: GA Batting Order</text>
+  <text x="1130" y="360" text-anchor="middle" font-size="18" font-family="Arial">Out: Optimized order</text>
+  <rect x="980" y="520" width="300" height="140" rx="16" fill="#f7faff" stroke="#1f3b5b" stroke-width="3"/>
+  <text x="1130" y="570" text-anchor="middle" font-size="20" font-family="Arial">Module 5: Adaptive Planning</text>
+  <text x="1130" y="600" text-anchor="middle" font-size="18" font-family="Arial">Out: Recommendations + plan</text>
+  <line x1="380" y1="240" x2="560" y2="330" stroke="#1f3b5b" stroke-width="4"/>
+  <line x1="380" y1="450" x2="560" y2="370" stroke="#1f3b5b" stroke-width="4"/>
+  <line x1="860" y1="350" x2="980" y2="350" stroke="#1f3b5b" stroke-width="4"/>
+  <line x1="1130" y1="420" x2="1130" y2="520" stroke="#1f3b5b" stroke-width="4"/>
+</svg>

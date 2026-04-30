@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Module 4 + Module 5 Dashboard</title>
+  <title>Bases Loaded With Knowledge</title>
   <style>
 /* Module 4 + 5 lineup dashboard — shared stylesheet (loaded by web_ui_styles.get_dashboard_css). */
 
@@ -862,11 +862,13 @@ tbody tr:nth-child(even) td {
   </style>
 </head>
 <body>
-  <script type="application/json" id="replan-context">{"game_state": {"inning": 7, "half": "bottom", "outs": 1, "score_for": 4, "score_against": 3, "bases": [true, false, true], "substitutions_used": 2, "substitutions_limit": 5, "pitcher_fatigue": 0.0}, "bench_players": [{"name": "Austin Riley", "roles": ["3B"]}, {"name": "Jake Fraley", "roles": ["LF", "RF"]}, {"name": "Vidal Bruján", "roles": ["3B", "RF", "SS"]}, {"name": "Ha-Seong Kim", "roles": ["SS"]}], "offensive_scores": {"Matt Olson": 37.32, "Ozzie Albies": 30.39, "Michael Harris II": 30.459999999999997, "Sean Murphy": 30.240000000000002, "Jonathan Ornelas": 50.0, "Nick Allen": 25.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 40.92, "Drake Baldwin": 35.93, "Austin Riley": 32.99999999999999, "Jake Fraley": 32.879999999999995, "Vidal Bruján": 32.03, "Ha-Seong Kim": 31.269999999999996}, "defensive_scores": {"Matt Olson": 100.0, "Ozzie Albies": 100.0, "Michael Harris II": 100.0, "Sean Murphy": 100.0, "Jonathan Ornelas": 80.0, "Nick Allen": 100.0, "Jurickson Profar": 100.0, "Ronald Acuña Jr.": 100.0, "Drake Baldwin": 0.0, "Austin Riley": 60.0, "Jake Fraley": 80.0, "Vidal Bruján": 80.0, "Ha-Seong Kim": 80.0}, "innings_ahead": 3}</script>
+  <script type="application/json" id="replan-context">{"game_state": {"inning": 7, "half": "bottom", "outs": 1, "score_for": 4, "score_against": 3, "bases": [true, false, true], "substitutions_used": 2, "substitutions_limit": 5, "pitcher_fatigue": 0.0}, "bench_players": [{"name": "Jake Fraley", "roles": ["LF", "RF"]}, {"name": "Alex Verdugo", "roles": ["LF"]}, {"name": "Vidal Bruján", "roles": ["RF", "SS", "3B"]}, {"name": "Jarred Kelenic", "roles": ["LF", "RF"]}], "offensive_scores": {"Matt Olson": 42.32, "Ozzie Albies": 30.39, "Michael Harris II": 35.459999999999994, "Sean Murphy": 15.240000000000002, "Jonathan Ornelas": 35.0, "Nick Allen": 10.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 30.92, "Drake Baldwin": 40.93, "Jake Fraley": 37.879999999999995, "Alex Verdugo": 32.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 28.25}, "defensive_scores": {"Matt Olson": 100.0, "Ozzie Albies": 100.0, "Michael Harris II": 100.0, "Sean Murphy": 100.0, "Jonathan Ornelas": 80.0, "Nick Allen": 100.0, "Jurickson Profar": 100.0, "Ronald Acuña Jr.": 100.0, "Drake Baldwin": 0.0, "Jake Fraley": 80.0, "Alex Verdugo": 100.0, "Vidal Bruján": 80.0, "Jarred Kelenic": 40.0}, "innings_ahead": 3}</script>
+
+  <script type="application/json" id="pitcher-context">{"default_pitcher": "Logan Webb", "pitchers": [{"name": "Logan Webb", "handedness": "RHP", "era": 3.22, "whip": 1.237, "k_rate": 0.262, "walk_rate": 0.054}, {"name": "Garrett Crochet", "handedness": "LHP", "era": 2.59, "whip": 1.028, "k_rate": 0.313, "walk_rate": 0.057}, {"name": "Cristopher Sánchez", "handedness": "LHP", "era": 2.5, "whip": 2.55, "k_rate": 0.263, "walk_rate": 0.055}, {"name": "Max Fried", "handedness": "LHP", "era": 2.86, "whip": 1.101, "k_rate": 0.236, "walk_rate": 0.064}, {"name": "Carlos Rodón", "handedness": "LHP", "era": 3.09, "whip": 1.049, "k_rate": 0.257, "walk_rate": 0.093}, {"name": "Tarik Skubal", "handedness": "LHP", "era": 2.21, "whip": 0.891, "k_rate": 0.322, "walk_rate": 0.044}, {"name": "Kevin Gausman", "handedness": "RHP", "era": 3.59, "whip": 1.062, "k_rate": 0.244, "walk_rate": 0.065}, {"name": "Zac Gallen", "handedness": "RHP", "era": 4.83, "whip": 1.26, "k_rate": 0.215, "walk_rate": 0.081}], "offensive_profiles_by_pitcher": {"Logan Webb": {"Matt Olson": 42.32, "Ozzie Albies": 30.39, "Michael Harris II": 35.459999999999994, "Sean Murphy": 15.240000000000002, "Jonathan Ornelas": 35.0, "Nick Allen": 10.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 30.92, "Drake Baldwin": 40.93, "Jake Fraley": 37.879999999999995, "Alex Verdugo": 32.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 28.25}, "Garrett Crochet": {"Matt Olson": 8.32, "Ozzie Albies": 29.39, "Michael Harris II": 9.459999999999997, "Sean Murphy": 29.240000000000002, "Jonathan Ornelas": 61.0, "Nick Allen": 29.52, "Jurickson Profar": 33.489999999999995, "Ronald Acuña Jr.": 39.92, "Drake Baldwin": 19.93, "Jake Fraley": 23.879999999999995, "Alex Verdugo": 11.68, "Vidal Bruján": 31.03, "Jarred Kelenic": 7.25}, "Cristopher Sánchez": {"Matt Olson": 22.32, "Ozzie Albies": 30.39, "Michael Harris II": 15.459999999999997, "Sean Murphy": 35.24, "Jonathan Ornelas": 62.0, "Nick Allen": 30.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 52.92, "Drake Baldwin": 20.93, "Jake Fraley": 17.879999999999995, "Alex Verdugo": 12.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 8.25}, "Max Fried": {"Matt Olson": 22.32, "Ozzie Albies": 30.39, "Michael Harris II": 15.459999999999997, "Sean Murphy": 35.24, "Jonathan Ornelas": 55.0, "Nick Allen": 30.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 45.92, "Drake Baldwin": 20.93, "Jake Fraley": 17.879999999999995, "Alex Verdugo": 12.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 8.25}, "Carlos Rodón": {"Matt Olson": 22.32, "Ozzie Albies": 30.39, "Michael Harris II": 15.459999999999997, "Sean Murphy": 35.24, "Jonathan Ornelas": 55.0, "Nick Allen": 30.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 50.92, "Drake Baldwin": 20.93, "Jake Fraley": 17.879999999999995, "Alex Verdugo": 12.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 8.25}, "Tarik Skubal": {"Matt Olson": 2.3200000000000003, "Ozzie Albies": 23.39, "Michael Harris II": 3.4599999999999973, "Sean Murphy": 23.240000000000002, "Jonathan Ornelas": 55.0, "Nick Allen": 23.52, "Jurickson Profar": 27.489999999999995, "Ronald Acuña Jr.": 33.92, "Drake Baldwin": 13.93, "Jake Fraley": 17.879999999999995, "Alex Verdugo": 5.68, "Vidal Bruján": 25.03, "Jarred Kelenic": 1.25}, "Kevin Gausman": {"Matt Olson": 42.32, "Ozzie Albies": 30.39, "Michael Harris II": 35.459999999999994, "Sean Murphy": 15.240000000000002, "Jonathan Ornelas": 35.0, "Nick Allen": 10.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 30.92, "Drake Baldwin": 40.93, "Jake Fraley": 37.879999999999995, "Alex Verdugo": 32.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 28.25}, "Zac Gallen": {"Matt Olson": 42.32, "Ozzie Albies": 30.39, "Michael Harris II": 35.459999999999994, "Sean Murphy": 15.240000000000002, "Jonathan Ornelas": 35.0, "Nick Allen": 10.52, "Jurickson Profar": 34.489999999999995, "Ronald Acuña Jr.": 37.92, "Drake Baldwin": 40.93, "Jake Fraley": 37.879999999999995, "Alex Verdugo": 32.68, "Vidal Bruján": 32.03, "Jarred Kelenic": 28.25}}, "batting_order_by_pitcher": {"Logan Webb": ["Ronald Acuña Jr.", "Jonathan Ornelas", "Michael Harris II", "Matt Olson", "Drake Baldwin", "Sean Murphy", "Nick Allen", "Ozzie Albies", "Jurickson Profar"], "Garrett Crochet": ["Ronald Acuña Jr.", "Jonathan Ornelas", "Michael Harris II", "Matt Olson", "Drake Baldwin", "Jurickson Profar", "Sean Murphy", "Nick Allen", "Ozzie Albies"], "Cristopher Sánchez": ["Jonathan Ornelas", "Ronald Acuña Jr.", "Drake Baldwin", "Michael Harris II", "Matt Olson", "Sean Murphy", "Nick Allen", "Ozzie Albies", "Jurickson Profar"], "Max Fried": ["Jonathan Ornelas", "Ronald Acuña Jr.", "Drake Baldwin", "Michael Harris II", "Matt Olson", "Jurickson Profar", "Sean Murphy", "Ozzie Albies", "Nick Allen"], "Carlos Rodón": ["Jonathan Ornelas", "Ronald Acuña Jr.", "Drake Baldwin", "Matt Olson", "Michael Harris II", "Jurickson Profar", "Sean Murphy", "Ozzie Albies", "Nick Allen"], "Tarik Skubal": ["Ronald Acuña Jr.", "Jonathan Ornelas", "Drake Baldwin", "Michael Harris II", "Matt Olson", "Sean Murphy", "Nick Allen", "Ozzie Albies", "Jurickson Profar"], "Kevin Gausman": ["Ronald Acuña Jr.", "Jonathan Ornelas", "Michael Harris II", "Matt Olson", "Drake Baldwin", "Sean Murphy", "Nick Allen", "Ozzie Albies", "Jurickson Profar"], "Zac Gallen": ["Jonathan Ornelas", "Ronald Acuña Jr.", "Michael Harris II", "Drake Baldwin", "Matt Olson", "Jurickson Profar", "Nick Allen", "Ozzie Albies", "Sean Murphy"]}}</script>
 
   <header class="site-header" role="banner">
     <div class="site-header-inner">
-      <h1 class="site-title">Module 4 + Module 5 Dashboard</h1>
+      <h1 class="site-title">Bases Loaded With Knowledge</h1>
       <span class="site-tagline">Batting order · field · planning</span>
     </div>
   </header>
@@ -876,9 +878,9 @@ tbody tr:nth-child(even) td {
       <ol>
         <li class="lineup-row" data-player="Ronald Acuña Jr." tabindex="0" role="button"><span class='slot'>1.</span> <span class='batter-name'>Ronald Acuña Jr.</span></li>
 <li class="lineup-row" data-player="Jonathan Ornelas" tabindex="0" role="button"><span class='slot'>2.</span> <span class='batter-name'>Jonathan Ornelas</span></li>
-<li class="lineup-row" data-player="Matt Olson" tabindex="0" role="button"><span class='slot'>3.</span> <span class='batter-name'>Matt Olson</span></li>
-<li class="lineup-row" data-player="Drake Baldwin" tabindex="0" role="button"><span class='slot'>4.</span> <span class='batter-name'>Drake Baldwin</span> <span class='role-badge'>DH</span></li>
-<li class="lineup-row" data-player="Michael Harris II" tabindex="0" role="button"><span class='slot'>5.</span> <span class='batter-name'>Michael Harris II</span></li>
+<li class="lineup-row" data-player="Michael Harris II" tabindex="0" role="button"><span class='slot'>3.</span> <span class='batter-name'>Michael Harris II</span></li>
+<li class="lineup-row" data-player="Matt Olson" tabindex="0" role="button"><span class='slot'>4.</span> <span class='batter-name'>Matt Olson</span></li>
+<li class="lineup-row" data-player="Drake Baldwin" tabindex="0" role="button"><span class='slot'>5.</span> <span class='batter-name'>Drake Baldwin</span> <span class='role-badge'>DH</span></li>
 <li class="lineup-row" data-player="Sean Murphy" tabindex="0" role="button"><span class='slot'>6.</span> <span class='batter-name'>Sean Murphy</span></li>
 <li class="lineup-row" data-player="Nick Allen" tabindex="0" role="button"><span class='slot'>7.</span> <span class='batter-name'>Nick Allen</span></li>
 <li class="lineup-row" data-player="Ozzie Albies" tabindex="0" role="button"><span class='slot'>8.</span> <span class='batter-name'>Ozzie Albies</span></li>
@@ -932,6 +934,10 @@ tbody tr:nth-child(even) td {
             <option value="CF">CF</option>
             <option value="RF">RF</option>
           </select>
+        </label>
+        <label class="predictive-toggle">
+          Opponent pitcher (Module 1)
+          <select id="opponent-pitcher"></select>
         </label>
         <div id="mode-label" class="mode-label"></div>
         <div id="optimizer-explain" class="explain"></div>
@@ -1017,7 +1023,7 @@ tbody tr:nth-child(even) td {
       </div>
       <ul id="m5-recommendations" class="recommendations">
         <li class="rec-item" tabindex="0" role="button" data-bench-player="Vidal Bruján" data-target-player="Jonathan Ornelas" data-position="3B"><strong>defensive_replacement</strong> (priority 1, confidence 0.64)<br/><span>Protecting a lead: strengthen 3B by bringing in Vidal Bruján for Jonathan Ornelas.</span></li>
-<li class="rec-item" tabindex="0" role="button" data-bench-player="" data-target-player="Jonathan Ornelas" data-position=""><strong>lineup_matchup_adjustment</strong> (priority 2, confidence 0.60)<br/><span>Center next high-leverage plate appearance around Jonathan Ornelas based on projected matchup edge.</span></li>
+<li class="rec-item" tabindex="0" role="button" data-bench-player="" data-target-player="Matt Olson" data-position=""><strong>lineup_matchup_adjustment</strong> (priority 2, confidence 0.60)<br/><span>Center next high-leverage plate appearance around Matt Olson based on projected matchup edge.</span></li>
       </ul>
       <h3>Multi-Inning Outlook</h3>
       <table>
@@ -1039,7 +1045,7 @@ tbody tr:nth-child(even) td {
         <li><strong>Module 1 -> Offensive scores:</strong> 25 players</li>
         <li><strong>Module 2 -> Defensive scores:</strong> 25 players</li>
         <li><strong>Module 3 -> Assignment:</strong> 9 positions solved</li>
-        <li><strong>Module 4 -> Batting optimization:</strong> fitness 7.179, generations 74</li>
+        <li><strong>Module 4 -> Batting optimization:</strong> fitness 7.131, generations 67</li>
         <li><strong>Module 5 -> Planning:</strong> 2 recommendations</li>
       </ul>
       <h3>Data Sources</h3>
@@ -1055,10 +1061,10 @@ tbody tr:nth-child(even) td {
   </div>
   <script>
     (function () {
-      const defensiveProfiles = {"Jake Fraley": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 80.0, "CF": 0.0, "RF": 80.0}, "Michael Harris II": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 100.0, "RF": 0.0}, "Ha-Seong Kim": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jonathan Ornelas": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Austin Riley": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 60.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Drake Baldwin": {"C": 80.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"C": 100.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Vidal Bruján": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 80.0}, "Jurickson Profar": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Ozzie Albies": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ronald Acuña Jr.": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 100.0}, "Nick Allen": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 100.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Matt Olson": {"C": 0.0, "1B": 100.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}};
-      const defensivePredictedProfiles = {"Jake Fraley": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Michael Harris II": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ha-Seong Kim": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jonathan Ornelas": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Austin Riley": {"C": 60.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Drake Baldwin": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}, "Sean Murphy": {"C": 100.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 80.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Vidal Bruján": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jurickson Profar": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 80.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ozzie Albies": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 100.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ronald Acuña Jr.": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Nick Allen": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Matt Olson": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}};
-      const offensiveProfiles = {"Michael Harris II": 30.459999999999997, "Jonathan Ornelas": 50.0, "Drake Baldwin": 35.93, "Sean Murphy": 30.240000000000002, "Jurickson Profar": 34.489999999999995, "Ozzie Albies": 30.39, "Ronald Acuña Jr.": 40.92, "Nick Allen": 25.52, "Matt Olson": 37.32};
-      const eligibilityProfiles = {"Michael Harris II": ["CF", "DH", "LF", "RF"], "Jonathan Ornelas": ["3B", "DH", "SS"], "Drake Baldwin": ["C", "DH"], "Sean Murphy": ["C", "DH"], "Jurickson Profar": ["CF", "DH", "LF", "RF"], "Ozzie Albies": ["2B", "DH"], "Ronald Acuña Jr.": ["CF", "DH", "LF", "RF"], "Nick Allen": ["2B", "DH", "SS"], "Matt Olson": ["1B", "DH"]};
+      const defensiveProfiles = {"Vidal Bruján": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 80.0}, "Nick Allen": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 100.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Ozzie Albies": {"C": 0.0, "1B": 0.0, "2B": 100.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Drake Baldwin": {"C": 80.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Alex Verdugo": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Michael Harris II": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 100.0, "RF": 0.0}, "Ronald Acuña Jr.": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 100.0}, "Jake Fraley": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 80.0, "CF": 0.0, "RF": 80.0}, "Jonathan Ornelas": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 80.0, "SS": 80.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jarred Kelenic": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 40.0, "CF": 0.0, "RF": 40.0}, "Matt Olson": {"C": 0.0, "1B": 100.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}, "Jurickson Profar": {"C": 0.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 100.0, "CF": 0.0, "RF": 0.0}, "Sean Murphy": {"C": 100.0, "1B": 0.0, "2B": 0.0, "3B": 0.0, "SS": 0.0, "LF": 0.0, "CF": 0.0, "RF": 0.0}};
+      const defensivePredictedProfiles = {"Vidal Bruján": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Nick Allen": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ozzie Albies": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 100.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Drake Baldwin": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}, "Alex Verdugo": {"C": 60.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 80.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Michael Harris II": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Ronald Acuña Jr.": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Jake Fraley": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jonathan Ornelas": {"C": 60.0, "1B": 80.0, "2B": 80.0, "3B": 80.0, "SS": 80.0, "LF": 80.0, "CF": 80.0, "RF": 80.0}, "Jarred Kelenic": {"C": 40.0, "1B": 80.0, "2B": 40.0, "3B": 0.0, "SS": 40.0, "LF": 40.0, "CF": 60.0, "RF": 40.0}, "Matt Olson": {"C": 80.0, "1B": 100.0, "2B": 80.0, "3B": 60.0, "SS": 80.0, "LF": 80.0, "CF": 100.0, "RF": 80.0}, "Jurickson Profar": {"C": 80.0, "1B": 100.0, "2B": 100.0, "3B": 80.0, "SS": 100.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}, "Sean Murphy": {"C": 100.0, "1B": 100.0, "2B": 100.0, "3B": 60.0, "SS": 80.0, "LF": 100.0, "CF": 100.0, "RF": 100.0}};
+      const offensiveProfiles = {"Nick Allen": 10.52, "Ozzie Albies": 30.39, "Drake Baldwin": 40.93, "Michael Harris II": 35.459999999999994, "Ronald Acuña Jr.": 30.92, "Jonathan Ornelas": 35.0, "Matt Olson": 42.32, "Jurickson Profar": 34.489999999999995, "Sean Murphy": 15.240000000000002};
+      const eligibilityProfiles = {"Nick Allen": ["2B", "DH", "SS"], "Ozzie Albies": ["2B", "DH"], "Drake Baldwin": ["C", "DH"], "Michael Harris II": ["CF", "DH", "LF", "RF"], "Ronald Acuña Jr.": ["CF", "DH", "LF", "RF"], "Jonathan Ornelas": ["3B", "DH", "SS"], "Matt Olson": ["1B", "DH"], "Jurickson Profar": ["CF", "DH", "LF", "RF"], "Sean Murphy": ["C", "DH"]};
       const allPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
       const slots = Array.from(document.querySelectorAll(".defensive-slot"));
       const lineupDefenseEl = document.getElementById("lineup-defense-confidence");
@@ -1075,12 +1081,22 @@ tbody tr:nth-child(even) td {
       const lineupRows = Array.from(document.querySelectorAll(".lineup-card ol li[data-player]"));
       const module5Root = document.getElementById("module5-root");
       const replanContextEl = document.getElementById("replan-context");
+      const pitcherContextEl = document.getElementById("pitcher-context");
+      const opponentPitcherEl = document.getElementById("opponent-pitcher");
       let replanContext = {};
+      let pitcherContext = {};
       if (replanContextEl && replanContextEl.textContent) {
         try {
           replanContext = JSON.parse(replanContextEl.textContent);
         } catch (err) {
           replanContext = {};
+        }
+      }
+      if (pitcherContextEl && pitcherContextEl.textContent) {
+        try {
+          pitcherContext = JSON.parse(pitcherContextEl.textContent);
+        } catch (err) {
+          pitcherContext = {};
         }
       }
       let dragSourcePos = null;
@@ -1097,6 +1113,7 @@ tbody tr:nth-child(even) td {
         originalAssignment[pos] = playerEl ? playerEl.textContent.trim() : "";
       }
       const originalLineupOrder = lineupRows.map((li) => li.dataset.player || "");
+      let activePitcher = "";
 
       function getUnavailablePosition() {
         const raw = unavailablePosEl ? unavailablePosEl.value : "";
@@ -1300,9 +1317,105 @@ tbody tr:nth-child(even) td {
         renderLocks();
       }
 
+      function getPitcherChoices() {
+        const items = Array.isArray(pitcherContext.pitchers) ? pitcherContext.pitchers : [];
+        return items
+          .map((p) => {
+            return {
+              name: String((p && p.name) || "").trim(),
+              handedness: String((p && p.handedness) || "").trim(),
+            };
+          })
+          .filter((p) => p.name);
+      }
+
+      function lineupForPitcher(pitcherName) {
+        const table = pitcherContext.batting_order_by_pitcher || {};
+        const order = table[pitcherName];
+        return Array.isArray(order) ? order.map((p) => String(p || "").trim()).filter(Boolean) : [];
+      }
+
+      function offenseForPitcher(pitcherName) {
+        const table = pitcherContext.offensive_profiles_by_pitcher || {};
+        const scores = table[pitcherName];
+        return scores && typeof scores === "object" ? scores : null;
+      }
+
+      function setBattingOrder(order) {
+        if (!Array.isArray(order) || order.length !== lineupRows.length) return false;
+        for (let i = 0; i < lineupRows.length; i += 1) {
+          const player = String(order[i] || "").trim();
+          if (!player) return false;
+          const li = lineupRows[i];
+          li.dataset.player = player;
+          const nameEl = li.querySelector(".batter-name");
+          if (nameEl) nameEl.textContent = player;
+        }
+        updateBattingLineupDHTag();
+        return true;
+      }
+
+      function applyPitcherContext(pitcherName) {
+        const scores = offenseForPitcher(pitcherName);
+        if (!scores) return false;
+        activePitcher = pitcherName;
+        for (const [player, score] of Object.entries(scores)) {
+          offensiveProfiles[player] = Number(score);
+          if (replanContext && replanContext.offensive_scores) {
+            replanContext.offensive_scores[player] = Number(score);
+          }
+        }
+        const changedLineup = setBattingOrder(lineupForPitcher(pitcherName));
+        renderBenchScoreTable();
+        renderWhyThisMove();
+        updateOverallDefenseConfidence();
+        refreshFocusAfterAssignment();
+        if (explainEl) {
+          explainEl.textContent =
+            "Opponent pitcher: " +
+            pitcherName +
+            " | Total fit score: " +
+            totalDefenseFitScore().toFixed(1) +
+            (changedLineup ? " | Batting order updated from Module 1 matchup scores." : "");
+        }
+        return true;
+      }
+
+      function initPitcherSelector() {
+        if (!opponentPitcherEl) return;
+        const pitchers = getPitcherChoices();
+        if (pitchers.length === 0) {
+          opponentPitcherEl.innerHTML = "<option value=''>N/A</option>";
+          opponentPitcherEl.disabled = true;
+          return;
+        }
+        opponentPitcherEl.innerHTML = pitchers
+          .map((p) => {
+            const label = p.handedness ? p.name + " (" + p.handedness + ")" : p.name;
+            return "<option value='" + escapeHtml(p.name) + "'>" + escapeHtml(label) + "</option>";
+          })
+          .join("");
+        const preferred = String(pitcherContext.default_pitcher || "").trim();
+        const initial = pitchers.some((p) => p.name === preferred) ? preferred : pitchers[0].name;
+        opponentPitcherEl.value = initial;
+        applyPitcherContext(initial);
+        opponentPitcherEl.addEventListener("change", () => {
+          const next = String(opponentPitcherEl.value || "").trim();
+          if (!next) return;
+          applyPitcherContext(next);
+          scheduleAutoReplan();
+        });
+      }
+
       function resetDashboardToInitial() {
         if (unavailablePosEl) unavailablePosEl.value = "";
+        if (opponentPitcherEl) {
+          const preferred = String(pitcherContext.default_pitcher || "").trim();
+          if (preferred) opponentPitcherEl.value = preferred;
+          activePitcher = preferred;
+        }
         restoreOriginalState();
+        if (activePitcher) applyPitcherContext(activePitcher);
         strictMode = false;
         renderModeUI();
         hydrateBenchProfiles("");
@@ -1564,12 +1677,9 @@ tbody tr:nth-child(even) td {
           const roles = Array.isArray(playerInfo.roles) ? playerInfo.roles.map((r) => String(r)).join(", ") : "—";
           const off = offensiveScore(name).toFixed(1);
           const scoreCells = posCols.map((pos) => {
-            const played = defensiveScore(name, pos);
-            const predicted = defensiveScorePredicted(name, pos);
-            if (predicted > 0.0 && Math.abs(predicted - played) > 0.01) {
-              return played.toFixed(1) + " / " + predicted.toFixed(1);
-            }
-            return played.toFixed(1);
+            // Use one consistent score source/format per table cell.
+            // This avoids mixed "played / predicted" representations.
+            return defensiveScore(name, pos).toFixed(1);
           });
           rows.push(
             "<tr>" +
@@ -1957,6 +2067,14 @@ tbody tr:nth-child(even) td {
           if (explainEl) explainEl.textContent = "Target position is locked. Unlock it first to modify.";
           return;
         }
+        const sourcePos = Object.keys(currentAssignment()).find((p) => getPlayerAt(p) === lockedPlayer) || "";
+        if (sourcePos && sourcePos === lockedPos) {
+          if (explainEl) {
+            explainEl.textContent =
+              "No change: " + lockedPlayer + " is already at " + lockedPos + ".";
+          }
+          return;
+        }
         const beforeFieldMutation = cloneAssignment();
         const current = currentAssignment();
         const players = Array.from(new Set(Object.values(current).filter(Boolean)));
@@ -1974,12 +2092,20 @@ tbody tr:nth-child(even) td {
 
         const remainingPlayers = players.filter((p) => p !== lockedPlayer && !fixedPlayers.has(p));
         const remainingPositions = allPositions.filter((p) => p !== lockedPos && !(p in fixedAssignments));
-        const best = { score: -Infinity, assignment: null };
+        const best = { score: -Infinity, stability: -Infinity, assignment: null };
 
         function backtrack(posIdx, availablePlayers, partial, runningScore) {
           if (posIdx >= remainingPositions.length) {
+            let stability = 0;
+            for (const pos of remainingPositions) {
+              if (partial[pos] === current[pos]) stability += 1;
+            }
             if (runningScore > best.score) {
               best.score = runningScore;
+              best.stability = stability;
+              best.assignment = Object.assign({}, partial);
+            } else if (Math.abs(runningScore - best.score) <= 0.0001 && stability > best.stability) {
+              best.stability = stability;
               best.assignment = Object.assign({}, partial);
             }
             return;
@@ -2014,7 +2140,14 @@ tbody tr:nth-child(even) td {
         if (explainEl && !autoShuffle) {
           const unavailablePos = getUnavailablePosition();
           const extra = unavailablePos ? " | Unavailable natural position: " + unavailablePos : "";
-          explainEl.textContent = "Locked " + lockedPlayer + " at " + lockedPos + extra + " | Total fit score: " + totalDefenseFitScore().toFixed(1);
+          explainEl.textContent =
+            "Pinned " +
+            lockedPlayer +
+            " at " +
+            lockedPos +
+            extra +
+            " | Re-optimized all other unlocked positions for best defense | Total fit score: " +
+            totalDefenseFitScore().toFixed(1);
         }
         const afterFieldMutation = cloneAssignment();
         const meta =
@@ -2251,6 +2384,7 @@ tbody tr:nth-child(even) td {
         if (gel) gel.addEventListener("change", scheduleAutoReplan);
       }
 
+      initPitcherSelector();
       updateBattingLineupDHTag();
       renderModeUI();
       renderLocks();
