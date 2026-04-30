@@ -1,0 +1,3 @@
+name,fielding_pct,errors,putouts,passed_balls,caught_stealing_pct,positions
+Example Player,0.950,5,150,,,"1B,LF"
+Example Catcher,0.980,2,200,3,0.350,C

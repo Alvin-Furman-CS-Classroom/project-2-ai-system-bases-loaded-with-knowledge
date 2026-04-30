@@ -1,0 +1,90 @@
+═══════════════════════════════════════════════════════════════════════════════
+SLIDE 1: MODULE 1 OVERVIEW & PURPOSE
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    MODULE 1: MATCHUP ANALYSIS                                │
+│                    First-Order Logic Implementation                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+WHAT IT DOES
+───────────────────────────────────────────────────────────────────────────────
+• Predicts offensive performance scores (0-100) for Braves batters vs MLB pitchers
+• Uses first-order logic rules with quantifiers (∀, ∃) to evaluate matchups
+• Produces scores that feed into Module 3 (CSP), Module 4 (Search), Module 5 (Planning)
+
+INPUTS
+───────────────────────────────────────────────────────────────────────────────
+BATTERS (26 Braves players):
+  • BA, OBP, SLG, HR, RBI, K, handedness (L/R/S)
+
+PITCHERS (157 MLB pitchers):
+  • ERA, WHIP, K rate, walk rate, handedness (LHP/RHP)
+
+OUTPUTS
+───────────────────────────────────────────────────────────────────────────────
+• Performance scores (0-100) for each batter-pitcher matchup
+• Format: {batter_name: score} or {batter_name: {pitcher_name: score}}
+
+KEY FEATURES
+───────────────────────────────────────────────────────────────────────────────
+✓ Realistic 2025 MLB statistics from Baseball-Reference
+✓ 26 Braves batters aligned with Module 2 defensive data
+✓ 157 unique MLB pitchers (2025 season)
+✓ Multiple analysis modes: single pitcher, single batter, or full matrix
+
+
+═══════════════════════════════════════════════════════════════════════════════
+SLIDE 2: TECHNICAL IMPLEMENTATION & RESULTS
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│              FIRST-ORDER LOGIC IMPLEMENTATION                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+QUANTIFIERS
+───────────────────────────────────────────────────────────────────────────────
+UNIVERSAL (∀): "For all batters, if OBP > 0.350 and pitcher walk rate > 0.10,
+               then increase score"
+
+EXISTENTIAL (∃): "There exists a batter such that SLG > 0.500 and pitcher
+                  ERA > 4.00, then increase score"
+
+EXAMPLE RULES
+───────────────────────────────────────────────────────────────────────────────
+┌──────────────────────┬──────────────────────────────┬──────────────────────┐
+│ Rule Type            │ Condition                    │ Adjustment           │
+├──────────────────────┼──────────────────────────────┼──────────────────────┤
+│ Handedness           │ Same-handed (L vs LHP)        │ -15.0 penalty        │
+│ OBP Advantage        │ OBP > 0.350, walk rate > 0.10│ +8.0 bonus          │
+│ Power Matchup        │ SLG > 0.500, ERA > 4.00      │ +10.0 bonus          │
+│ Strikeout Risk       │ High K rate vs high K pitcher │ -12.0 penalty        │
+└──────────────────────┴──────────────────────────────┴──────────────────────┘
+
+ARCHITECTURE
+───────────────────────────────────────────────────────────────────────────────
+Input Files (JSON/CSV)
+    ↓
+MatchupDataParser → Batter & Pitcher Objects
+    ↓
+RuleEvaluator + LogicEngine → Apply FOL Rules
+    ↓
+ScoreCalculator → Final Performance Scores (0-100)
+    ↓
+Output: {batter_name: score}
+
+TEST RESULTS
+───────────────────────────────────────────────────────────────────────────────
+✅ 132 Unit Tests - ALL PASSING
+   • Input parsing (JSON/CSV)
+   • First-order logic quantifiers (∀, ∃)
+   • Individual matchup rules
+   • End-to-end score calculation
+   • Matrix analysis (5 batters × 157 pitchers = 785 matchups)
+
+INTEGRATION READY
+───────────────────────────────────────────────────────────────────────────────
+Module 1 outputs feed directly into:
+  → Module 3 (CSP): Offensive scores for position assignment
+  → Module 4 (Search): Performance data for batting order optimization
+  → Module 5 (Planning): Matchup predictions for in-game adjustments

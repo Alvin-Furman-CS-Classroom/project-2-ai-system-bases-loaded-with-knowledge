@@ -1,0 +1,5 @@
+# Python requirements for Baseball/Softball Lineup Optimization System
+# Module 2: Defensive Performance Analysis
+
+# No external dependencies required
+# Uses only Python standard library (Python 3.8+)
